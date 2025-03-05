@@ -17,7 +17,7 @@
 	<!-- Libraries Stylesheet -->
 	<link href="${pageContext.request.contextPath }/assets/plugin/animate/animate.min.css" rel="stylesheet">
 	<link href="${pageContext.request.contextPath }/assets/plugin/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-	<link href="${pageContext.request.contextPath }/assets/plugin/swiper/swiper-bundle.min.css" rel="stylesheet">
+	<link href="${pageContext.request.contextPath }/assets/plugin/swiper/swiper-bundle.css" rel="stylesheet">
 	
 	<!-- Customized Bootstrap Stylesheet -->
 	<link href="${pageContext.request.contextPath }/assets/css/bootstrapEdit.css" rel="stylesheet">
@@ -39,7 +39,7 @@
     <script src="${pageContext.request.contextPath }/assets/plugin/waypoints/waypoints.min.js"></script>
     <script src="${pageContext.request.contextPath }/assets/plugin/counterup/counterup.min.js"></script>
     <script src="${pageContext.request.contextPath }/assets/plugin/owlcarousel/owl.carousel.min.js"></script>
-    <script src="${pageContext.request.contextPath }/assets/plugin/swiper/swiper-bundle.js"></script>
+    <script src="${pageContext.request.contextPath }/assets/plugin/swiper/swiper-bundle.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath }/assets/js/main.js"></script>
 </body>
 </html>
