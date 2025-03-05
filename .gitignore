@@ -1,6 +1,18 @@
 # Compiled class file
 *.class
 
+#eclipse#
+*.pydevproject
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+local.properties
+.classpath
+.settings/
+.loadpath
+
 # Log file
 *.log
 
