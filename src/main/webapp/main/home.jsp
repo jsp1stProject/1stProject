@@ -37,7 +37,7 @@
     <!-- Facts Start -->
     <div class="container-xxl py-3">
     	<div class="container">
-    		<h3 class="main-h3 wow fadeInUp" data-wow-delay="0.1s">이번주 많이 찾는 숙소</h3>
+    		<h3 class="main-h3 wow fadeInUp" data-wow-delay="0.1s">이번 주 많이 찾는 숙소</h3>
     		<div class="tab-nav-wrap wow fadeInUp" data-wow-delay="0.1s">
     			<div class="tab-nav-item active" data-tab="1">서울</div>
     			<div class="tab-nav-item" data-tab="2">부산</div>
