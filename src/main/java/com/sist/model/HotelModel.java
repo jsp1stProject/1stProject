@@ -30,7 +30,7 @@ public class HotelModel {
 		map.put("start", start);
 		map.put("end", end);
 		
-		List<ContentVO> list = HotelDAO.hotelListData();
+		List<ContentVO> list = HotelDAO.hotelListData(map);
 		
 		int totalPage = HotelDAO.hotelTotalPage();
 		
@@ -43,12 +43,12 @@ public class HotelModel {
 		}
 		
 		request.setAttribute("list", list);
-		/*
+		
 		request.setAttribute("curPage", curPage);
 		request.setAttribute("totalPage", totalPage);
 		request.setAttribute("startPage", startPage);
 		request.setAttribute("endPage", endPage);
-		*/
+		
 		request.setAttribute("main_jsp", "../hotel/hotel_list.jsp");
 		return "../main/main.jsp";
 	}

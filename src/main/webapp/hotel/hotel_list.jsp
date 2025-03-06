@@ -130,10 +130,10 @@
           <c:forEach var="vo" items="${list }">
           <div class="col-md-12 mb-3">
             <div class="card card-horizontal">
-              <img src="${vo.firstImage }" class="card-img-left" alt="숙소 이미지">
+              <img src="${vo.cvo.firstImage }" class="card-img-left" alt="숙소 이미지">
               <div class="card-body">
-                <h5 class="card-title">${vo.title }</h5>
-                <p class="card-text">${vo.addr1 }</p>
+                <h5 class="card-title">${vo.cvo.title }</h5>
+                <p class="card-text">${vo.cvo.addr1 }</p>
                 <p class="card-text"></p>
               </div>
             </div>
@@ -142,6 +142,41 @@
 
         </div>
       </div>
+      <div class="container-xxl py-3 px-0">
+					<div class="container d-flex">
+						<ul class="pagination">
+							<c:if test="${startPage> 1 }">
+								<a href="list.do?page=1" class="bfarr">
+									<div class="arr left" style="left:9px;"></div>
+									<div class="arr left" style="left:16px;"></div>
+								</a>
+								<a href="list.do?page=${startPage - 1 }" class="bfarr">
+									<div class="arr left"></div>
+								</a>
+							</c:if>
+							<c:forEach begin="${startPage }" end="${endPage }" var="i">
+								<c:choose>
+									<c:when test="${i eq curpage}">
+										<a href="list.do?page=${i }" class="active">${i }</a>
+									</c:when>
+									<c:otherwise>
+										<a href="list.do?page=${i }">${i }</a>
+									</c:otherwise>
+								</c:choose>
+							</c:forEach>
+							<c:if test="${endPage < totalPage }">
+								<a href="list.do?page=${endPage + 1 }" class="afarr">
+									<div class="arr right"></div>
+								</a>
+								<a href="list.do?page=${totalPage }" class="afarr">
+									<div class="arr right" style="left:9px;"></div>
+									<div class="arr right" style="left:16px;"></div>
+								</a>
+							</c:if>
+						</ul>
+					</div>
+				</div>
+      
     </div>
   </div>
 
