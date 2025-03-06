@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c"  %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -40,6 +40,8 @@
     <script src="${pageContext.request.contextPath }/assets/plugin/counterup/counterup.min.js"></script>
     <script src="${pageContext.request.contextPath }/assets/plugin/owlcarousel/owl.carousel.min.js"></script>
     <script src="${pageContext.request.contextPath }/assets/plugin/swiper/swiper-bundle.min.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath }/assets/js/main.js"></script>
+	<c:if test="${title eq '메인'}">
+		<script type="text/javascript" src="${pageContext.request.contextPath }/assets/js/main.js"></script>
+	</c:if>
 </body>
 </html>
