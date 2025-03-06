@@ -15,7 +15,7 @@
         <div class="d-flex justify-content-end flex-fill">
 	        <div class="collapse navbar-collapse" id="navbarCollapse">
 	            <div class="navbar-nav mx-auto p-4 p-lg-0">
-	                <a href="../hotel/hotel.list.do" class="nav-item nav-link">숙소</a>
+	                <a href="../hotel/hotel_list.do" class="nav-item nav-link">숙소</a>
 	                <a href="index.html" class="nav-item nav-link">행사</a>
 	                <a href="index.html" class="nav-item nav-link">축제</a>
 	                <a href="about.html" class="nav-item nav-link">지도보기</a>
