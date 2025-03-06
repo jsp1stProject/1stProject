@@ -9,7 +9,7 @@
 <body>
 	<%// wow는 main에서만 적용 %>
     <nav class="navbar navbar-expand-lg fixed-top py-lg-0 px-lg-4 ${title eq '메인'?'wow':'bg-white' }">
-        <a href="main.do" class="navbar-brand ms-4 ms-lg-0">
+        <a href="${pageContext.request.contextPath }/main/main.do" class="navbar-brand ms-4 ms-lg-0">
             <h1 class="m-0 home">Festeller</h1>
         </a>
         <div class="d-flex justify-content-end flex-fill">
