@@ -10,6 +10,10 @@ import jakarta.servlet.http.HttpServletResponse;
 public class testModel {
     @RequestMapping("main/search.do")
     public String main_main(HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute("startPage", "1");
+        request.setAttribute("endPage", "10");
+        request.setAttribute("totalpage", "13");
+        request.setAttribute("curpage", "1");
         request.setAttribute("main_jsp", "../template/search.jsp");
         request.setAttribute("title", "검색 결과");
         request.setAttribute("wide", "y"); //본문 가로폭 넓히려면 attribute에 wide:y 추가
