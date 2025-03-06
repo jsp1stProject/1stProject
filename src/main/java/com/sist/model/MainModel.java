@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class MainModel {
 	@RequestMapping("main/main.do")
 	public String main_main(HttpServletRequest request, HttpServletResponse response) {
+		request.setAttribute("wide", "y");
 		request.setAttribute("main_jsp", "home.jsp");
 		request.setAttribute("title", "메인");
 		return "../main/main.jsp";

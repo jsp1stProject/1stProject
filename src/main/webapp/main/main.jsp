@@ -26,7 +26,7 @@
 	<link href="${pageContext.request.contextPath }/assets/css/style.css" rel="stylesheet">
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 </head>
-<body class="${wide eq y?'wide':''} ${title eq '메인'?'main':'' }">
+<body class="${wide eq 'y'?'wide':''} ${title eq '메인'?'main':'' }">
 	<jsp:include page="header.jsp"></jsp:include>
 	<jsp:include page="${main_jsp }"></jsp:include>
 	<jsp:include page="footer.jsp"></jsp:include>
