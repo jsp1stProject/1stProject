@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>    
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -126,38 +127,18 @@
       <div class="col-md-9 p-3">
         <div class="row">
           <!-- 숙소 카드 -->
+          <c:forEach var="vo" items="${list }">
           <div class="col-md-12 mb-3">
             <div class="card card-horizontal">
-              <img src="../assets/img/hotel1.jpg" class="card-img-left" alt="숙소 이미지">
+              <img src="${vo.firstImage }" class="card-img-left" alt="숙소 이미지">
               <div class="card-body">
-                <h5 class="card-title">서울 강남 호텔</h5>
-                <p class="card-text">📍 서울특별시 강남구 테헤란로 123</p>
-                <p class="card-text">💰 120,000원 / 1박</p>
+                <h5 class="card-title">${vo.title }</h5>
+                <p class="card-text">${vo.addr1 }</p>
+                <p class="card-text"></p>
               </div>
             </div>
           </div>
-
-          <div class="col-md-12 mb-3">
-            <div class="card card-horizontal">
-              <img src="../assets/img/hotel2.jpg" class="card-img-left" alt="숙소 이미지">
-              <div class="card-body">
-                <h5 class="card-title">부산 해운대 호텔</h5>
-                <p class="card-text">📍 부산광역시 해운대구 해운대로 456</p>
-                <p class="card-text">💰 150,000원 / 1박</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-12 mb-3">
-            <div class="card card-horizontal">
-              <img src="../assets/img/hotel3.jpg" class="card-img-left" alt="숙소 이미지">
-              <div class="card-body">
-                <h5 class="card-title">제주 오션 뷰 리조트</h5>
-                <p class="card-text">📍 제주특별자치도 서귀포시 중문관광로 789</p>
-                <p class="card-text">💰 200,000원 / 1박</p>
-              </div>
-            </div>
-          </div>
+          </c:forEach>
 
         </div>
       </div>

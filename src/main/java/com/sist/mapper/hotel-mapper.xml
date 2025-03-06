@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sist.mapper.hotel-mapper">
+	
+	<resultMap type="ContentVO" id="contentMap">
+		<result property="hvo.subfacility" column="subfacility"/>
+		
+	</resultMap>
+	
+	
+		<!-- <id property="contentId" column="content_id"/>
+		
+		<association property="hvo" javaType="HotelVO">
+			<result property="subFacility" column="subfacility"/>
+		</association> -->
+	<!-- 
+	<resultMap type="HotelVO" id="hotelMap">
+		<result property="cvo.title" column="title"/>
+		<result property="cvo.addr1" column="addr1"/>
+		<result property="cvo.firstImage" column="first_image"/>
+		<result property="cvo.firstImage2" column="first_image2"/>
+	</resultMap>
+	 -->
+	
+	<select id="hotelListData" resultMap="contentMap">
+		SELECT title, addr1, subfacility, first_image, first_image2
+		FROM content, hotel
+		WHERE content.content_id = hotel.content_id
+	</select>
+	<select id="hotelTotalPage" resultType="int">
+		SELECT CEIL(COUNT(*) / 15.0) 
+		FROM (SELECT title, addr1, subfacility, first_image, first_image2
+			FROM content, hotel
+			WHERE content.content_id = hotel.content_id) list
+	</select>
+</mapper>
