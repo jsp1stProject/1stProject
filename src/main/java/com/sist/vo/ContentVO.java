@@ -9,5 +9,4 @@ public class ContentVO {
 	private int contentTypeId, sigunguCode, areaCode;
 	private double mapX, mapY;
 	
-	HotelVO hvo = new HotelVO();
 }
