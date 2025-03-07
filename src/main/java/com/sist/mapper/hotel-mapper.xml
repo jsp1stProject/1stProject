@@ -22,19 +22,35 @@
 		<result property="cvo.cat3" column="cat3"/>
 	</resultMap>
 	
-	<!-- 이 테이블에서 LIKE '%__%' 로 검색 -->
-	<select id="hotelListData" resultMap="hotelMap" parameterType="hashmap">
-		SELECT title, addr1, subfacility, first_image, cat3, num
-		FROM (SELECT title, addr1, subfacility, first_image, cat3, rownum as num
-			  FROM content, hotel
-			  WHERE content.content_id = hotel.content_id)
-		WHERE num BETWEEN #{start} AND #{end}
-		
+	<select id="hotelListData" resultType="ContentVO" parameterType="hashmap">
+		<!-- 
+		SELECT * 
+		FROM (SELECT c.content_id, title, addr1, subfacility, first_image, cat3, ROWNUM AS rnum
+    		  FROM content c
+    		  JOIN hotel h ON c.content_id = h.content_id
+    		  WHERE addr1 LIKE '%'||#{search}||'%') 
+    	WHERE rnum BETWEEN #{start} AND #{end}
+    	 -->
+    	SELECT content_id, title, addr1, first_image, cat3, num FROM 
+		(SELECT content_id, title, addr1, first_image, cat3, rownum as num 
+		FROM content 
+		WHERE contenttype_id = 32 
+		AND addr1 LIKE '%'||#{search}||'%') 
+		WHERE num BETWEEN #{start} AND #{end} 
 	</select>
-	<select id="hotelTotalPage" resultType="int">
-		SELECT CEIL(COUNT(*) / 15.0) 
-		FROM (SELECT title, addr1, subfacility, first_image
-			FROM content, hotel
-			WHERE content.content_id = hotel.content_id) list
+	<select id="hotelTotalPage" resultType="int" parameterType="string">
+		<!-- 
+		SELECT CEIL(COUNT(*) / 15.0)
+		FROM (SELECT c.content_id, title, addr1, subfacility, first_image, cat3
+			  FROM content c
+			  JOIN hotel h
+			  ON c.content_id = h.content_id
+			  AND addr1 LIKE '%'||#{search}||'%')
+		 -->			  
+		 SELECT CEIL(COUNT(*) / 15.0)
+		 FROM (SELECT content_id, title, addr1, first_image, cat3
+		 FROM content
+		 WHERE contenttype_id = 32
+		 AND addr1 LIKE '%'||#{search}||'%')
 	</select>
 </mapper>

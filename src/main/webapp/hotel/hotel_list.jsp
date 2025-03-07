@@ -7,15 +7,114 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="${pageContext.request.contextPath }/assets/plugin/rangeslider/rangeslider.umd.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link href="${pageContext.request.contextPath }/assets/plugin/rangeslider/style.css" rel="stylesheet">
 <style type="text/css">
 .hotel{
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+a:hover{
+	cursor: pointer;
+}
 </style>
 <script type="text/javascript">
+	
+	function commons(page) {
+		let search = $('#search').val();
+		$.ajax({
+			type: 'post',
+			url: '../hotel/hotel_list_ajax.do',
+			data: {'search': search, 'page': page},
+			success: function(result) {
+				//console.log(result);
+				if (result.trim() === '') {
+		            console.error('response NULL 임');
+		        }
+				let json = JSON.parse(result);
+				console.log(json);
+				jsonView(json);
+				window.scrollTo({ top: 200, behavior: 'smooth' });
+			},
+			error: function(xhr, status, error) {
+		        console.error('AJAX request failed:', status, error);
+		    }
+		});
+	}
+	function prev(page) {
+		commons(page);
+	}
+	function next(page) {
+		commons(page);
+	}
+	function pageChange(page) {
+		commons(page);
+	}
+	function jsonView(json) {
+		let html = '';
+		let htmlPage = '';
+		
+		json.map(function(hotel) {
+			// 숙소 반복 출력
+			html += '<li>'
+		        + '<a href="#" class="d-flex">'
+		        + '<div class="thumb-wrap" style="background-image:url(' + hotel.first_image + ')">'
+		        + '<button type="button" class="bookmark-btn" name="bm-btn" data-id=""></button>'
+		        + '</div>'
+		        + '<div class="d-flex flex-column flex-md-row right">'
+		        + '<div class="title-wrap">'
+		        + '<p class="cat"><span class="hotel">' + hotel.cat3 + '</span><!--cat3으로 구분--></p>'
+		        + '<p class="content-name">' + hotel.title + '</p>'
+		        + '<p class="location">' + hotel.addr1 + '</p>'
+		        + '<p class="score">4.3(23)</p>'
+		        + '</div>'
+		        + '<div class="price-wrap">'
+		        + '<p class="price">125,000원~</p>'
+		        + '</div>'
+		        + '</div>'
+		        + '</a>'
+		        + '</li>';
+		})
+		
+        let startPage = json[0].startPage;
+        let endPage = json[0].endPage;
+        let curPage = json[0].curPage;
+        let totalPage = json[0].totalPage;	 
+        
+		htmlPage += '<div class="container d-flex">'
+		     	 + '<ul class="pagination">';
+		// 이전 버튼
+	    if (startPage > 1) {
+	    	htmlPage += '<a class="bfarr" onclick="prev(' + 1 + ')">' // TO-DO onclick 추가
+			    	 + '<div class="arr left" style="left:9px;"></div>'
+			    	 + '<div class="arr left" style="left:16px;"></div>'
+			    	 + '</a>'
+			    	 + '<a class="bfarr" onclick="prev(' + (startPage - 1) + ')">'
+			    	 + '<div class="arr left"></div>'
+			    	 + '</a>';
+		}
+		// 번호 버튼
+	    for(let i = startPage; i <= endPage; i++) {
+	    	htmlPage += '<a class="' + (i === curPage ? 'active' : '') + '" onclick="pageChange(' + i + ')">' + i + '</a>';
+	    }
+		// 다음 버튼
+	    if (endPage < totalPage) {
+	        htmlPage += '<a class="afarr" onclick="next(' + (endPage + 1) + ')">'
+	            + '<div class="arr right"></div>'
+	            + '</a>'
+	            + '<a class="afarr" onclick="next(' + totalPage + ')">'
+	            + '<div class="arr right" style="left: 9px;"></div>'
+	            + '<div class="arr right" style="left: 16px;"></div>'
+	            + '</a>';
+	    }
 
+	    htmlPage += '</ul></div>';
+	    
+	    $('#view').html(html);
+	    $('#viewPage').html(htmlPage);
+			    
+		
+	}
 </script>
 </head>
 <body>
@@ -38,18 +137,20 @@
 						</div>
 					</div>
 					<div class="filter-item"> <!--checkbox 타입-->
-						<h6>축제 유형</h6>
+						<h6>숙소 유형</h6>
 						<div class="checkbtn-wrap">
 							<input type="checkbox" name="type" id="t1">
-							<label for="t1">문화관광축제</label>
+							<label for="t1">관광호텔</label>
 							<input type="checkbox" name="type" id="t2">
-							<label for="t2">일반축제</label>
+							<label for="t2">펜션</label>
 							<input type="checkbox" name="type" id="t3">
-							<label for="t3">전통공연</label>
+							<label for="t3">모텔</label>
 							<input type="checkbox" name="type" id="t4">
-							<label for="t4">연극</label>
+							<label for="t4">민박</label>
 							<input type="checkbox" name="type" id="t5">
-							<label for="t5">뮤지컬</label>
+							<label for="t5">홈스테이</label>
+							<input type="checkbox" name="type" id="t6">
+							<label for="t6">게스트하우스</label>
 						</div>
 					</div>
 				</div>
@@ -67,70 +168,31 @@
 				</div>
 				<div class="container-xxl py-3 px-0">
 					<div class="container">
-						<h4 class="search-title mb-3"><span>제주도</span>에 대한 총 <span>1,324</span> 건의 검색 결과</h4>
-						<ul class="content-ul event">
-							<c:forEach var="vo" items="${list }">
-								<li><!--호텔 li-->
-									<a href="#" class="d-flex">
-										<div class="thumb-wrap" style="background-image:url(${vo.cvo.firstImage})">
-											<button type="button" class="bookmark-btn" name="bm-btn" data-id="${conid}"></button>
-										</div>
-										<div class="d-flex flex-column flex-md-row right">
-											<div class="title-wrap">
-												<p class="cat"><span class="hotel">${vo.cvo.cat3 }</span><!--cat3으로 구분--></p>
-												<p class="content-name">${vo.cvo.title}</p>
-												<p class="location">${vo.cvo.addr1 }</p>
-												<p class="score">4.3(23)</p>
-											</div>
-											<div class="price-wrap">
-												<p class="price">125,000원~</p>
-											</div>
-										</div>
-									</a>
-								</li>
-							</c:forEach>
+						<h4 class="search-title mb-3"><span>서울</span>에 대한 총 <span>1,324</span> 건의 검색 결과</h4>
+						<ul class="content-ul event" id="view">
+							<!-- 숙소 반복 -->
+								
+								
+							<!-- 숙소 반복 끝 -->
 						</ul>
 					</div>
 				</div>
-				<div class="container-xxl py-3 px-0">
-					<div class="container d-flex">
-						<ul class="pagination">
-							<c:if test="${startPage >1 }">
-								<a href="../hotel/hotel_list.do?page=1" class="bfarr">
-									<div class="arr left" style="left:9px;"></div>
-									<div class="arr left" style="left:16px;"></div>
-								</a>
-								<a href="../hotel/hotel_list.do?page=${startPage - 1 }" class="bfarr">
-									<div class="arr left"></div>
-								</a>
-							</c:if>
-							<c:forEach begin="${startPage }" end="${endPage }" var="i">
-								<c:choose>
-									<c:when test="${i eq curPage}">
-										<a href="../hotel/hotel_list.do?page=${i }" class="active">${i }</a>
-									</c:when>
-									<c:otherwise>
-										<a href="../hotel/hotel_list.do?page=${i }">${i }</a>
-									</c:otherwise>
-								</c:choose>
-							</c:forEach>
-							<c:if test="${endPage < totalPage }">
-								<a href="../hotel/hotel_list.do?page=${endPage + 1 }" class="afarr">
-									<div class="arr right"></div>
-								</a>
-								<a href="../hotel/hotel_list.do?page=${totalPage }" class="afarr">
-									<div class="arr right" style="left:9px;"></div>
-									<div class="arr right" style="left:16px;"></div>
-								</a>
-							</c:if>
-						</ul>
-					</div>
+				<div class="container-xxl py-3 px-0" id="viewPage">
+					<!-- 페이지 -->
+					
+					<!-- 페이지 -->
 				</div>
 			</div>
 		</div>
 	</div>
 
 <script type="text/javascript">
+	$(function() {
+		$('#search').val('서울');
+		commons(1);
+	
+	})
+
 	$('.bookmark-btn').on('click',function(){
 		$(this).toggleClass('on');
 	});

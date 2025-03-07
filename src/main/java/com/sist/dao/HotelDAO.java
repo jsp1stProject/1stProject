@@ -17,15 +17,15 @@ public class HotelDAO {
 		ssf = CreateSqlSessionFactory.getSsf();
 	}
 	
-	public static List<ContentVO> hotelListData(Map<String, Object> map) {
+	public static List<ContentVO> hotelListData(Map map) {
 		SqlSession session = ssf.openSession();
 		List<ContentVO> list = session.selectList("hotelListData", map);
 		session.close();
 		return list;
 	}
-	public static int hotelTotalPage() {
+	public static int hotelTotalPage(String search) {
 		SqlSession session = ssf.openSession();
-		int total = session.selectOne("hotelTotalPage");
+		int total = session.selectOne("hotelTotalPage", search);
 		session.close();
 		return total;
 	}
