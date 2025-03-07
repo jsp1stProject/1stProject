@@ -4,10 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONArray;
+
 import com.sist.controller.Controller;
 import com.sist.controller.RequestMapping;
 import com.sist.dao.HotelDAO;
 import com.sist.vo.ContentVO;
+import com.sist.vo.HotelVO;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,13 +20,14 @@ public class HotelModel {
 	@RequestMapping("hotel/hotel_list.do")
 	public String hotel_list(HttpServletRequest request, HttpServletResponse response) {
 		String page = request.getParameter("page");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		if (page == null) {
 			page = "1";
 		}
 		
-		int curPage = Integer.parseInt(page);
 		
-		Map<String, Integer> map = new HashMap<String, Integer>();
+		int curPage = Integer.parseInt(page);
 		int start = (curPage * 15) - 14;
 		int end = curPage * 15;
 		
@@ -41,6 +45,10 @@ public class HotelModel {
 		if (endPage > totalPage) {
 			endPage = totalPage;
 		}
+		
+		JSONArray arr = new JSONArray();
+		
+		
 		
 		request.setAttribute("list", list);
 		

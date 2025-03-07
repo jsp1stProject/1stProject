@@ -19,12 +19,13 @@
 		<result property="cvo.addr1" column="addr1"/>
 		<result property="cvo.firstImage" column="first_image"/>
 		<result property="cvo.firstImage2" column="first_image2"/>
+		<result property="cvo.cat3" column="cat3"/>
 	</resultMap>
 	
-	
+	<!-- 이 테이블에서 LIKE '%__%' 로 검색 -->
 	<select id="hotelListData" resultMap="hotelMap" parameterType="hashmap">
-		SELECT title, addr1, subfacility, first_image, num
-		FROM (SELECT title, addr1, subfacility, first_image, rownum as num
+		SELECT title, addr1, subfacility, first_image, cat3, num
+		FROM (SELECT title, addr1, subfacility, first_image, cat3, rownum as num
 			  FROM content, hotel
 			  WHERE content.content_id = hotel.content_id)
 		WHERE num BETWEEN #{start} AND #{end}
@@ -32,7 +33,7 @@
 	</select>
 	<select id="hotelTotalPage" resultType="int">
 		SELECT CEIL(COUNT(*) / 15.0) 
-		FROM (SELECT title, addr1, subfacility, first_image, first_image2
+		FROM (SELECT title, addr1, subfacility, first_image
 			FROM content, hotel
 			WHERE content.content_id = hotel.content_id) list
 	</select>

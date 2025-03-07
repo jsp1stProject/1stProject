@@ -17,7 +17,7 @@ public class HotelDAO {
 		ssf = CreateSqlSessionFactory.getSsf();
 	}
 	
-	public static List<ContentVO> hotelListData(Map<String, Integer> map) {
+	public static List<ContentVO> hotelListData(Map<String, Object> map) {
 		SqlSession session = ssf.openSession();
 		List<ContentVO> list = session.selectList("hotelListData", map);
 		session.close();
