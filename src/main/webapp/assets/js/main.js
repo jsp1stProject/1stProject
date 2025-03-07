@@ -98,7 +98,13 @@
 			},
 		},
 	});
-	
+
+   $(".main-fes-item:first-child").addClass('active');
+   $(document).on('click','.main-fes-item',function(){
+       $('.main-fes-item').removeClass('active');
+       $(this).addClass('active');
+   });
+
 	//tab
 	$(document).on('click','.tab-nav-item',function(){
 		$(this).siblings('.tab-nav-item').removeClass('active');
