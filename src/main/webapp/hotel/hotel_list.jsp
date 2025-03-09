@@ -57,7 +57,7 @@ a:hover{
 		json.map(function(hotel) {
 			// 숙소 반복 출력
 			html += '<li>'
-		        + '<a href="#" class="d-flex">'
+		        + '<a href="../hotel/hotel_detail.do?content_id=' + hotel.content_id + '" class="d-flex">'
 		        + '<div class="thumb-wrap" style="background-image:url(' + hotel.first_image + ')">'
 		        + '<button type="button" class="bookmark-btn" name="bm-btn" data-id=""></button>'
 		        + '</div>'
@@ -115,6 +115,16 @@ a:hover{
 			    
 		
 	}
+	function location() {
+		/*
+			TO-DO
+			지역 case 구분
+		*/
+	}
+	/*
+		TO-DO
+		ajax JOIN 
+	*/
 </script>
 </head>
 <body>
@@ -151,6 +161,45 @@ a:hover{
 							<label for="t5">홈스테이</label>
 							<input type="checkbox" name="type" id="t6">
 							<label for="t6">게스트하우스</label>
+						</div>
+					</div>
+					<div class="filter-tiem">
+						<h6>#지역</h6>
+						<div class="checkbtn-wrap">
+							<input type="checkbox" name="type" id="l1">
+							<label for="l1">서울</label>
+							<input type="checkbox" name="type" id="l2">
+							<label for="l2">인천</label>
+							<input type="checkbox" name="type" id="l3">
+							<label for="l3">대전</label>
+							<input type="checkbox" name="type" id="l3">
+							<label for="l4">대구</label>
+							<input type="checkbox" name="type" id="l4">
+							<label for="l5">광주</label>
+							<input type="checkbox" name="type" id="l5">
+							<label for="l6">부산</label>
+							<input type="checkbox" name="type" id="l6">
+							<label for="l7">울산</label>
+							<input type="checkbox" name="type" id="l7">
+							<label for="l8">세종</label>
+							<input type="checkbox" name="type" id="l8">
+							<label for="l31">경기</label>
+							<input type="checkbox" name="type" id="l31">
+							<label for="l32">강원</label>
+							<input type="checkbox" name="type" id="l32">
+							<label for="l33">충북</label>
+							<input type="checkbox" name="type" id="l33">
+							<label for="l34">충남</label>
+							<input type="checkbox" name="type" id="l34">
+							<label for="l35">경북</label>
+							<input type="checkbox" name="type" id="l35">
+							<label for="l36">경남</label>
+							<input type="checkbox" name="type" id="l37">
+							<label for="l37">전북</label>
+							<input type="checkbox" name="type" id="l38">
+							<label for="l38">전남</label>
+							<input type="checkbox" name="type" id="l39">
+							<label for="l39">제주</label>
 						</div>
 					</div>
 				</div>

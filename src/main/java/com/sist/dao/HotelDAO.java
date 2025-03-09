@@ -29,4 +29,16 @@ public class HotelDAO {
 		session.close();
 		return total;
 	}
+	public static HotelVO hotelDetailData(int content_id) {
+		SqlSession session = ssf.openSession();
+		HotelVO vo = session.selectOne("hotelDetailData", content_id);
+		session.close();
+		return vo;
+	}
+	public static List<HotelVO> hotelRoomData(int content_id) {
+		SqlSession session = ssf.openSession();
+		List<HotelVO> list = session.selectList("hotelRoomData", content_id);
+		session.close();
+		return list;
+	}
 }
