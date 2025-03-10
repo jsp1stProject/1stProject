@@ -9,6 +9,7 @@
 </head>
 <body>
 	<div class="container-fluid p-0 pb-4 wow fadeIn" data-wow-delay="0.1s">
+		<div class="owl-carousel-inner">
             <div class="container">
                 <div class="row justify-content-start">
                     <div class="col-12">
@@ -312,7 +313,7 @@
 			<h3 class="main-h3 wow fadeInUp" data-wow-delay="0.1s">지금 볼 수 있는 지역별 축제</h3>
 			<div class="main-fes-wrap d-flex wow fadeInUp" data-wow-delay="0.1s">
 				<c:forEach items="${fesList }" var="vo" varStatus="i">
-					<div class="main-fes-item" style="background-image:url(${vo.cvo.firstImage});">
+					<div class="main-fes-item" style="background-image:url(${vo.cvo.first_image});">
 						<p class="main-fes-area fs-3">${vo.dbarea}</p>
 						<a href="#" class="main-fes-title">${vo.cvo.title}</a>
 					</div>
@@ -332,7 +333,7 @@
 								<div class="li-item swiper-slide">
 									<a href="#">
 										<div class="item-inner">
-											<div class="item-img" style="background-image:url(${vo.cvo.firstImage});">
+											<div class="item-img" style="background-image:url(${vo.cvo.first_image});">
 											</div>
 											<div class="text-wrap">
 												<p class="date">[${vo.dbcate}]</p>

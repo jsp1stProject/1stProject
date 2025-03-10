@@ -56,7 +56,7 @@ public class EventDAO {
 			session = ssf.openSession();
 			list= session.selectList("mainFesList");
 			for(EventVO vo:list){
-				int areaCode = vo.getCvo().getAreaCode();
+				int areaCode = vo.getCvo().getAreacode();
 				System.out.println(areaCode);
 				switch (areaCode){
 					case 1:vo.setDbarea("서울");break;

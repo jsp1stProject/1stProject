@@ -3,17 +3,17 @@
 <mapper namespace="com.sist.mapper.event-mapper">
 
 	<resultMap type="EventVO" id="eventMap">
-		<id column="content_id" property="contentId"/>
+		<id column="content_id" property="content_id"/>
 		<result property="cvo.title" column="title"/>
 		<result property="cvo.addr1" column="addr1"/>
 		<result property="cvo.addr2" column="addr2"/>
-		<result property="cvo.firstImage" column="first_image"/>
-		<result property="cvo.firstImage2" column="first_image2"/>
+		<result property="cvo.first_image" column="first_image"/>
+		<result property="cvo.first_image2" column="first_image2"/>
 		<result property="cvo.tel" column="tel"/>
 		<result property="cvo.cat1" column="cat1"/>
 		<result property="cvo.cat2" column="cat2"/>
 		<result property="cvo.cat3" column="cat3"/>
-		<result property="cvo.areaCode" column="areacode"/>
+		<result property="cvo.areacode" column="areacode"/>
 	</resultMap>
 
 	<select id="mainEventList" resultMap="eventMap">
