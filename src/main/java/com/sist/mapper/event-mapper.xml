@@ -35,5 +35,19 @@
 		and EVENT_STARTDATE&lt;=sysdate
 		and rownum&lt;5
 	</select>
+	<select id="eventSearchList" resultMap="eventMap" parameterType="hashmap">
+		SELECT TITLE, addr1, addr2, TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, CAT3, FIRST_IMAGE, price
+		FROM EVENT,CONTENT
+		where event.CONTENT_ID=content.CONTENT_ID
+		AND CAT2='A0208'
+		AND regexp_like(TITLE,#{key},'i')
+	</select>
+	<select id="replace_data" resultMap="eventMap">
+		SELECT CONTENT_ID,CHARGE from event
+	</select>
+	<insert id="replace_execute" parameterType="hashmap">
+		UPDATE EVENT SET price=#{price}, price_info=#{info, jdbcType=VARCHAR}
+		WHERE content_id=#{id}
+	</insert>
 
 </mapper>

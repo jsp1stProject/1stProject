@@ -79,6 +79,7 @@
 						<select name="option">
 							<option value="1">숙박</option>
 							<option value="2">행사</option>
+							<option value="3">축제</option>
 						</select>
 						<input type="text" name="key" placeholder="검색어를 입력하세요.">
 						<input type="submit" value="검색">
