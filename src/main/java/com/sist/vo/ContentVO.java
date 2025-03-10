@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class ContentVO {
-	private int contentId;
-	private String title, addr1, addr2, zipcode, firstImage, firstImage2, tel, cat1, cat2, cat3;
-	private int contentTypeId, sigunguCode, areaCode;
-	private double mapX, mapY;
+	private int content_id;
+	private String title, addr1, addr2, zipcode, first_image, first_image2, tel, cat1, cat2, cat3;
+	private int content_type_id, sigungucode, areacode;
+	private double mapx, mapy;
 	
 }
