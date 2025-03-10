@@ -40,7 +40,6 @@
 		<result property="hrvo.img1" column="img1"/>
 		<result property="hrvo.img2" column="img2"/>
 		<result property="hrvo.img3" column="img3"/>
-		
 	</resultMap>
 	
 	
@@ -89,4 +88,27 @@
 		FROM hotel_room 
 		WHERE content_id = ${content_id}
 	</select>
+    	<!-- 
+    		SELECT * 
+    		FROM hotel_list_view
+    		<where>
+    			<if test="column==cat3">
+    				OR cat3 LIKE '%'||#{search}||'%'
+   				</if>
+			</where>
+   				<if test="column==addr1">
+   					OR addr1 LIKE '%'||#{search}||'
+    		
+    	 -->
+   	 <select id="hotelFindData" resultMap="hotelMap" parameterType="hashmap">
+   	 	SELECT * 
+   	 	FROM hotel_list_view 
+   	 	<where>
+ 			<if test="searchList != null">
+	   	 		<foreach collection="searchList" item="cat3" separator="OR">
+	   	 			cat3 LIKE '%' || #{cat3} || '%'
+	   	 		</foreach>
+   	 		</if>
+   	 	</where>
+   	 </select>
 </mapper>

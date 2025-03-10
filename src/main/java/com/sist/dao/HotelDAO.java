@@ -41,4 +41,14 @@ public class HotelDAO {
 		session.close();
 		return list;
 	}
+	// 체크박스 검색
+	public static List<HotelVO> hotelFindData(Map map) {
+		SqlSession session = ssf.openSession();
+		List<HotelVO> searchList = session.selectList("hotelFindData", map);
+		if (searchList == null) {
+			searchList = new ArrayList<HotelVO>();
+		}
+		session.close();
+		return searchList;
+	}
 }
