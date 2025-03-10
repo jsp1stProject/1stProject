@@ -9,7 +9,7 @@
 <body>
 	<%// wow는 main에서만 적용 %>
     <nav class="navbar navbar-expand-lg fixed-top py-lg-0 px-lg-4 ${title eq '메인'?'wow':'bg-white' }">
-        <a href="main.do" class="navbar-brand ms-4 ms-lg-0">
+        <a href="${pageContext.request.contextPath }/main/main.do" class="navbar-brand ms-4 ms-lg-0">
             <h1 class="m-0 home">Festeller</h1>
         </a>
         <div class="d-flex justify-content-end flex-fill">
@@ -32,13 +32,23 @@
 	        <div class="d-flex justify-content-end align-self-baseline">
 	        	<div class="d-flex" id="nav-wide-right">
 	            	<div class="flex-shrink-0 btn-square rounded-circle srhbtn">
-						<svg class="srhbtn" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>
-	                </div>
-	                <div class="flex-shrink-0 btn-square rounded-circle">
+						<svg xmlns="http://www.w3.org/2000/svg" id="svg4162" viewBox="70 620 360 360">
+							<g id="layer1">
+								<g id="g1400">
+									<path id="path4714" d="M 232.83952,614.96702 A 154.04816,154.04794 0 0 0 78.79153,769.01382 154.04816,154.04794 0 0 0 232.83952,923.06184 154.04816,154.04794 0 0 0 386.88751,769.01382 154.04816,154.04794 0 0 0 232.83952,614.96702 Z m 0,26.77613 A 129.95832,127.2707 0 0 1 362.79832,769.01382 129.95832,127.2707 0 0 1 232.83952,896.28449 129.95832,127.2707 0 0 1 102.88194,769.01382 129.95832,127.2707 0 0 1 232.83952,641.74315 Z"></path>
+									<rect ry="18.08342" rx="33.249443" transform="matrix(0.65316768,0.7572133,-0.60689051,0.79478545,0,0)" y="319.55432" x="794.8775" height="36.16684" width="173.02675" id="rect4721"></rect>
+								</g>
+							</g>
+						</svg>
+					</div>
+	                <div class="flex-shrink-0 btn-square rounded-circle cartbtn">
+						<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 2.25C2.08579 2.25 1.75 2.58579 1.75 3C1.75 3.41421 2.08579 3.75 2.5 3.75H4.27924C4.38685 3.75 4.48238 3.81886 4.51641 3.92094L7.83264 13.8696C8.20695 14.9926 9.25783 15.75 10.4415 15.75H17.614C18.7603 15.75 19.7864 15.0389 20.1889 13.9656L21.9422 9.29003C22.4938 7.81909 21.4065 6.25 19.8355 6.25H9.5C9.08579 6.25 8.75 6.58579 8.75 7C8.75 7.41421 9.08579 7.75 9.5 7.75H19.8355C20.3592 7.75 20.7216 8.27303 20.5377 8.76334L18.7844 13.4389C18.6015 13.9268 18.1351 14.25 17.614 14.25H10.4415C9.90348 14.25 9.42581 13.9057 9.25566 13.3953L5.93944 3.4466C5.70124 2.732 5.03249 2.25 4.27924 2.25H2.5Z"></path><path clip-rule="evenodd" d="M10 22C11.3807 22 12.5 20.8807 12.5 19.5C12.5 18.1193 11.3807 17 10 17C8.61929 17 7.5 18.1193 7.5 19.5C7.5 20.8807 8.61929 22 10 22ZM10 20.5C10.5523 20.5 11 20.0523 11 19.5C11 18.9477 10.5523 18.5 10 18.5C9.44772 18.5 9 18.9477 9 19.5C9 20.0523 9.44772 20.5 10 20.5Z"></path><path clip-rule="evenodd" d="M18 22C19.3807 22 20.5 20.8807 20.5 19.5C20.5 18.1193 19.3807 17 18 17C16.6193 17 15.5 18.1193 15.5 19.5C15.5 20.8807 16.6193 22 18 22ZM18 20.5C18.5523 20.5 19 20.0523 19 19.5C19 18.9477 18.5523 18.5 18 18.5C17.4477 18.5 17 18.9477 17 19.5C17 20.0523 17.4477 20.5 18 20.5Z"></path></svg>
+					</div>
+					<div class="flex-shrink-0 btn-square rounded-circle userbtn">
 	                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/></svg>
 	                </div>
 	            </div>
-	            <button type="button" class="navbar-toggler me-4 ms-3" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+	            <button type="button" class="navbar-toggler me-4 ms-2" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
 		            <!-- <span class="navbar-toggler-icon"></span>-->
 		            <div class="menu-icon">
 			            <div class="i_menu"></div>

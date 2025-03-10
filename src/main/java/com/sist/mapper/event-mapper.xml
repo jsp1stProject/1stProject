@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sist.mapper.event-mapper">
+
+	<resultMap type="EventVO" id="eventMap">
+		<id column="content_id" property="content_id"/>
+		<result property="cvo.title" column="title"/>
+		<result property="cvo.addr1" column="addr1"/>
+		<result property="cvo.addr2" column="addr2"/>
+		<result property="cvo.first_image" column="first_image"/>
+		<result property="cvo.first_image2" column="first_image2"/>
+		<result property="cvo.tel" column="tel"/>
+		<result property="cvo.cat1" column="cat1"/>
+		<result property="cvo.cat2" column="cat2"/>
+		<result property="cvo.cat3" column="cat3"/>
+		<result property="cvo.areacode" column="areacode"/>
+	</resultMap>
+
+	<select id="mainEventList" resultMap="eventMap">
+		<![CDATA[
+		SELECT title,addr1,CAT3,TO_CHAR(EVENT_STARTDATE,'YYYY.MM.DD') as dbstart,TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend,FIRST_IMAGE,rownum
+		from EVENT,CONTENT
+		where event.CONTENT_ID=content.CONTENT_ID
+		and EVENT_ENDDATE >= sysdate
+		and CAT2='A0208'
+		and rownum <6
+		]]>
+	</select>
+	<select id="mainFesList" resultMap="eventMap">
+		SELECT title,FIRST_IMAGE,AREACODE
+		from EVENT, CONTENT
+		where event.CONTENT_ID=content.CONTENT_ID
+		and cat2='A0207'
+		and EVENT_ENDDATE&gt;=sysdate
+		and EVENT_STARTDATE&lt;=sysdate
+		and rownum&lt;5
+	</select>
+
+</mapper>

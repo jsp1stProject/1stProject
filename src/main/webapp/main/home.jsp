@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,15 +8,14 @@
 <title></title>
 </head>
 <body>
-	<div class="container-fluid p-0 pb-5 wow fadeIn" data-wow-delay="0.1s">
+	<div class="container-fluid p-0 pb-4 wow fadeIn" data-wow-delay="0.1s">
 		<div class="owl-carousel-inner">
             <div class="container">
                 <div class="row justify-content-start">
-                    <div class="col-lg-8">
-                        <p class="text-primary text-uppercase fw-bold mb-2">// The Best Bakery</p>
-                        <h1 class="display-1 text-light mb-4 animated slideInDown">We Bake With Passion</h1>
-                        <p class="text-light fs-5 mb-4 pb-3">Vero elitr justo clita lorem. Ipsum dolor sed stet sit diam rebum ipsum.</p>
-                        <a href="" class="btn btn-primary rounded-pill py-3 px-5">Read More</a>
+                    <div class="col-12">
+						<p class="display-4 text-light mb-4 slideInDown">여행가기 좋은 계절,<br><span class="impact">Festeller</span>와 함께 가요</p>
+                        <p class="text-light fs-5 mb-4 pb-3">봄맞이 최대 30% 할인 쿠폰 이벤트</p>
+                        <a href="" class="btn btn-primary rounded-pill py-3 px-5">자세히 보기</a>
                     </div>
                 </div>
             </div>
@@ -33,9 +33,8 @@
         </div>
     </div>
     <!-- Carousel End -->
-
-    <!-- Facts Start -->
-    <div class="container-xxl py-3">
+	<!-- hotel list-->
+    <div class="container-xxl py-4">
     	<div class="container">
     		<h3 class="main-h3 wow fadeInUp" data-wow-delay="0.1s">이번 주 많이 찾는 숙소</h3>
     		<div class="tab-nav-wrap wow fadeInUp" data-wow-delay="0.1s">
@@ -308,8 +307,70 @@
     		</div>
     	</div>
     </div>
-    
-	
+	<!-- fest list-->
+	<div class="container-xxl py-4">
+		<div class="container">
+			<h3 class="main-h3 wow fadeInUp" data-wow-delay="0.1s">지금 볼 수 있는 지역별 축제</h3>
+			<div class="main-fes-wrap d-flex wow fadeInUp" data-wow-delay="0.1s">
+				<c:forEach items="${fesList }" var="vo" varStatus="i">
+					<div class="main-fes-item" style="background-image:url(${vo.cvo.first_image});">
+						<p class="main-fes-area fs-3">${vo.dbarea}</p>
+						<a href="#" class="main-fes-title">${vo.cvo.title}</a>
+					</div>
+				</c:forEach>
+			</div>
+		</div>
+	</div>
+    <!-- concert list-->
+	<div class="container-xxl py-4">
+		<div class="container">
+			<h3 class="main-h3 wow fadeInUp" data-wow-delay="0.1s">지금 예매 가능한 행사/공연</h3>
+			<div class="tab-content-wrap wow fadeInUp" data-wow-delay="0.1s">
+				<div class="tab-cont-item active" data-tab="1">
+					<div class="swiper main-slide-list">
+						<div class="swiper-wrapper">
+							<c:forEach items="${musicalList }" var="vo">
+								<div class="li-item swiper-slide">
+									<a href="#">
+										<div class="item-inner">
+											<div class="item-img" style="background-image:url(${vo.cvo.first_image});">
+											</div>
+											<div class="text-wrap">
+												<p class="date">[${vo.dbcate}]</p>
+												<p class="title">${vo.cvo.title}</p>
+												<p class="date">${vo.dbstart} ~ ${vo.dbend}</p>
+											</div>
+										</div>
+									</a>
+								</div>
+							</c:forEach>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container-xxl py-4">
+		<div class="container">
+			<h3 class="main-h3 wow fadeInUp" data-wow-delay="0.1s">공지사항</h3>
+			<div class="main-notice-wrap wow fadeInUp" data-wow-delay="0.1s">
+				<ul class="main-notice-ul">
+					<c:forEach begin="1" end="5">
+						<li>
+							<div class="notice-title">
+								<p>봄맞이 국내여행 최대 3만원 쿠폰 대한민국 숙박세일 페스타</p>
+							</div>
+							<div class="notice-content">
+								<p>봄맞이 국내여행 최대 3만원 쿠폰 대한민국 숙박세일 페스타봄맞이 국내여행 최대 3만원 쿠폰 대한민국 숙박세일 페스타봄맞이 국내여행 최대 3만원 쿠폰 대한민국 숙박세일 페스타</p>
+								<button type="button" class="notice-more-btn">자세히 보기</button>
+							</div>
+						</li>
+					</c:forEach>
+
+				</ul>
+			</div>
+		</div>
+	</div>
 
 </body>
 </html>

@@ -5,7 +5,10 @@
   <configuration>
   	<properties resource="db.properties"></properties>
   	<typeAliases >
-  		<typeAlias type="com.sist.vo.testVO" alias="testVO"/>
+  		<typeAlias type="com.sist.vo.ContentVO" alias="ContentVO"/>
+  		<typeAlias type="com.sist.vo.HotelVO" alias="HotelVO"/>
+  		<typeAlias type="com.sist.vo.EventVO" alias="EventVO"/>
+  		<typeAlias type="com.sist.vo.HotelRoomVO" alias="HotelRoomVO"/>
   	</typeAliases>
   	<environments default="development">
   		<environment id="development">
@@ -20,5 +23,7 @@
   	</environments>
   	
   	<mappers> <!-- sql 문장 mapper 파일 -->
+  		<mapper resource="com/sist/mapper/hotel-mapper.xml"/>
+  		<mapper resource="com/sist/mapper/event-mapper.xml"/>
   	</mappers>
   </configuration>
