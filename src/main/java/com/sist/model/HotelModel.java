@@ -1,5 +1,6 @@
 package com.sist.model;
 
+import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import com.sist.controller.Controller;
 import com.sist.controller.RequestMapping;
@@ -28,29 +30,73 @@ public class HotelModel {
 	@RequestMapping("hotel/hotel_list_ajax.do")
 	public void hotel_list_ajax(HttpServletRequest request, HttpServletResponse response) {
 		String page = request.getParameter("page");
-		String search = request.getParameter("search");
+		String title = request.getParameter("title");
+		
 		String[] cat3 = request.getParameterValues("cat3");
-		//System.out.println("cat3: " + cat3.toString());
-		Map<String, Object> searchMap = new HashMap<String, Object>();
-		List<HotelVO> searchList = HotelDAO.hotelFindData(searchMap);
-		
-		searchMap.put("cat3", cat3);
-		
+		String[] locations = request.getParameterValues("locations");
+		/*
+		String[] cat3 = null;
+		String[] locations = null;
+		JSONParser parser = new JSONParser();
+		try {
+			BufferedReader reader = request.getReader();
+			StringBuilder jsonBuilder = new StringBuilder();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				jsonBuilder.append(line);
+			}
+			
+			JSONObject jsonObject = (JSONObject) parser.parse(jsonBuilder.toString());
+			
+			JSONArray cat3Array = (JSONArray) jsonObject.get("cat3");
+			JSONArray locationsArray = (JSONArray) jsonObject.get("locations");
+			
+			
+			if (cat3Array != null) {
+				cat3 = new String[cat3Array.size()];
+				for (int i = 0; i < cat3Array.size(); i++) {
+					cat3[i] = (String) cat3Array.get(i);
+				}
+			}
+			if (locationsArray != null) {
+				locations = new String[locationsArray.size()];
+				for (int i = 0; i < locationsArray.size(); i++) {
+					locations[i] = (String) locationsArray.get(i);
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		*/
 		
 		Map map = new HashMap();
-		System.out.println("search: " + search);
 		int curPage = Integer.parseInt(page);
 		int start = (15 * curPage) - 14;
 		int end = 15 * curPage;
 		
 		map.put("start", start);
 		map.put("end", end);
-		map.put("search", search);
+		map.put("cat3", cat3);
+		map.put("locations", locations);
+		map.put("title", title);
 		
-		List<ContentVO> list = HotelDAO.hotelListData(map);
-		int totalPage = HotelDAO.hotelTotalPage(search);
+		//System.out.println("cat3: " + cat3.toString() + " and " + cat3);;
+		//System.out.println("locations:" + locations.toString());;
+		System.out.println("cat3Arr: " + Arrays.toString(cat3));
+		System.out.println("locationArr: " + Arrays.toString(locations));
 		
-		System.out.println(list.toString());
+		List<HotelVO> list = HotelDAO.hotelListData(map);
+		int totalPage = HotelDAO.hotelTotalPage(map);
+		
+		//System.out.println("List: " + list.toString());
+		for (HotelVO vo : list) {
+			if (vo.getCvo() != null) {
+				//System.out.println("ContentVO: " + vo.getCvo());
+			}
+			if (vo.getHrvo() != null) {
+				//System.out.println("HotelRoomVO: " + vo.getHrvo());
+			}
+		}
 		
 		final int BLOCK = 10;
 		int startPage = ((curPage - 1) / BLOCK * BLOCK) + 1;
@@ -62,30 +108,7 @@ public class HotelModel {
 		
 		JSONArray arr = new JSONArray();
 		int i = 0;
-		for (ContentVO vo : list) {
-			JSONObject obj = new JSONObject();
-			obj.put("content_id", vo.getContent_id());
-			obj.put("title", vo.getTitle());
-			obj.put("addr1", vo.getAddr1());
-			//obj.put("subfacility", vo.getSubfacility());
-			obj.put("first_image", vo.getFirst_image());
-			obj.put("cat3", vo.getCat3());
-			// 가격 등 표시해야 함
-			
-			if (i == 0) {
-				obj.put("curPage", curPage);
-				obj.put("totalPage", totalPage);
-				obj.put("startPage", startPage);
-				obj.put("endPage", endPage);
-			}
-			
-			arr.add(obj);
-			i++;
-		}
-		
-		int j = 0;
-		JSONArray searchArr = new JSONArray();
-		for (HotelVO vo : searchList) {
+		for (HotelVO vo : list) {
 			JSONObject obj = new JSONObject();
 			obj.put("content_id", vo.getCvo().getContent_id());
 			obj.put("title", vo.getCvo().getTitle());
@@ -104,15 +127,17 @@ public class HotelModel {
 			obj.put("offseason_minfee1", vo.getHrvo().getOffseason_minfee1());
 			obj.put("peakseason_minfee1", vo.getHrvo().getPeakseason_minfee1());
 			
-			if (j == 0) {
+			if (i == 0) {
 				obj.put("curPage", curPage);
 				obj.put("totalPage", totalPage);
 				obj.put("startPage", startPage);
 				obj.put("endPage", endPage);
 			}
-			searchArr.add(obj);
-			j++;
+			
+			arr.add(obj);
+			i++;
 		}
+		System.out.println("JSONArr: " + arr.toJSONString());
 		try {
 			response.setContentType("text/plain;charset=UTF-8");
 			PrintWriter out = response.getWriter();
