@@ -125,7 +125,12 @@
 	btn.addEventListener('click',function(){
 		document.querySelector('.navbar').classList.toggle('on');
 	});
-	
+
+    //공지사항 slidedown
+    $(document).on('click','.notice-title',function(){
+        $(this).closest('li').toggleClass('active');
+        $(this).siblings('.notice-content').slideToggle('fast');
+    });
 	
     
 })(jQuery);

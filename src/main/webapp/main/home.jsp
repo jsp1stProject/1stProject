@@ -359,10 +359,17 @@
 						<li>
 							<div class="notice-title">
 								<p>봄맞이 국내여행 최대 3만원 쿠폰 대한민국 숙박세일 페스타</p>
+								<p class="date">2025.03.10</p>
 							</div>
 							<div class="notice-content">
-								<p>봄맞이 국내여행 최대 3만원 쿠폰 대한민국 숙박세일 페스타봄맞이 국내여행 최대 3만원 쿠폰 대한민국 숙박세일 페스타봄맞이 국내여행 최대 3만원 쿠폰 대한민국 숙박세일 페스타</p>
-								<button type="button" class="notice-more-btn">자세히 보기</button>
+								<p>안녕하세요,
+									인터파크항공입니다.
+									보다 안정적인 서비스를 위하여 아래 기간 동안 서비스가 제한될 예정이오니, 이용에 참고 부탁 드리겠습니다.
+									※ 정기점검 일시 : 2025년 3월 12일[수] 02:00 ~ 07:00
+									(해당 작업은 작업상태에 따라 단축되거나 연장될 수 있습니다.)
+									항상 고객님께 최선의 서비스를 제공하기 위해 노력하는 인터파크항공이 되겠습니다.
+									감사합니다. </p>
+								<button type="button" class="notice-more-btn w-100" onclick="location.href='#'">자세히 보기</button>
 							</div>
 						</li>
 					</c:forEach>
