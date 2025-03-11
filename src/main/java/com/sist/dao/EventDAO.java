@@ -115,7 +115,14 @@ public class EventDAO {
 		session.close();
 		return list;
 	}
+	public static EventVO eventSearchPrice(String key){
+		SqlSession session = ssf.openSession();
+		EventVO vo= session.selectOne("eventSearchPrice", key);
+		session.close();
+		return vo;
+	}
 
+	/*
 	public static void test(){
 		SqlSession session = ssf.openSession();
 		List<EventVO> list= session.selectList("replace_data");
@@ -181,6 +188,7 @@ public class EventDAO {
 			System.out.println("info:"+vo.getPrice_info());
 		}
 	}
+	*/
 
 }
 
