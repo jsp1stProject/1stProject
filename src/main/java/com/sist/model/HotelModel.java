@@ -31,7 +31,7 @@ public class HotelModel {
 	public void hotel_list_ajax(HttpServletRequest request, HttpServletResponse response) {
 		String page = request.getParameter("page");
 		String title = request.getParameter("title");
-		
+		System.out.println("title:" + title);
 		String[] cat3 = request.getParameterValues("cat3");
 		String[] locations = request.getParameterValues("locations");
 		/*
@@ -101,6 +101,7 @@ public class HotelModel {
 		final int BLOCK = 10;
 		int startPage = ((curPage - 1) / BLOCK * BLOCK) + 1;
 		int endPage = ((curPage - 1) / BLOCK * BLOCK) + BLOCK;
+		System.out.println("endPage: " + endPage);
 		
 		if (endPage > totalPage) {
 			endPage = totalPage;

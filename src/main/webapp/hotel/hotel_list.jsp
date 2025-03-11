@@ -19,17 +19,28 @@ a:hover{
 }
 </style>
 <script type="text/javascript">
-	$(function() {
-		$('#search').val('서울');
-		commons(1);
+/*
+ 	TO-DO
+ 	1. 페이지 변경 시 해당 필터 적용된 목록 출력 -> O
+ 		- 페이지 변경 함수 매개변수 수정
+ 	2. 주소 맨 앞 주소만 잘라 적용 -> O
+ 		- DB 에서 SUBSTR
+ 	3. 필터 중복 적용 동적 쿼리 수정 -> O
+ 		- mapper 수정
+ 	4. 맨 뒤 또는 맨 앞으로 가기 오류 수정 -> O (- CEIL / 15.0 추가하지 않았음)
+ 	5. 검색 창에서 호텔 이름으로 검색 -> O
+ 		- model 값 전송
+ 		
+ */
 	
-	})
 	function commons(page, title, cat3, locations) {
+ 		/*
 		console.log('commons 호출');
 	    console.log('page:', page);
 	    console.log('title:', title);
 	    console.log('cat3:', cat3);
 	    console.log('locations:', locations);
+	    */
 		$.ajax({
 			type: 'post',
 			url: '../hotel/hotel_list_ajax.do',
@@ -55,13 +66,13 @@ a:hover{
 		});
 	}
 	function prev(page) {
-		commons(page);
+		commons(page, title, cat3, locations);
 	}
 	function next(page) {
-		commons(page);
+		commons(page, title, cat3, locations);
 	}
 	function pageChange(page) {
-		commons(page);
+		commons(page, title, cat3, locations);
 	}
 	function jsonView(json) {
 		let html = '';
@@ -104,10 +115,18 @@ a:hover{
 		        + '</li>';
 		})
 		
+		//console.log('jsonStartPage:' + json[0].startPage);
         let startPage = json[0].startPage;
         let endPage = json[0].endPage;
         let curPage = json[0].curPage;
         let totalPage = json[0].totalPage;	 
+        
+        /*
+        console.log('startPage:' + startPage);
+        console.log('endPage:' + endPage);
+        console.log('curPage:' + curPage);
+        console.log('totalPage:' + totalPage);
+        */
         
 		htmlPage += '<div class="container d-flex">'
 		     	 + '<ul class="pagination">';
@@ -127,10 +146,10 @@ a:hover{
 	    }
 		// 다음 버튼
 	    if (endPage < totalPage) {
-	        htmlPage += '<a class="afarr" onclick="next(' + (endPage + 1) + ')">'
+	        htmlPage += '<a class="afarr" onclick="next(' + (endPage + 1) + ')">' // 10 페이지 다음
 	            + '<div class="arr right"></div>'
 	            + '</a>'
-	            + '<a class="afarr" onclick="next(' + totalPage + ')">'
+	            + '<a class="afarr" onclick="next(' + totalPage + ')">' // 맨 끝 페이지
 	            + '<div class="arr right" style="left: 9px;"></div>'
 	            + '<div class="arr right" style="left: 16px;"></div>'
 	            + '</a>';
@@ -143,18 +162,6 @@ a:hover{
 			    
 		
 	}
-	/*
-	function location() {
-		
-			TO-DO
-			지역 case 구분
-		
-	}
-	*/
-	/*
-		TO-DO
-		ajax JOIN 
-	*/
 </script>
 </head>
 <body>
@@ -237,12 +244,12 @@ a:hover{
 			<div class="col-md-9 px-0">
 				<div class="container-xxl py-3 px-0">
 					<div class="container">
-						<form action="" method="post" name="page-search">
+						<!-- <form action="" method="post" name="page-search"> -->
 							<div class="sch_wrap page">
 								<input type="text" name="key" id="title" placeholder="검색어를 입력하세요.">
 								<input type="submit" value="검색">
 							</div>
-						</form>
+						 <!-- </form> -->
 					</div>
 				</div>
 				<div class="container-xxl py-3 px-0">
@@ -283,9 +290,14 @@ a:hover{
 		},
 	});
 	
+	let cat3 = [];
+	let locations = [];
+	let title = '';
+	
 	function updateFilters() {
-		let cat3 = [];
-		let locations = [];
+		cat3 = [];
+		locations = [];
+		let title = $('#title').val() || '';
 		
 		
 		$('input[name="cat3"]:checked').each(function() {
@@ -299,7 +311,6 @@ a:hover{
 		//console.log('cat3:', cat3);
 		//console.log('locations:', locations);
 		
-		let title = $('#title').val() || '';
 		commons(1, title, cat3, locations);
 	}
 	
@@ -309,6 +320,16 @@ a:hover{
 	$('input[name="location1"]').on('change', function() {
 		updateFilters();
 	});
+	
+	$(function() {
+		commons(1);
+		$('#title').keydown(function(e) {
+			if (e.keyCode === 13) {
+				title = $('#title').val();
+				commons(1, title, cat3, locations);
+			}
+		});
+	})
 </script>
 </body>
 </html>

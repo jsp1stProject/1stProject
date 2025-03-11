@@ -48,38 +48,43 @@
 					   FROM hotel_list_view 
 			<where>
 				<if test="cat3 != null and cat3.length > 0">
-					cat3 IN
+					AND cat3 IN
 					<foreach collection="cat3" item="cat3" open="(" separator="," close=")">
 						#{cat3}
 					</foreach>
 				</if>
 				
 				<if test="locations != null and locations.length > 0">
-					<foreach collection="locations" item="location" open="(" separator=" OR " close=")">
-						addr1 LIKE '%'||#{location}||'%' 
+					AND (
+					<foreach collection="locations" item="location" separator=" OR ">
+						SUBSTR(addr1, 1, INSTR(addr1, ' ') - 1) LIKE '%'||#{location}||'%' 
 					</foreach>
+					)
 				</if>
 				
 				<if test="title != null and title != ''">
 					AND title LIKE '%'||#{title}||'%'
 				</if>
 			</where>
-			) WHERE num BETWEEN #{start} AND #{end}
+			) 
+			WHERE num BETWEEN #{start} AND #{end}
 	</select>
 	<select id="hotelTotalPage" resultType="int" parameterType="hashmap">
-		SELECT CEIL(COUNT(*)) FROM hotel_list_view 
+		SELECT CEIL(COUNT(*) / 15.0) FROM hotel_list_view 
 			<where>
 				<if test="cat3 != null and cat3.length > 0">
-					cat3 IN
+					AND cat3 IN
 					<foreach collection="cat3" item="cat3" open="(" separator="," close=")">
 						#{cat3}
 					</foreach>
 				</if>
 				
 				<if test="locations != null and locations.length > 0">
-					<foreach collection="locations" item="location" open="(" separator=" OR " close=")">
-						addr1 LIKE '%'||#{location}||'%'
+					AND (
+					<foreach collection="locations" item="location" separator=" OR ">
+						SUBSTR(addr1, 1, INSTR(addr1, ' ') - 1) LIKE '%'||#{location}||'%' 
 					</foreach>
+					)
 				</if>
 				
 				<if test="title != null and title != ''">
