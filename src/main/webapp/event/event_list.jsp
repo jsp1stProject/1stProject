@@ -135,7 +135,8 @@
 				data:{
 					"key": $('#key').val(),
 					"curpage": page,
-					"max":form.max.value //form.name.값
+					"start":form.start.value, //form.name.값
+					"end":form.end.value
 
 				}
 			});
