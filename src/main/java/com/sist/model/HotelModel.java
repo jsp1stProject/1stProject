@@ -31,6 +31,7 @@ public class HotelModel {
 	public void hotel_list_ajax(HttpServletRequest request, HttpServletResponse response) {
 		String page = request.getParameter("page");
 		String title = request.getParameter("title");
+		String searchTitle = request.getParameter("searchTitle");
 		System.out.println("title:" + title);
 		String[] cat3 = request.getParameterValues("cat3");
 		String[] locations = request.getParameterValues("locations");
@@ -79,6 +80,7 @@ public class HotelModel {
 		map.put("cat3", cat3);
 		map.put("locations", locations);
 		map.put("title", title);
+		map.put("searchTitle", map);
 		
 		//System.out.println("cat3: " + cat3.toString() + " and " + cat3);;
 		//System.out.println("locations:" + locations.toString());;
@@ -87,6 +89,7 @@ public class HotelModel {
 		
 		List<HotelVO> list = HotelDAO.hotelListData(map);
 		int totalPage = HotelDAO.hotelTotalPage(map);
+		int totalCount = HotelDAO.hotelTotalCount(map);
 		
 		//System.out.println("List: " + list.toString());
 		for (HotelVO vo : list) {
@@ -127,6 +130,7 @@ public class HotelModel {
 			obj.put("sports", vo.getSports());
 			obj.put("offseason_minfee1", vo.getHrvo().getOffseason_minfee1());
 			obj.put("peakseason_minfee1", vo.getHrvo().getPeakseason_minfee1());
+			obj.put("totalCount", totalCount);
 			
 			if (i == 0) {
 				obj.put("curPage", curPage);
