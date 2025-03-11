@@ -4,6 +4,12 @@
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
   <configuration>
   	<properties resource="db.properties"></properties>
+  	<!-- SQL 실행 로그 출력 -->
+  	
+  	<settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>  
+    </settings>
+     
   	<typeAliases >
   		<typeAlias type="com.sist.vo.ContentVO" alias="ContentVO"/>
   		<typeAlias type="com.sist.vo.HotelVO" alias="HotelVO"/>
