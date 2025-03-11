@@ -41,4 +41,10 @@ public class HotelDAO {
 		session.close();
 		return list;
 	}
+	public static int hotelTotalCount(Map map) {
+		SqlSession session = ssf.openSession();
+		int totalCount = session.selectOne("hotelTotalCount", map);
+		session.close();
+		return totalCount;
+	}
 }

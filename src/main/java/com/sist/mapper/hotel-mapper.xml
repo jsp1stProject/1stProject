@@ -70,7 +70,7 @@
 			WHERE num BETWEEN #{start} AND #{end}
 	</select>
 	<select id="hotelTotalPage" resultType="int" parameterType="hashmap">
-		SELECT CEIL(COUNT(*) / 15.0) FROM hotel_list_view 
+		SELECT NVL(CEIL(COUNT(*) / 15.0), 1) FROM hotel_list_view  
 			<where>
 				<if test="cat3 != null and cat3.length > 0">
 					AND cat3 IN
@@ -91,13 +91,29 @@
 					AND title LIKE '%'||#{title}||'%'
 				</if>
 			</where>	
-		<!--
-		SELECT CEIL(COUNT(*) / 15.0)
-		FROM (SELECT content_id, title, addr1, first_image, cat3
-		FROM content
-		WHERE contenttype_id = 32
-		AND addr1 LIKE '%'||#{search}||'%')
-		-->  
+	</select>
+	<select id="hotelTotalCount" resultType="int" parameterType="hashmap">
+		SELECT COUNT(*) FROM hotel_list_view  
+			<where>
+				<if test="cat3 != null and cat3.length > 0">
+					AND cat3 IN
+					<foreach collection="cat3" item="cat3" open="(" separator="," close=")">
+						#{cat3}
+					</foreach>
+				</if>
+				
+				<if test="locations != null and locations.length > 0">
+					AND (
+					<foreach collection="locations" item="location" separator=" OR ">
+						SUBSTR(addr1, 1, INSTR(addr1, ' ') - 1) LIKE '%'||#{location}||'%' 
+					</foreach>
+					)
+				</if>
+				
+				<if test="title != null and title != ''">
+					AND title LIKE '%'||#{title}||'%'
+				</if>
+			</where>	
 	</select>
 	<select id="hotelDetailData" resultMap="hotelMap" parameterType="int">
 		SELECT c.content_id, title, addr1, first_image, cat3, 
