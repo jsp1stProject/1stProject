@@ -62,9 +62,9 @@ public class EventDAO {
 				int areaCode = vo.getCvo().getAreacode();
 				System.out.println(areaCode);
 				switch (areaCode){
-					case 1:vo.setDbarea("서울");break;
-					case 2:vo.setDbarea("인천");break;
-					case 3:vo.setDbarea("대전");break;
+					case 1:vo.setDbarea("서울");break; //146
+					case 2:vo.setDbarea("인천");break; //22
+					case 3:vo.setDbarea("대전");break; //6
 					case 4:vo.setDbarea("대구");break;
 					case 5:vo.setDbarea("광주");break;
 					case 6:vo.setDbarea("부산");break;
@@ -90,6 +90,13 @@ public class EventDAO {
 		}
 		return list;
 	}
+	public static List<EventVO> eventAreaList(HashMap map){
+		SqlSession session = ssf.openSession();
+		List<EventVO> list= session.selectList("eventAreaList", map);
+		session.close();
+		return list;
+	}
+
 	public static List<EventVO> eventSearchList(HashMap map){
 		SqlSession session = ssf.openSession();
 		List<EventVO> list= session.selectList("eventSearchList", map);
@@ -115,9 +122,9 @@ public class EventDAO {
 		session.close();
 		return list;
 	}
-	public static EventVO eventSearchPrice(String key){
+	public static EventVO eventSearchDefault(HashMap map){
 		SqlSession session = ssf.openSession();
-		EventVO vo= session.selectOne("eventSearchPrice", key);
+		EventVO vo= session.selectOne("eventSearchPrice", map);
 		session.close();
 		return vo;
 	}

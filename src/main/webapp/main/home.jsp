@@ -312,7 +312,7 @@
 				<c:forEach items="${fesList }" var="vo" varStatus="i">
 					<div class="main-fes-item" style="background-image:url(${vo.cvo.first_image});">
 						<p class="main-fes-area fs-3">${vo.dbarea}</p>
-						<a href="#" class="main-fes-title">${vo.cvo.title}</a>
+						<a href="#" class="main-fes-title fs-2">${vo.cvo.title}</a>
 					</div>
 				</c:forEach>
 			</div>
