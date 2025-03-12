@@ -24,6 +24,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class HotelModel {
 	@RequestMapping("hotel/hotel_list.do")
 	public String hotel_list(HttpServletRequest request, HttpServletResponse response) {
+		request.setAttribute("wide", "y");
 		request.setAttribute("main_jsp", "../hotel/hotel_list.jsp");
 		return "../main/main.jsp";
 	}
