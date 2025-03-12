@@ -17,11 +17,7 @@
 	            <div class="navbar-nav mx-auto p-4 p-lg-0">
 	                <a href="../hotel/hotel_list.do" class="nav-item nav-link">숙소</a>
 	                <a href="index.html" class="nav-item nav-link">행사</a>
-<<<<<<< develop
-	                <a href="../fes/fes_list.do" class="nav-item nav-link">축제.</a>
-=======
-	                <a href="index.html" class="nav-item nav-link">축제</a>
->>>>>>> 0d01c28 Merge branch 'develop' of https://github.com/jsp1stProject/1stProject.git into develop
+	                <a href="../fes/fes_list.do" class="nav-item nav-link">축제</a>
 	                <a href="about.html" class="nav-item nav-link">지도보기</a>
 	                <div class="nav-item">
 	                    <a href="#" class="nav-link" data-bs-toggle="collapse" data-bs-target="#subnav1">게시판</a>
