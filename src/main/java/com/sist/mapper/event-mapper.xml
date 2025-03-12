@@ -35,12 +35,23 @@
 		and EVENT_STARTDATE&lt;=sysdate
 		and rownum&lt;5
 	</select>
-	<select id="eventSearchList" resultMap="eventMap" parameterType="hashmap">
-		SELECT TITLE, addr1, addr2, TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, CAT3, FIRST_IMAGE, price
-		FROM EVENT,CONTENT
+
+
+	<select id="eventSearchPrice" resultType="EventVO">
+		SELECT MAX(price) as maxprice, MIN(price) as minprice, count(*) as count FROM event,content
 		where event.CONTENT_ID=content.CONTENT_ID
-		AND CAT2='A0208'
-		AND regexp_like(TITLE,#{key},'i')
+		  AND CAT2='A0208'
+		  AND regexp_like(TITLE,#{key},'i')
+	</select>
+	<select id="eventSearchList" resultMap="eventMap" parameterType="hashmap">
+		SELECT TITLE, addr1, addr2, TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, CAT3, FIRST_IMAGE, price, num
+		FROM (SELECT TITLE, addr1, addr2, EVENT_ENDDATE, CAT3, FIRST_IMAGE, price, rownum as num
+		FROM (SELECT TITLE, addr1, addr2, EVENT_ENDDATE, CAT3, FIRST_IMAGE, price
+		from EVENT,CONTENT
+			  where event.CONTENT_ID=content.CONTENT_ID
+				AND CAT2='A0208'
+				AND regexp_like(TITLE,#{key},'i')))
+		where num between #{start} and #{end}
 	</select>
 	<select id="replace_data" resultMap="eventMap">
 		SELECT CONTENT_ID,CHARGE from event

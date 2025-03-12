@@ -8,39 +8,43 @@
 <title>Insert title here</title>
 	<script src="${pageContext.request.contextPath }/assets/plugin/rangeslider/rangeslider.umd.min.js"></script>
 	<link href="${pageContext.request.contextPath }/assets/plugin/rangeslider/style.css" rel="stylesheet">
+	<script src="${pageContext.request.contextPath }/assets/plugin/scroll/slimscroll.js"></script>
 </head>
 <body>
 	<div class="container">
 		<div class="row justify-content-center">
-			<div class="col-lg-3 py-3 px-0">
-				<div class="d-flex justify-content-between px-2">
-					<button class="cpsbtn" data-bs-toggle="collapse" data-bs-target="#filter">필터</button>
-					<button type="button" class="btn btn-light resetbtn">초기화</button>
-				</div>
-				<div class="filter-wrap mt-3 collapse show" id="filter">
-					<div class="filter-item col-lg-12 col-md-4 col-sm-12"> <!-- range 타입 -->
-						<h6>가격대</h6>
-						<div id="range-slider"></div>
-						<div class="d-flex justify-content-center range-value-wrap">
-							<span class="start">0원</span><span class="ignr"> ~ </span><span class="end">100000</span>
+			<div class="col-lg-3 py-3 px-0" style="position:relative">
+				<div class="filter-container active">
+					<div class="d-flex justify-content-between px-2">
+						<button class="cpsbtn">필터</button>
+						<button type="button" class="btn btn-light resetbtn">초기화</button>
+					</div>
+					<div class="filter-wrap" id="filter">
+						<div class="filter-item col-lg-12 col-md-4 col-sm-12"> <!-- range 타입 -->
+							<h6>가격대</h6>
+							<div id="range-slider"></div>
+							<div class="d-flex justify-content-center range-value-wrap">
+								<input type="text" class="start" disabled value="0"><span class="ignr"> ~ </span><input type="text" class="end" disabled value="100000">
+							</div>
+						</div>
+						<div class="filter-item"> <!--checkbox 타입-->
+							<h6>축제 유형</h6>
+							<div class="checkbtn-wrap">
+								<input type="checkbox" name="type" id="t1">
+								<label for="t1">문화관광축제</label>
+								<input type="checkbox" name="type" id="t2">
+								<label for="t2">일반축제</label>
+								<input type="checkbox" name="type" id="t3">
+								<label for="t3">전통공연</label>
+								<input type="checkbox" name="type" id="t4">
+								<label for="t4">연극</label>
+								<input type="checkbox" name="type" id="t5">
+								<label for="t5">뮤지컬</label>
+							</div>
 						</div>
 					</div>
-					<div class="filter-item"> <!--checkbox 타입-->
-						<h6>축제 유형</h6>
-						<div class="checkbtn-wrap">
-							<input type="checkbox" name="type" id="t1">
-							<label for="t1">문화관광축제</label>
-							<input type="checkbox" name="type" id="t2">
-							<label for="t2">일반축제</label>
-							<input type="checkbox" name="type" id="t3">
-							<label for="t3">전통공연</label>
-							<input type="checkbox" name="type" id="t4">
-							<label for="t4">연극</label>
-							<input type="checkbox" name="type" id="t5">
-							<label for="t5">뮤지컬</label>
-						</div>
-					</div>
 				</div>
+
 			</div>
 			<div class="col-lg-9 px-0">
 				<div class="container-xxl py-3 px-0">
@@ -154,22 +158,60 @@
 		</div>
 	</div>
 
-<script type="text/javascript">
-	$('.bookmark-btn').on('click',function(e){
-		e.preventDefault();
-		$(this).toggleClass('on');
-	});
-	rangeSlider(document.querySelector('#range-slider'), {
-		min: 0,
-		max: 100000,
-		step: 1000, //step size
-		value: [0, 100000], //initial values
-		onInput: function(valueSet) {
-			console.log(valueSet);
-			$('span.start').text(valueSet[0].toLocaleString('ko-KR')+'원');
-			$('span.end').text(valueSet[1].toLocaleString('ko-KR')+'원');
-		},
-	});
-</script>
+	<script type="text/javascript">
+		let listend=false;
+		$('.bookmark-btn').on('click',function(e){
+			e.preventDefault();
+			$(this).toggleClass('on');
+		});
+		$(document).on("click",".cpsbtn",function(){
+			var con=$(this).closest('.filter-container')
+			if(con.hasClass('active')){
+				con.removeClass('active');
+				$('.slimScrollDiv').fadeOut(300);
+			}else{
+				con.addClass('active');
+				$('.slimScrollDiv').fadeIn(300);
+			}
+		});
+		rangeSlider(document.querySelector('#range-slider'), {
+			min: 0,
+			max: 100000,
+			step: 1000, //step size
+			value: [0,100000], //initial values
+			onInput: function(valueSet) {
+				console.log(valueSet);
+				rangeset(valueSet[0],valueSet[1]);
+			},
+		});
+		function rangeset(min, max){
+			$('input.start').val(min.toLocaleString('ko-KR')+'원');
+			$('input.end').val(max.toLocaleString('ko-KR')+'원');
+		}
+		rangeset(0,100000);
+		let floatPosition = parseInt($(".filter-container").css('top'));
+		$(window).scroll(function() {
+			var scrollTop = $(window).scrollTop();
+			var newPosition = scrollTop + floatPosition + "px";
+			$(".filter-container").stop().animate({
+				"top" : newPosition
+			}, 50);
+
+		}).scroll();
+
+		$(function(){
+			$('#filter').slimScroll({
+				height: 'auto',
+				railVisible: false,
+				railColor: '#222',
+				railOpacity: 0.3,
+				wheelStep: 10,
+				allowPageScroll: false,
+				disableFadeOut: false
+			})
+		});
+
+
+	</script>
 </body>
 </html>

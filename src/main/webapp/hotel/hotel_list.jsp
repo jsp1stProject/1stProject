@@ -30,6 +30,9 @@ a:hover{
  	4. 맨 뒤 또는 맨 앞으로 가기 오류 수정 -> O (- CEIL / 15.0 추가하지 않았음)
  	5. 검색 창에서 호텔 이름으로 검색 -> O
  		- model 값 전송
+	6. 검색 결과 text 출력
+	7. 가격 출력
+	
  		
  */
 	
@@ -159,8 +162,10 @@ a:hover{
 	    
 	    $('#view').html(html);
 	    $('#viewPage').html(htmlPage);
-			    
-		
+	    console.log('TC: ' + json[0].totalCount);
+	    console.log('TC1: ' + totalCount);
+	    $('#totalCount').html(json[0].totalCount.length);
+	    
 	}
 </script>
 </head>
@@ -254,7 +259,7 @@ a:hover{
 				</div>
 				<div class="container-xxl py-3 px-0">
 					<div class="container">
-						<h4 class="search-title mb-3"><span>서울</span>에 대한 총 <span>1,324</span> 건의 검색 결과</h4>
+						<h4 class="search-title mb-3">총 <span id="totalCount"></span> 건의 검색 결과</h4>
 						<ul class="content-ul event" id="view">
 							<!-- 숙소 반복 -->
 								
@@ -292,12 +297,13 @@ a:hover{
 	
 	let cat3 = [];
 	let locations = [];
+	//let title = $('#title').val() === '' || $('#title').val() === null ? '서울' : $('#title').val();
 	let title = '';
-	
+	//console.log('title: ' + title);
 	function updateFilters() {
 		cat3 = [];
 		locations = [];
-		let title = $('#title').val() || '';
+		let title = $('#title').val();
 		
 		
 		$('input[name="cat3"]:checked').each(function() {
@@ -322,7 +328,8 @@ a:hover{
 	});
 	
 	$(function() {
-		commons(1);
+		console.log("title: " + title);
+		commons(1, title);
 		$('#title').keydown(function(e) {
 			if (e.keyCode === 13) {
 				title = $('#title').val();
