@@ -114,39 +114,40 @@ public class EventModel {
 		String key=json.get("key").toString();
 		String page=json.get("curpage").toString();
 		String filter=json.get("filter").toString(); //filter true/false
-		String filtermin = "";
-		String filtermax = "";
-		String cate = "";
-		String[] catelist=new String[0];
-		if(json.get("filtermin")!=null){
-            filtermin = json.get("filtermin").toString();
-            filtermax = json.get("filtermax").toString();
-        }
-		if(json.get("cate")!=null){
-            cate = json.get("cate").toString();
-			System.out.println(cate);
-			catelist=cate.split(",");
-			System.out.println(catelist);
 
-        }
-
-		//검색어, 페이지 추출
-		System.out.println("filter:"+filter);
-		System.out.println("filtermin:"+filtermin);
-		System.out.println("filtermax:"+filtermax);
-		System.out.println("cate:"+catelist);
-
-		//parameter 설정
+		//parameter 매핑
 		HashMap map = new HashMap();
 		int curpage=Integer.parseInt(page);
 		map.put("key", key);
 		map.put("start", (10*curpage)-9);
 		map.put("end", 10*curpage);
-		if(filter.equals("true")){ //
+
+		//filter parameter 추출/매핑
+		String filtermin = "";
+		String filtermax = "";
+		String cate = "";
+		String[] catelist=new String[0];
+		if(json.get("filtermin")!=null){ //가격 필터 적용했을 때만 매핑
+			filtermin = json.get("filtermin").toString();
+			filtermax = json.get("filtermax").toString();
 			map.put("filtermin", filtermin);
 			map.put("filtermax", filtermax);
-			map.put("cate", catelist);
 		}
+		if(json.get("cate")!=null){ //카테고리 필터 적용했을 때만 매핑
+			cate = json.get("cate").toString();
+			catelist=cate.split(",");
+			map.put("cate", catelist);
+
+		}
+		if(json.get("enddate")!=null){
+			map.put("enddate", json.get("enddate").toString());
+		}
+		//검색어, 페이지 추출
+
+		System.out.println("filter:"+filter);
+		System.out.println("filtermin:"+filtermin);
+		System.out.println("filtermax:"+filtermax);
+		System.out.println("cate:"+catelist.toString());
 
 		//검색결과 총개수
 		EventVO cvo=EventDAO.eventSearchDefault(map);
@@ -165,11 +166,7 @@ public class EventModel {
 			obj.put("price", vo.getPrice());
 			if(i==0){
 				obj.put("curpage", curpage);
-				if(cvo!=null){
-					obj.put("count", cvo.getCount());
-				}else{
-					obj.put("count", 0);
-				}
+				obj.put("count", cvo.getCount());
 				if(10*curpage>=Integer.parseInt(cvo.getCount())){
 					System.out.println("10 * curpage:"+10*curpage);
 					System.out.println("총페이지:"+cvo.getCount());
@@ -180,6 +177,11 @@ public class EventModel {
 			}
 			arr.add(obj);
 			i++;
+		}
+		if(list==null||list.size()==0){
+			JSONObject obj=new JSONObject();
+			obj.put("count", 0);
+			arr.add(obj);
 		}
 
 		PrintWriter out;

@@ -31,7 +31,7 @@
 							</div>
 						</div>
 						<div class="filter-item"> <!--checkbox 타입-->
-							<h6>축제 유형</h6>
+							<h6>행사 유형</h6>
 							<div class="checkbtn-wrap">
 								<c:forEach items="${catemap}" var="cate" varStatus="i">
 									<input type="checkbox" name="type" id="${cate.key}">
@@ -39,8 +39,21 @@
 								</c:forEach>
 							</div>
 						</div>
+						<div class="filter-item"> <!--radio 타입-->
+							<h6>행사 기간</h6>
+							<div class="radio-wrap row">
+								<div class="col-3 col-lg-6">
+									<input type="radio" name="enddate" value="false" id="enddate1" checked>
+									<label for="enddate1">전체</label>
+								</div>
+								<div class="col-3 col-lg-6">
+									<input type="radio" name="enddate" value="true" id="enddate2">
+									<label for="enddate2">진행 중</label>
+								</div>
+							</div>
+						</div>
 						<div class="filter-item">
-							<button type="button" class="btn filterschbtn" onclick="filtersubmit();">검색</button>
+							<button type="button" class="filterschbtn" onclick="filtersubmit();">검색</button>
 						</div>
 					</div>
 					</form>
@@ -59,7 +72,7 @@
 				</div>
 				<div class="container-xxl py-3 px-0">
 					<div class="container">
-						<h4 class="search-title mb-3"><span>${param.key}</span>에 대한 총 <span id="count">0</span> 건의 검색 결과</h4>
+						<h4 class="search-title mb-3">찾으시는 행사가 총 <span id="count">0</span> 건 있습니다.</h4>
 						<ul class="content-ul event"></ul>
 					</div>
 				</div>
@@ -139,13 +152,15 @@
 			}
 			let cate=[];
 			let catelist='';
-			$("#filter input:checked").map(function(index,el){
+			$("#filter input[name=type]:checked").map(function(index,el){
 				cate.push($(el).attr("id"));
 			});
 			if(cate.length>0){
 				catelist+=cate.join(",");
 				data.cate=catelist;
-				console.log(catelist);
+			}
+			if($("#filter input[name=enddate]:checked").val()==='true'){
+				data.enddate="true";
 			}
 		}
 		try {
@@ -158,27 +173,25 @@
 				data:JSON.stringify(data)
 			});
 			listadd(response.data,isScroll);
+			console.log(response);
 		} catch (e) {
 			console.log(e);
 			throw new Error(e);
 		}
 	}
+	//내용 삽입
 	function listadd(data,isScroll){
-
 		if(!isScroll){
 			$('.content-ul').children().remove();
 			console.log("is scroll "+isScroll);
 		}
 		let html='';
-		console.log("data length "+data.length);
-		console.log("listend "+listend);
-		if(listend){
-
-		}else if(data.length===0){
-			html+='<li class="noresult">일치하는 행사를 찾을 수 없습니다.</li>';
-		}else{
-			data.map(function(vo){
-				html+=`<li>
+		if(listend===false){ //listend면 아무 것도 하지 않음
+			if(data[0].count===0){
+				html+='<li class="noresult">일치하는 행사를 찾을 수 없습니다.</li>';
+			}else{
+				data.map(function(vo){
+					html+=`<li>
 <a href="#" class="d-flex">
 <div class="thumb-wrap" style="background-image:url(`+vo.first_image+`)">
 <button type="button" class="bookmark-btn on"></button>
@@ -191,23 +204,22 @@
 <p class="enddate">`+vo.dbend+`까지</p>
 </div>
 <div class="price-wrap">`;
-				if(vo.price==0){
-					html+="<p class=\"price\">무료</p>";
-				}else{
-					html+="<p class=\"price\">"+vo.price.toLocaleString('ko-KR')+"원</p>"
-				}
-				html+=`</div>
+					if(vo.price==0){
+						html+="<p class=\"price\">무료</p>";
+					}else{
+						html+="<p class=\"price\">"+vo.price.toLocaleString('ko-KR')+"원</p>"
+					}
+					html+=`</div>
 </div>
 </a>
 </li>`
 
-			});
-		}
-		if(listend===false){
+				});
+			}
 			$('.content-ul').append(html);
-			$('#count').text(data[0].count.toLocaleString('ko-KR'));
+			$('#count').text(data[0].count==0?'0':data[0].count.toLocaleString('ko-KR'));
 		}
-		console.log("실행 후 listend: "+listend)
+
 		if(data.length!=0 && data[0].listend===true){ //남은 페이지가 없는 경우 listend true
 			listend=true;
 		}
@@ -217,7 +229,8 @@
 		filteron=true;
 		if($("#range-slider input[name=start]").val()==${minprice}&&
 				$("#range-slider input[name=end]").val()==${maxprice}&&
-				!$("#filter input[type=checkbox]").is(':checked')){
+				!$("#filter input[type=checkbox]").is(':checked')&&
+				$("#filter input[name=enddate]:checked").val()==='false'){
 			filteron=false;
 		}
 		if(filteron){
@@ -234,12 +247,10 @@
 		}else{
 			filtersrh=false;
 		}
-
-		$("html, body").stop().animate({scrollTop:0}, 200,function(){
-			page=2;
-			listend=false; //page, listend 초기화
-			data(1,false,filtersrh,document.filterform);
-		});
+		$("html").scrollTop(0);
+		page=2;
+		listend=false; //page, listend 초기화
+		data(1,false,filtersrh,document.filterform);
 
 	}
 	function reset(){
@@ -252,17 +263,28 @@
 
 	//스크롤할때
 	$(window).scroll(function () {
-		if($(window).scrollTop() + $(window).height() === $(document).height()) {
-			if(filtersrh){ //filter 적용 중이면
-				data(page,true,filtersrh,document.filterform);
-			}else{//아니면
-				data(page,true,filtersrh);
+
+	});
+
+	let preScrollTop = 0;
+
+	window.addEventListener('scroll',() => {
+		let nextScrollTop = window.scrollY;
+
+		if(preScrollTop < nextScrollTop) {
+			if($(window).scrollTop() + $(window).height() === $(document).height()) {
+				if(filtersrh){ //filter 적용 중이면
+					data(page,true,filtersrh,document.filterform);
+				}else{//아니면
+					data(page,true,filtersrh);
+				}
+				if(listend===false){
+					page++;
+				}
+				console.log(page);
 			}
-			if(listend===false){
-				page++;
-			}
-			console.log(page);
 		}
+		preScrollTop = nextScrollTop;
 	});
 </script>
 </body>

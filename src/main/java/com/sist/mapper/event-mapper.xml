@@ -42,14 +42,17 @@
 		where event.CONTENT_ID=content.CONTENT_ID
 		  AND CAT2='A0208'
 		  AND regexp_like(TITLE,#{key},'i')
-		<if test="minprice != null">
-			AND price between #{minprice} and #{maxprice}
+		<if test="filtermin != null">
+			AND price between #{filtermin} and #{filtermax}
 		</if>
 		<if test="cate != null">
 			AND CAT3 in
 			<foreach collection="cate" item="c" separator="," open="(" close=")">
 				#{c}
 			</foreach>
+		</if>
+		<if test="enddate != null">
+			and EVENT_ENDDATE >= sysdate
 		</if>
 	</select>
 	<!--검색 리스트-->
@@ -61,8 +64,8 @@
 			  where event.CONTENT_ID=content.CONTENT_ID
 				AND CAT2='A0208'
 				AND regexp_like(TITLE,#{key},'i')
-		<if test="minprice != null">
-			AND price between #{minprice} and #{maxprice}
+		<if test="filtermin != null">
+			AND price between #{filtermin} and #{filtermax}
 		</if>
 		<if test="cate != null">
 			AND CAT3 in
@@ -70,17 +73,20 @@
 				#{c}
 			</foreach>
 		</if>
+		<if test="enddate != null">
+			and EVENT_ENDDATE >= sysdate
+		</if>
 			  ))
 
 		where num between #{start} and #{end}
 	</select>
-	<select id="replace_data" resultMap="eventMap">
-		SELECT CONTENT_ID,CHARGE from event
-	</select>
-	<insert id="replace_execute" parameterType="hashmap">
-		UPDATE EVENT SET price=#{price}, price_info=#{info, jdbcType=VARCHAR}
-		WHERE content_id=#{id}
-	</insert>
+<!--	<select id="replace_data" resultMap="eventMap">-->
+<!--		SELECT CONTENT_ID,CHARGE from event-->
+<!--	</select>-->
+<!--	<insert id="replace_execute" parameterType="hashmap">-->
+<!--		UPDATE EVENT SET price=#{price}, price_info=#{info, jdbcType=VARCHAR}-->
+<!--		WHERE content_id=#{id}-->
+<!--	</insert>-->
 
 	<!--지역별 목록-->
 	<select id="eventAreaList" resultMap="eventMap" parameterType="hashmap">
