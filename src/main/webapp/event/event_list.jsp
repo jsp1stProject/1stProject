@@ -1,0 +1,269 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="jakarta.tags.core" %>
+<%@taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+	<script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="${pageContext.request.contextPath }/assets/plugin/rangeslider/rangeslider.umd.min.js"></script>
+	<script src="${pageContext.request.contextPath }/assets/plugin/scroll/slimscroll.js"></script>
+	<link href="${pageContext.request.contextPath }/assets/plugin/rangeslider/style.css" rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-lg-3 py-3 px-0" style="position:relative">
+				<div class="filter-container active">
+					<div class="d-flex justify-content-between px-2">
+						<button class="cpsbtn">필터</button>
+						<button type="button" class="btn btn-light resetbtn" onclick="reset()">초기화</button>
+					</div>
+					<form action="" name="filterform" method="post">
+					<div class="filter-wrap" id="filter">
+						<div class="filter-item col-lg-12 col-md-4 col-sm-12"> <!-- range 타입 -->
+							<h6>가격대</h6>
+							<div id="range-slider"></div>
+							<div class="d-flex justify-content-center range-value-wrap">
+								<input type="text" class="start" disabled value="<fmt:formatNumber value="${minprice }" pattern="#,###" />원"><span class="ignr"> ~ </span><input type="text" class="end" disabled value="<fmt:formatNumber value="${maxprice }" pattern="#,###" />원">
+							</div>
+						</div>
+						<div class="filter-item"> <!--checkbox 타입-->
+							<h6>축제 유형</h6>
+							<div class="checkbtn-wrap">
+								<c:forEach items="${catemap}" var="cate" varStatus="i">
+									<input type="checkbox" name="type" id="${cate.key}">
+									<label for="${cate.key}">${cate.value}</label>
+								</c:forEach>
+							</div>
+						</div>
+						<div class="filter-item">
+							<button type="button" class="btn filterschbtn" onclick="filtersubmit();">검색</button>
+						</div>
+					</div>
+					</form>
+				</div>
+			</div>
+			<div class="col-lg-9 px-0">
+				<div class="container-xxl py-lg-3 pt-5 pb-3 px-0">
+					<div class="container">
+						<form action="../event/event_list.do" method="post" name="page-search">
+							<div class="sch_wrap page">
+								<input type="text" name="key" id="key" placeholder="검색어를 입력하세요." value="${param.key}">
+								<input type="submit" value="검색">
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="container-xxl py-3 px-0">
+					<div class="container">
+						<h4 class="search-title mb-3"><span>${param.key}</span>에 대한 총 <span id="count">0</span> 건의 검색 결과</h4>
+						<ul class="content-ul event"></ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<script type="text/javascript">
+	let listend=false;
+	let filteron=false;
+	let filtersrh=false;
+
+	$('.bookmark-btn').on('click',function(e){
+		e.preventDefault();
+		$(this).toggleClass('on');
+	});
+	$(document).on("click",".cpsbtn",function(){
+		var con=$(this).closest('.filter-container')
+		if(con.hasClass('active')){
+			con.removeClass('active');
+			$('.slimScrollDiv').fadeOut(300);
+		}else{
+			con.addClass('active');
+			$('.slimScrollDiv').fadeIn(300);
+		}
+	});
+	const rs= rangeSlider(document.querySelector('#range-slider'), {
+		min: ${minprice},
+		max: ${maxprice},
+		step: 1000, //step size
+		value: [${minprice}, ${maxprice}], //initial values
+		onInput: function(valueSet) {
+			rangeset(valueSet[0],valueSet[1]);
+		},
+	});
+
+	function rangeset(min, max){
+		$('input.start').val(min.toLocaleString('ko-KR')+'원');
+		$('input.end').val(max.toLocaleString('ko-KR')+'원');
+	}
+	rangeset(${minprice},${maxprice});
+
+	let floatPosition = parseInt($(".filter-container").css('top'));
+	$(window).scroll(function() {
+		var scrollTop = $(window).scrollTop();
+		var newPosition = scrollTop + floatPosition + "px";
+		$(".filter-container").stop().animate({
+			"top" : newPosition
+		}, 50);
+
+	}).scroll();
+
+	$(function(){
+		$('#filter').slimScroll({
+			height: 'auto',
+			railVisible: false,
+			railColor: '#222',
+			railOpacity: 0.3,
+			wheelStep: 10,
+			allowPageScroll: false,
+			disableFadeOut: false
+		})
+	});
+
+	//--------------------ajax
+	async function data(page,isScroll,isFilter,form){
+		let data={
+			"key": $("#key").val(),
+			"curpage": page,
+			"filter":"false"
+		}
+		if(isFilter){ //필터 적용일 때만
+			data.filter="true";
+			if(form.start.value!=${minprice}||form.end.value!=${maxprice}){
+				data.filtermin=form.start.value;
+				data.filtermax=form.end.value;
+			}
+			let cate=[];
+			let catelist='';
+			$("#filter input:checked").map(function(index,el){
+				cate.push($(el).attr("id"));
+			});
+			if(cate.length>0){
+				catelist+=cate.join(",");
+				data.cate=catelist;
+				console.log(catelist);
+			}
+		}
+		try {
+			let response=await axios({
+				method:'post',
+				url:'event_list_data.do',
+				hearders:{
+					"Content-Type":"application/json"
+				},
+				data:JSON.stringify(data)
+			});
+			listadd(response.data,isScroll);
+		} catch (e) {
+			console.log(e);
+			throw new Error(e);
+		}
+	}
+	function listadd(data,isScroll){
+
+		if(!isScroll){
+			$('.content-ul').children().remove();
+			console.log("is scroll "+isScroll);
+		}
+		let html='';
+		console.log("data length "+data.length);
+		console.log("listend "+listend);
+		if(listend){
+
+		}else if(data.length===0){
+			html+='<li class="noresult">일치하는 행사를 찾을 수 없습니다.</li>';
+		}else{
+			data.map(function(vo){
+				html+=`<li>
+<a href="#" class="d-flex">
+<div class="thumb-wrap" style="background-image:url(`+vo.first_image+`)">
+<button type="button" class="bookmark-btn on"></button>
+</div>
+<div class="d-flex flex-column flex-md-row right">
+<div class="title-wrap">
+<p class="cat"><span class="event1">`+vo.dbcate+`</span></p>
+<p class="content-name">`+vo.title+`</p>
+<p class="location">`+vo.addr1+`</p>
+<p class="enddate">`+vo.dbend+`까지</p>
+</div>
+<div class="price-wrap">`;
+				if(vo.price==0){
+					html+="<p class=\"price\">무료</p>";
+				}else{
+					html+="<p class=\"price\">"+vo.price.toLocaleString('ko-KR')+"원</p>"
+				}
+				html+=`</div>
+</div>
+</a>
+</li>`
+
+			});
+		}
+		if(listend===false){
+			$('.content-ul').append(html);
+			$('#count').text(data[0].count.toLocaleString('ko-KR'));
+		}
+		console.log("실행 후 listend: "+listend)
+		if(data.length!=0 && data[0].listend===true){ //남은 페이지가 없는 경우 listend true
+			listend=true;
+		}
+	}
+	//filter 값 변경 시 filter 적용 되었는지 체크
+	$(document).on("click",$("#filter input, #range-slider"),function(){
+		filteron=true;
+		if($("#range-slider input[name=start]").val()==${minprice}&&
+				$("#range-slider input[name=end]").val()==${maxprice}&&
+				!$("#filter input[type=checkbox]").is(':checked')){
+			filteron=false;
+		}
+		if(filteron){
+			$(".cpsbtn").addClass("active");
+		}else{
+			$(".cpsbtn").removeClass("active");
+		}
+	});
+
+	//filter검색버튼
+	function filtersubmit(){
+		if(filteron){ //filter 적용 되어있으면
+			filtersrh=true;
+		}else{
+			filtersrh=false;
+		}
+
+		$("html, body").stop().animate({scrollTop:0}, 200,function(){
+			page=2;
+			listend=false; //page, listend 초기화
+			data(1,false,filtersrh,document.filterform);
+		});
+
+	}
+	function reset(){
+		document.filterform.reset();
+		rs.value([${minprice},${maxprice}]);
+		filteron=false;
+	}
+	data(1,false);
+	let page=2;
+
+	//스크롤할때
+	$(window).scroll(function () {
+		if($(window).scrollTop() + $(window).height() === $(document).height()) {
+			if(filtersrh){ //filter 적용 중이면
+				data(page,true,filtersrh,document.filterform);
+			}else{//아니면
+				data(page,true,filtersrh);
+			}
+			if(listend===false){
+				page++;
+			}
+			console.log(page);
+		}
+	});
+</script>
+</body>
+</html>

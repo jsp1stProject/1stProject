@@ -85,17 +85,21 @@
 
 		breakpoints: {
 			0:{
-				slidesPerView: 2,  //브라우저가 0보다 클 때
+				slidesPerView: 3,  //브라우저가 0보다 클 때
 				spaceBetween: 10,
 			},
 			768: {
-				slidesPerView: 3,  //브라우저가 768보다 클 때
+				slidesPerView: 4,  //브라우저가 768보다 클 때
 				spaceBetween: 10,
 			},
 			991: {
-				slidesPerView: 4,  //브라우저가 991보다 클 때
+				slidesPerView: 5,  //브라우저가 991보다 클 때
 				spaceBetween: 10,
 			},
+            1200: {
+                slidesPerView: 5,  //브라우저가 1200보다 클 때
+                spaceBetween: 10,
+            },
 		},
 	});
 
@@ -125,7 +129,12 @@
 	btn.addEventListener('click',function(){
 		document.querySelector('.navbar').classList.toggle('on');
 	});
-	
+
+    //공지사항 slidedown
+    $(document).on('click','.notice-title',function(){
+        $(this).closest('li').toggleClass('active');
+        $(this).siblings('.notice-content').slideToggle('fast');
+    });
 	
     
 })(jQuery);

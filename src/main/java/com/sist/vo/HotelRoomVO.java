@@ -26,7 +26,7 @@ IMG1                        VARCHAR2(1000)
 IMG1ALT                     VARCHAR2(1000) 
 IMG2                        VARCHAR2(1000) 
 IMG2ALT                     VARCHAR2(1000) 
-IMG3                        VARCHAR2(1000) 
+IMG3                        VARCHAR2(1000)  
 IMG3ALT                     VARCHAR2(1000) 
  */
 @Data
