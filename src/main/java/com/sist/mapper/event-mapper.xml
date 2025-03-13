@@ -38,10 +38,15 @@
 
 	<!--검색 최대최소가격, 개수-->
 	<select id="eventSearchPrice" resultType="EventVO" parameterType="hashmap">
-		SELECT MAX(price) as maxprice, MIN(price) as minprice, count(*) as count FROM event,content
-		where event.CONTENT_ID=content.CONTENT_ID
-		  AND CAT2='A0208'
-		  AND regexp_like(TITLE,#{key},'i')
+		SELECT MAX(price) as maxprice, MIN(price) as minprice, count(*) as count FROM event_list_view
+		<choose>
+			<when test="key!=null">
+				WHERE regexp_like(TITLE,#{key},'i')
+			</when>
+			<when test="areacode!=null">
+				WHERE AREACODE in (#{areacode})
+			</when>
+		</choose>
 		<if test="filtermin != null">
 			AND price between #{filtermin} and #{filtermax}
 		</if>
@@ -58,12 +63,17 @@
 	<!--검색 리스트-->
 	<select id="eventSearchList" resultMap="eventMap" parameterType="hashmap">
 		SELECT TITLE, addr1, addr2, TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, CAT3, FIRST_IMAGE, price, num
-		FROM (SELECT TITLE, addr1, addr2, EVENT_ENDDATE, CAT3, FIRST_IMAGE, price, rownum as num
-		FROM (SELECT TITLE, addr1, addr2, EVENT_ENDDATE, CAT3, FIRST_IMAGE, price
-		from EVENT,CONTENT
-			  where event.CONTENT_ID=content.CONTENT_ID
-				AND CAT2='A0208'
-				AND regexp_like(TITLE,#{key},'i')
+		FROM (SELECT e.*,rownum as num
+		FROM event_list_view e
+		<choose>
+			<when test="key!=null">
+				WHERE regexp_like(TITLE,#{key},'i')
+			</when>
+			<when test="areacode!=null">
+				WHERE AREACODE in (#{areacode})
+			</when>
+		</choose>
+
 		<if test="filtermin != null">
 			AND price between #{filtermin} and #{filtermax}
 		</if>
@@ -76,28 +86,16 @@
 		<if test="enddate != null">
 			and EVENT_ENDDATE >= sysdate
 		</if>
-			  ))
-
-		where num between #{start} and #{end}
-	</select>
-<!--	<select id="replace_data" resultMap="eventMap">-->
-<!--		SELECT CONTENT_ID,CHARGE from event-->
-<!--	</select>-->
-<!--	<insert id="replace_execute" parameterType="hashmap">-->
-<!--		UPDATE EVENT SET price=#{price}, price_info=#{info, jdbcType=VARCHAR}-->
-<!--		WHERE content_id=#{id}-->
-<!--	</insert>-->
-
-	<!--지역별 목록-->
-	<select id="eventAreaList" resultMap="eventMap" parameterType="hashmap">
-		SELECT TITLE, addr1, addr2, TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, CAT3, FIRST_IMAGE, price, num
-		FROM (SELECT TITLE, addr1, addr2, EVENT_ENDDATE, CAT3, FIRST_IMAGE, price, rownum as num
-			  FROM (SELECT TITLE, addr1, addr2, EVENT_ENDDATE, CAT3, FIRST_IMAGE, price
-					from EVENT,CONTENT
-					where event.CONTENT_ID=content.CONTENT_ID
-					  AND CAT2='A0208'
-					  AND AREACODE in (#{areacode})))
+		)
 		where num between #{start} and #{end}
 	</select>
 
+
+	<!--	<select id="replace_data" resultMap="eventMap">-->
+	<!--		SELECT CONTENT_ID,CHARGE from event-->
+	<!--	</select>-->
+	<!--	<insert id="replace_execute" parameterType="hashmap">-->
+	<!--		UPDATE EVENT SET price=#{price}, price_info=#{info, jdbcType=VARCHAR}-->
+	<!--		WHERE content_id=#{id}-->
+	<!--	</insert>-->
 </mapper>

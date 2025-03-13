@@ -1152,7 +1152,7 @@ body.is{
 /*search template*/
 h4.search-title {
     padding: 0 10px;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 500!important;
 }
 h4.search-title span{
@@ -1492,4 +1492,20 @@ button.resetbtn:focus{
 .filterschbtn:hover{
     background-color: #000000;
 }
+
+/*area*/
+.sch_wrap.area{
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    padding-left:12px;
+}
+.sch_wrap.area svg {
+    width:30px;
+}
+.sch_wrap.area input:disabled{
+    padding:0 6px;
+    color:#000000;
+}
+
 /*search template*/
