@@ -8,11 +8,5 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class MemberModel {
-	@RequestMapping("member/join.do")
-	public String member_join(HttpServletRequest request, HttpServletResponse response) {
-		
-		request.setAttribute("wide", "y");
-		request.setAttribute("main_jsp", "../member/join.jsp");
-		return "../main/main.jsp";
-	}
+	
 }

@@ -70,7 +70,7 @@
 			WHERE num BETWEEN #{start} AND #{end}
 	</select>
 	<select id="hotelTotalPage" resultType="int" parameterType="hashmap">
-		SELECT DECODE(COUNT(*), 0, 1, COUNT(*)) FROM hotel_list_view  
+		SELECT DECODE(COUNT(*) / 15.0, 0, 1, COUNT(*) / 15.0) FROM hotel_list_view  
 			<where>
 				<if test="cat3 != null and cat3.length > 0">
 					AND cat3 IN

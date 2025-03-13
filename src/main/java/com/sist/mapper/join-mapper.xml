@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sist.mapper.join-mapper">
+	<select id="userIdCheck" resultType="int" parameterType="string">
+		SELECT COUNT(*) FROM user_info WHERE id = #{user_id}
+	</select>
+	<insert id="userInsert" parameterType="UserVO">
+		INSERT INTO user_info (user_id, pwd, name, nickname, sex, birthday, email, post, addr1, phone, admin) 
+		VALUES(#{user_id}, #{pwd}, #{name}, #{nickname}, #{sex}, #{birthday}, #{email}, #{post}, #{addr1}, #{phone}, #{admin})
+	</insert>
+</mapper>
