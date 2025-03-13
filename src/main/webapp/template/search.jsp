@@ -175,11 +175,13 @@
 	</div>
 
 	<script type="text/javascript">
-		let listend=false;
+		<%--북마크 클릭 이벤트 --%>
 		$('.bookmark-btn').on('click',function(e){
 			e.preventDefault();
 			$(this).toggleClass('on');
 		});
+
+		<%-- 필터창 on/off 이벤트 --%>
 		$(document).on("click",".cpsbtn",function(){
 			var con=$(this).closest('.filter-container')
 			if(con.hasClass('active')){
@@ -190,6 +192,8 @@
 				$('.slimScrollDiv').fadeIn(300);
 			}
 		});
+
+		<%-- 필터 input range 라이브러리 --%>
 		rangeSlider(document.querySelector('#range-slider'), {
 			min: 0,
 			max: 100000,
@@ -205,16 +209,20 @@
 			$('input.end').val(max.toLocaleString('ko-KR')+'원');
 		}
 		rangeset(0,100000);
+
+		<%--필터 absolute 애니메이트--%>
 		let floatPosition = parseInt($(".filter-container").css('top'));
 		$(window).scroll(function() {
 			var scrollTop = $(window).scrollTop();
 			var newPosition = scrollTop + floatPosition + "px";
-			$(".filter-container").stop().animate({
-				"top" : newPosition
-			}, 50);
-
+			if(scrollTop + $(window).height()+300 < $(document).height()||$("body").hasClass('is')) {
+				$(".filter-container").stop().animate({
+					"top" : newPosition
+				}, 50);
+			}
 		}).scroll();
 
+		<%-- 필터창 스크롤 라이브러리 --%>
 		$(function(){
 			$('#filter').slimScroll({
 				height: 'auto',

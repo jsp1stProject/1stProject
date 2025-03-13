@@ -998,6 +998,9 @@ ul.main-notice-ul p{
 /* index custom */
 
 /*** Footer ***/
+body.is .footer {
+    display:none;
+}
 .footer .btn.btn-link {
     display: block;
     margin-bottom: 5px;
