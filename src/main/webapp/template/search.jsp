@@ -42,6 +42,22 @@
 								<label for="t5">뮤지컬</label>
 							</div>
 						</div>
+						<div class="filter-item"> <!--radio 타입-->
+							<h6>행사 기간</h6>
+							<div class="radio-wrap row">
+								<div class="col-3 col-lg-6">
+									<input type="radio" name="enddate" value="false" id="enddate1" checked>
+									<label for="enddate1">전체</label>
+								</div>
+								<div class="col-3 col-lg-6">
+									<input type="radio" name="enddate" value="true" id="enddate2">
+									<label for="enddate2">진행 중</label>
+								</div>
+							</div>
+						</div>
+						<div class="filter-item">
+							<button type="button" class="filterschbtn" onclick="filtersubmit();">검색</button>
+						</div>
 					</div>
 				</div>
 
