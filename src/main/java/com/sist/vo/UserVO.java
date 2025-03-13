@@ -20,6 +20,5 @@ import java.util.Date;
 import lombok.Data;
 @Data
 public class UserVO {
-	private String user_id, pwd, name, nickname, profile_img, sex, email, post, addr1, addr2, phone, admin;
-	private Date birthday;
+	private String user_id, pwd, name, nickname, profile_img, sex, email, post, addr1, addr2, phone, admin, birthday;
 }

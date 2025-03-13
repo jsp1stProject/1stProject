@@ -52,11 +52,7 @@
 	position: relative;
 	width: 420px;
 	height: 40px;
-	margin-top: 4rem;
-}
-.joinDiv {
-	position: relative;
-	margin: 0px auto;
+	margin-top: 2rem;
 }
 input:focus, textarea:focus, select:focus {
     box-shadow: none !important;
@@ -79,38 +75,12 @@ input::placeholder {
 	width: 420px;
 	height: 3rem;
 }
-
+.vaildationCheck{
+	margin-left: -12.8rem;
+}
 </style>
 <script type="text/javascript">
 $(document).ready(function() {
-	
-	let prevEmptyFields = []; // 포커스 전 비어 있던 ID 저장
-
-	$('#id, #pwd, #name').focus(function() {
-	    // 현재 비어 있는 input ID 저장
-	    prevEmptyFields = $('#id, #pwd, #name').filter(function() {
-	        return $(this).val().trim() === '';
-	    }).map(function() {
-	        return this.id;
-	    }).get();
-	});
-
-	$('#id, #pwd, #name').blur(function() {
-	    let emptyFields = $('#id, #pwd, #name').filter(function() {
-	        return $(this).val().trim() === '';
-	    }).map(function() {
-	        return this.id;
-	    }).get();
-
-	    // 이전에 비어 있던 항목 제외
-	    let newEmptyFields = emptyFields.filter(id => !prevEmptyFields.includes(id));
-
-	    if (newEmptyFields.length > 0) {
-	        console.log("새롭게 비어진 항목: " + newEmptyFields.join(", "));
-	    }
-	});
-
-	
 	$('#addr1, #zipcode').on('keyup click', function() {
 	    new daum.Postcode({
 	        oncomplete: function(data) {
@@ -158,40 +128,95 @@ $(document).ready(function() {
             $(this).val(phoneNumber.replace(/(\d{3})(\d{4})(\d{0,4})/, '$1-$2-$3')); // 4자리 이상일 때
         }
     });
-	
+    $('#id').focus(function() {
+    	$('#idCheck').html('')
+    })
+    $('#id').blur(function() {
+    	// 중복체크
+    	let id = $('#id').val(); 
+    	let pwd = $('#pwd').val();
+    	let name = $('#name').val();
+    	
+    	// 아이디 공백 체크
+        if (id.trim() === '') {
+            $('#idCheck').html('<span class="vaildationCheck" style="color: red;">•아이디: 필수정보입니다.</span>');
+            return;
+        } else {
+            $('#idCheck').html(''); // 아이디 입력이 있으면 이전 메시지 제거
+        }
+    	$.ajax({
+    		type: 'post',
+    		url: '../member/join_idcheck_ok.do',
+    		data: {'id': id.trim()},
+    		success: function(result) {
+    			let count = parseInt(result);
+    			if (count === 0) {
+					$('#idCheck').html('<span class="vaildationCheck" style="color: green;">•사용 가능한 아이디입니다.</span>')
+				} else {
+					$('#idCheck').html('<span class="vaildationCheck" style="color: red;">•이미 존재하는 아이디입니다.</span>');
+				}
+    		}
+    	});
+    });
+    $('#pwd').focus(function() {
+        $('#pwdCheck').html('');
+    });
+    $('#pwd').blur(function() {
+        let pwd = $('#pwd').val().trim();
+        if (pwd === '') {
+            $('#pwdCheck').html('<span class="vaildationCheck" style="color: red;">•비밀번호: 필수정보입니다.</span>');
+            return;
+        } else {
+            $('#pwdCheck').html('');
+        }
+        // 비밀번호 유효성 체크 (예: 6자리 이상)
+        if (pwd.length < 6) {
+            $('#pwdCheck').html('<span style="color: red; margin-left: -10.5rem;">•비밀번호는 6자리 이상이어야 합니다.</span>');
+        }
+    });
+
+    $('#name').focus(function() {
+        $('#nameCheck').html('');
+    });
+    $('#name').blur(function() {
+        let name = $('#name').val().trim();
+        if (name === '') {
+            $('#nameCheck').html('<span class="vaildationCheck" style="color: red;">•이름: 필수정보입니다.</span>');
+            return;
+        } else {
+            $('#nameCheck').html('');
+        }
+    });
+    
+    
+
 });
-	/*
-		id / pwd / name / nickname / birthday / email / addr1 / zipcode / phone
-	*/
-	function checkValidation() {
-	}
-	
-	
-
-
 </script>
 </head>
 <body>
 	<div class="joinDiv">
 		<div class="center-wrap">
 			<form method="post" action="../member/join_ok.do" name="frm" id="frm">
-			<div class="user d-flex flex-column align-items-center" style="margin-bottom: 4.3rem;">
-		    	<input type="text" class="form-control form_list" id="id" placeholder="아이디" required style="border-radius: 10px 10px 0 0; background-image: url(../assets/img/id.png)">
-		    	<input type="password" class="form-control form_list" id="pwd" placeholder="비밀번호" required style="background-image: url(../assets/img/password.png)">
-		    	<input type="text" class="form-control form_list" id="name" placeholder="이름" required style="border-radius: 0 0 10px 10px; background-image: url(../assets/img/name.png)">
+			<div class="user d-flex flex-column align-items-center" style="margin-bottom: 1rem;">
+		    	<input type="text" class="form-control form_list" name="id" id="id" placeholder="아이디" required style="border-radius: 10px 10px 0 0; background-image: url(../assets/img/id.png)">
+		    	<input type="password" class="form-control form_list" name="pwd" id="pwd" placeholder="비밀번호" required style="background-image: url(../assets/img/password.png)">
+		    	<input type="text" class="form-control form_list" name="name" id="name" placeholder="이름" required style="border-radius: 0 0 10px 10px; background-image: url(../assets/img/name.png)">
+    	 		<span id="idCheck"></span>
+    	 		<span id="pwdCheck"></span>
+    	 		<span id="nameCheck"></span>
     	 	</div>
     	 	<div class="user d-flex flex-column align-items-center" style="margin-bottom: 0.5rem;">
-		    	<input type="text" class="form-control form_list" id="nickname" placeholder="닉네임" required style="border-radius: 10px 10px 0 0; background-image: url(../assets/img/name.png)">
+		    	<input type="text" class="form-control form_list" name="nickname" id="nickname" placeholder="닉네임" required style="border-radius: 10px 10px 0 0; background-image: url(../assets/img/name.png)">
 		    	<!--<input type="text" class="form-control form_list" id="sex" placeholder="성별" required style="background-image: url(../assets/img/sex.png)"> -->
 		    	<!-- <input type="date" class="form-control form_list" id="birthday" placeholder="생일" required style="background-image: url(../assets/img/date.png)">-->
 		    		<div style="position: relative; display: inline-block;">
 				    	<label for="birthday" id="birthdayLabel" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #aaa; pointer-events: none;"></label>
-				    	<input type="text" id="birthday" class="form-control" placeholder="생년월일" style="background-image: url('../assets/img/date.png'); background-repeat: no-repeat; background-position: 10px center; padding-left: 40px;">
+				    	<input type="text" name="birthday" id="birthday" class="form-control" placeholder="생년월일" style="background-image: url('../assets/img/date.png'); background-repeat: no-repeat; background-position: 10px center; padding-left: 40px;">
 					</div>
-		    	<input type="text" class="form-control form_list" id="email" placeholder="이메일" required style="background-image: url(../assets/img/email.png)">
-		    	<input type="text" class="form-control form_list" id="addr1" placeholder="주소" required style="background-image: url(../assets/img/address.png)">
-		    	<input type="text" class="form-control form_list" id="zipcode" placeholder="우편번호" required style="background-image: url(../assets/img/zipcode.png)">
-		    	<input type="text" class="form-control form_list" id="phone" placeholder="전화번호" required style="background-image: url(../assets/img/phone.png); border-radius: 0 0 10px 10px;">
+		    	<input type="text" class="form-control form_list" name="email" id="email" placeholder="이메일" required style="background-image: url(../assets/img/email.png)">
+		    	<input type="text" class="form-control form_list" name="addr1" id="addr1" placeholder="주소" required style="background-image: url(../assets/img/address.png)">
+		    	<input type="text" class="form-control form_list" name="zipcode" id="zipcode" placeholder="우편번호" required style="background-image: url(../assets/img/zipcode.png)">
+		    	<input type="text" class="form-control form_list" name="phone" id="phone" placeholder="전화번호" required style="background-image: url(../assets/img/phone.png); border-radius: 0 0 10px 10px;">
 	    		<!-- 
 	    		<select class="form-select gender-select" aria-label="Default select example" style="border-radius: 0 0 10px 10px; width: 420px; height: 3rem;">
 			  		<option title="../assets/img/sex.png" selected>성별</option>
@@ -202,9 +227,46 @@ $(document).ready(function() {
 	    	</div>
 	    	</form>
 	    	<div class="user d-flex flex-column align-items-center">
-	    		<button class="btn btn-primary joinB" type="submit">회원가입</button>
+	    		<button class="btn btn-primary joinB" id="trans" type="button">회원가입</button>
 	    	</div>
 		</div>
 	</div>
+<script type="text/javascript">
+$(function() {
+	$('#trans').click(function() {
+    	$('#frm').submit();
+    })
+})
+
+/*
+let prevEmptyFields = []; // 포커스 전 비어 있던 ID 저장
+
+$('#id, #pwd, #name').focus(function() {
+    // 현재 비어 있는 input ID 저장
+    prevEmptyFields = $('#id, #pwd, #name').filter(function() {
+        return $(this).val().trim() === '';
+    }).map(function() {
+        return this.id;
+    }).get();
+    console.log('prev: ' + prevEmptyFields);
+});
+
+$('#id, #pwd, #name').blur(function() {
+    let emptyFields = $('#id, #pwd, #name').filter(function() {
+        return $(this).val().trim() === '';
+    }).map(function() {
+        return this.id;
+    }).get();
+
+    // 이전에 비어 있던 항목 제외
+    let newEmptyFields = emptyFields.filter(id => !prevEmptyFields.includes(id));
+
+    if (newEmptyFields.length > 0) {
+        console.log("새롭게 비어진 항목: " + newEmptyFields.join(", "));
+    }
+    console.log('new: ' + newEmptyFields);
+});
+*/
+</script>
 </body>
 </html>

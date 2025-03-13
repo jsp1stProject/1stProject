@@ -49,7 +49,7 @@
 						<div class="user-wrapper">
 							<ul>
 								<li><a href="#">로그인</a></li>
-								<li><a href="#">회원가입</a></li>
+								<li><a href="../member/join.do">회원가입</a></li>
 								<li><a href="#">비회원 예약</a></li>
 								<!--로그인 상태에 따라 다른 메뉴 보이기-->
 								<li><a href="#">마이페이지</a></li>

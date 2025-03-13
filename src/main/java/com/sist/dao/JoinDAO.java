@@ -14,7 +14,7 @@ public class JoinDAO {
 	
 	public static void userIdInsert(UserVO vo) {
 		SqlSession session = ssf.openSession();
-		session.insert("userIdInsert", vo);
+		session.insert("userInsert", vo);
 		session.commit();
 		session.close();
 	}
