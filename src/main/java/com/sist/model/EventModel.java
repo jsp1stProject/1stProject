@@ -27,15 +27,15 @@ public class EventModel {
 		map.put("areacode", "1");
 		map.put("start", "1");
 		map.put("end", "8");
-		List<EventVO> arealist1= EventDAO.eventAreaList(map);
+		List<EventVO> arealist1= EventDAO.eventSearchList(map);
 		request.setAttribute("arealist1", arealist1);
 
 		map.put("areacode", "6");
-		List<EventVO> arealist2= EventDAO.eventAreaList(map);
+		List<EventVO> arealist2= EventDAO.eventSearchList(map);
 		request.setAttribute("arealist2", arealist2);
 
 		map.put("areacode", "39");
-		List<EventVO> arealist3= EventDAO.eventAreaList(map);
+		List<EventVO> arealist3= EventDAO.eventSearchList(map);
 		request.setAttribute("arealist3", arealist3);
 
 		List<EventVO> list3= EventDAO.mainEventList();
