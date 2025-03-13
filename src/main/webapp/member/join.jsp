@@ -225,19 +225,13 @@ $(document).ready(function() {
 				</select>
 				 -->
 	    	</div>
-	    	</form>
 	    	<div class="user d-flex flex-column align-items-center">
-	    		<button class="btn btn-primary joinB" id="trans" type="button">회원가입</button>
+	    		<button class="btn btn-primary joinB" id="trans" type="submit">회원가입</button>
 	    	</div>
+	    	</form>
 		</div>
 	</div>
 <script type="text/javascript">
-$(function() {
-	$('#trans').click(function() {
-    	$('#frm').submit();
-    })
-})
-
 /*
 let prevEmptyFields = []; // 포커스 전 비어 있던 ID 저장
 
