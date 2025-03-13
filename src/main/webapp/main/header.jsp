@@ -94,6 +94,9 @@
     		</div>
     	</div>
     </div>
+	<div class="scrollTopBtn">
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2 160 448c0 17.7 14.3 32 32 32s32-14.3 32-32l0-306.7L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"></path></svg>
+	</div>
     <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function(){
     	const inputWrap = document.querySelector(".sch_wrap");
@@ -118,6 +121,22 @@
 	$(document).on("click",".userbtn", function(){
 		$(this).toggleClass('active');
 	});
+
+	//scroll-top btn
+	let preScrollTop = 0;
+	window.addEventListener('scroll',() => {
+		let nextScrollTop = window.scrollY;
+		if(preScrollTop > nextScrollTop) {
+			$(".scrollTopBtn").fadeIn();
+		}else{
+
+			$(".scrollTopBtn").fadeOut();
+		}
+		preScrollTop = nextScrollTop;
+	});
+	$(document).on("click",".scrollTopBtn",function(){
+		$('html').scrollTop(0);
+	})
     </script>
 </body>
 </html>

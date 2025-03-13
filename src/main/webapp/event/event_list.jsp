@@ -262,10 +262,6 @@
 	let page=2;
 
 	//스크롤할때
-	$(window).scroll(function () {
-
-	});
-
 	let preScrollTop = 0;
 
 	window.addEventListener('scroll',() => {

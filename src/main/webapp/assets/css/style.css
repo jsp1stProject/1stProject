@@ -376,6 +376,27 @@ button[aria-expanded=true] .i_menu, button[aria-expanded=true] .i_menu:before, b
     }
 }
 
+.scrollTopBtn {
+    display:none;
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    width: 46px;
+    height: 46px;
+    border: 1px solid #393939;
+    border-radius: 50px;
+    background-color:#ffffff;
+    text-align: center;
+    padding: 8px 0;
+    cursor: pointer;
+    opacity: 0.9;
+    z-index: 100;
+}
+.scrollTopBtn svg{
+    width: 40%;
+    fill: #393939;
+}
+
 /*검색창*/
 
 .search-wrap {
@@ -1204,6 +1225,7 @@ button.bookmark-btn.on{background-image: url("data:image/svg+xml,%3Csvg xmlns='h
 }
 
 .content-ul .title-wrap p.location {
+    font-size:15px;
     color: #898989;
 }
 
