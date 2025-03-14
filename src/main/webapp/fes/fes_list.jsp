@@ -93,7 +93,7 @@ $(function(){
 							</div>
 						</form>
 					</div>
-				</div>
+				</div> 
 				<div class="container-xxl py-3 px-0">
 					<div class="container">
 						<h4 class="search-title mb-3"><span>제주도</span>에 대한 총 <span>${list.size()}</span> 건의 검색 결과</h4>
