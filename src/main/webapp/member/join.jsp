@@ -211,7 +211,7 @@ $(document).ready(function() {
 		    	<!-- <input type="date" class="form-control form_list" id="birthday" placeholder="생일" required style="background-image: url(../assets/img/date.png)">-->
 		    		<div style="position: relative; display: inline-block;">
 				    	<label for="birthday" id="birthdayLabel" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #aaa; pointer-events: none;"></label>
-				    	<input type="text" name="birthday" id="birthday" class="form-control" placeholder="생년월일" style="background-image: url('../assets/img/date.png'); background-repeat: no-repeat; background-position: 10px center; padding-left: 40px;">
+				    	<input type="text" name="birthday" id="birthday" class="form-control" placeholder="생년월일" required style="background-image: url('../assets/img/date.png'); background-repeat: no-repeat; background-position: 10px center; padding-left: 40px;">
 					</div>
 		    	<input type="text" class="form-control form_list" name="email" id="email" placeholder="이메일" required style="background-image: url(../assets/img/email.png)">
 		    	<input type="text" class="form-control form_list" name="addr1" id="addr1" placeholder="주소" required style="background-image: url(../assets/img/address.png)">
