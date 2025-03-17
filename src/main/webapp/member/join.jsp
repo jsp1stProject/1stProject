@@ -44,7 +44,7 @@
 	border-radius: 0;
 	height: 3rem;
 	width: 420px;
-	paddig: 0.375rem 2.4rem;
+	paddig: 0.375rem 2.4rem !important;
 }
 .user {
 }
@@ -98,6 +98,12 @@ $(document).ready(function() {
         } else {
             $('#birthdayLabel').show();  // 값이 없으면 label 보이기
         }
+		let birthday = $(this).val().replace(/[^0-9]/g, ''); // 숫자 외 문자 제거
+        // 8자리 이상이면 입력을 차단
+        if (birthday.length > 8) {
+        	birthday = birthday.slice(0, 8); // 8자리까지만 입력하도록 제한
+        }
+		$('#birthday').val(birthday);
     });
 
     // 날짜 형식으로 자동 변환
@@ -174,7 +180,20 @@ $(document).ready(function() {
             $('#pwdCheck').html('<span style="color: red; margin-left: -10.5rem;">•비밀번호는 6자리 이상이어야 합니다.</span>');
         }
     });
-
+    
+	$('#birthday').focus(function() {
+		$('#validation').html('');
+	});
+	$('#birthday').blur(function() {
+		let birthday = $('#birthday').val().trim();
+		if (birthday === '' || birthday.length < 8) {
+			$('#validation').html('<span class="vaildationCheck" style="color: red;">•생년월일은 8자리여야 합니다.</span>')
+			return;
+		} else {
+			$('validation').html('');
+		}
+	});
+	
     $('#name').focus(function() {
         $('#nameCheck').html('');
     });
@@ -187,9 +206,6 @@ $(document).ready(function() {
             $('#nameCheck').html('');
         }
     });
-    
-    
-
 });
 </script>
 </head>
@@ -198,25 +214,28 @@ $(document).ready(function() {
 		<div class="center-wrap">
 			<form method="post" action="../member/join_ok.do" name="frm" id="frm">
 			<div class="user d-flex flex-column align-items-center" style="margin-bottom: 1rem;">
-		    	<input type="text" class="form-control form_list" name="id" id="id" placeholder="아이디" required style="border-radius: 10px 10px 0 0; background-image: url(../assets/img/id.png)">
-		    	<input type="password" class="form-control form_list" name="pwd" id="pwd" placeholder="비밀번호" required style="background-image: url(../assets/img/password.png)">
-		    	<input type="text" class="form-control form_list" name="name" id="name" placeholder="이름" required style="border-radius: 0 0 10px 10px; background-image: url(../assets/img/name.png)">
+		    	<input type="text" class="form-control form_list" name="id" id="id" placeholder="아이디" required style="border-radius: 10px 10px 0 0; background-image: url(../assets/img/id.png); padding: 0.375rem 2.4rem;">
+		    	<input type="password" class="form-control form_list" name="pwd" id="pwd" placeholder="비밀번호" required style="background-image: url(../assets/img/password.png); padding: 0.375rem 2.4rem;">
+		    	<input type="text" class="form-control form_list" name="name" id="name" placeholder="이름" required style="border-radius: 0 0 10px 10px; background-image: url(../assets/img/name.png); padding: 0.375rem 2.4rem;">
     	 		<span id="idCheck"></span>
     	 		<span id="pwdCheck"></span>
     	 		<span id="nameCheck"></span>
     	 	</div>
-    	 	<div class="user d-flex flex-column align-items-center" style="margin-bottom: 0.5rem;">
-		    	<input type="text" class="form-control form_list" name="nickname" id="nickname" placeholder="닉네임" required style="border-radius: 10px 10px 0 0; background-image: url(../assets/img/name.png)">
+    	 	<div class="user d-flex flex-column align-items-center" style="">
+		    	<input type="text" class="form-control form_list" name="nickname" id="nickname" placeholder="닉네임" required style="border-radius: 10px 10px 0 0; background-image: url(../assets/img/name.png); padding: 0.375rem 2.4rem;">
 		    	<!--<input type="text" class="form-control form_list" id="sex" placeholder="성별" required style="background-image: url(../assets/img/sex.png)"> -->
 		    	<!-- <input type="date" class="form-control form_list" id="birthday" placeholder="생일" required style="background-image: url(../assets/img/date.png)">-->
 		    		<div style="position: relative; display: inline-block;">
 				    	<label for="birthday" id="birthdayLabel" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #aaa; pointer-events: none;"></label>
-				    	<input type="text" name="birthday" id="birthday" class="form-control" placeholder="생년월일" required style="background-image: url('../assets/img/date.png'); background-repeat: no-repeat; background-position: 10px center; padding-left: 40px;">
+				    	<input type="text" name="birthday" id="birthday" class="form-control" placeholder="생년월일 8자리" required style="background-image: url('../assets/img/date.png'); background-repeat: no-repeat; background-position: 10px center; padding-left: 40px;">
 					</div>
-		    	<input type="text" class="form-control form_list" name="email" id="email" placeholder="이메일" required style="background-image: url(../assets/img/email.png)">
-		    	<input type="text" class="form-control form_list" name="addr1" id="addr1" placeholder="주소" required style="background-image: url(../assets/img/address.png)">
-		    	<input type="text" class="form-control form_list" name="zipcode" id="zipcode" placeholder="우편번호" required style="background-image: url(../assets/img/zipcode.png)">
-		    	<input type="text" class="form-control form_list" name="phone" id="phone" placeholder="전화번호" required style="background-image: url(../assets/img/phone.png); border-radius: 0 0 10px 10px;">
+		    	<input type="text" class="form-control form_list" name="email" id="email" placeholder="이메일" required style="background-image: url(../assets/img/email.png); padding: 0.375rem 2.4rem;">
+		    	<input type="text" class="form-control form_list" name="addr1" id="addr1" placeholder="주소" required style="background-image: url(../assets/img/address.png); padding: 0.375rem 2.4rem;">
+		    	<input type="text" class="form-control form_list" name="zipcode" id="zipcode" placeholder="우편번호" required style="background-image: url(../assets/img/zipcode.png); padding: 0.375rem 2.4rem;">
+		    	<input type="text" class="form-control form_list" name="phone" id="phone" placeholder="전화번호" required style="background-image: url(../assets/img/phone.png); border-radius: 0 0 10px 10px; padding: 0.375rem 2.4rem;">
+		    	<div class="d-flex bd-highlight mb-3">
+		    	</div>
+		    	<span id="validation"></span>
 	    		<!-- 
 	    		<select class="form-select gender-select" aria-label="Default select example" style="border-radius: 0 0 10px 10px; width: 420px; height: 3rem;">
 			  		<option title="../assets/img/sex.png" selected>성별</option>

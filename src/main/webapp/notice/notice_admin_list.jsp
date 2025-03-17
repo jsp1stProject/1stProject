@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -57,6 +58,7 @@ function changeButtonText(element) {
 			</tr>
 			</thead>
 			<tbody>
+			<c:forEach var="vo" items="${list }">
 			<tr>
 				<td width="9%" class="text-center">1</td>
 				<td width="11%" class="text-center">행사</td>
@@ -65,6 +67,7 @@ function changeButtonText(element) {
 				<td width="15%" class="text-center">2025.03.08</td>
 				<td width="10%" class="text-center">1</td>
 			</tr>
+			</c:forEach>
 			<tr>
 				<td width="9%" class="text-center">2</td>
 				<td width="11%" class="text-center">숙소</td>
