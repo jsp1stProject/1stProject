@@ -12,12 +12,12 @@
 	<div class="container-fluid p-0 pb-4 wow fadeIn" data-wow-delay="0.1s">
 		<div class="event_main_wrap" style="background-image:url(/assets/img/event_main.png)">
 			<div class="event_main_schwrap">
-				<div class="event_main_schinner">
-					<form method="post" action="../event/event_list.do" name="keywordform">
+				<form method="post" action="../event/event_list.do" name="keywordform">
+					<div class="event_main_schinner">
 						<input type="text" name="key" placeholder="가고싶은 행사가 있나요?">
 						<input type="submit">
-					</form>
-				</div>
+					</div>
+				</form>
 			</div>
 			<div class="event_main_schwrap">
 				<div class="event_main_selinner">
@@ -32,29 +32,10 @@
 						<li><button type="button" id="a31">경기</button></li>
 						<li><button type="button" id="a2">인천</button></li>
 						<li><button type="button" id="a32">강원</button></li>
-						<li><button type="button" id="a35">경상(울산, 대구)</button></li>
-						<li><button type="button" id="a37">전라(광주)</button></li>
-						<li><button type="button" id="a33">충청(대전, 세종)</button></li>
+						<li><button type="button" id="a35">경북, 경남, 울산, 대구</button></li>
+						<li><button type="button" id="a37">전북, 전남, 광주</button></li>
+						<li><button type="button" id="a33">충북, 충남, 대전, 세종</button></li>
 					</ul>
-					<form method="post" action="../event/event_area.jsp" name="areaform">
-						<input type="checkbox" name="type" value="1" id="1">
-						<input type="checkbox" name="type" value="2" id="2">
-						<input type="checkbox" name="type" value="3" id="3">
-						<input type="checkbox" name="type" value="4" id="4">
-						<input type="checkbox" name="type" value="5" id="5">
-						<input type="checkbox" name="type" value="6" id="6">
-						<input type="checkbox" name="type" value="7" id="7">
-						<input type="checkbox" name="type" value="8" id="8">
-						<input type="checkbox" name="type" value="31" id="31">
-						<input type="checkbox" name="type" value="32" id="32">
-						<input type="checkbox" name="type" value="33" id="33">
-						<input type="checkbox" name="type" value="34" id="34">
-						<input type="checkbox" name="type" value="35" id="35">
-						<input type="checkbox" name="type" value="36" id="36">
-						<input type="checkbox" name="type" value="37" id="37">
-						<input type="checkbox" name="type" value="38" id="38">
-						<input type="checkbox" name="type" value="39" id="39">
-					</form>
 				</div>
 			</div>
 		</div>
@@ -237,23 +218,47 @@
 			</div>
 		</div>
 	</div>
+
+	<form method="post" action="../event/event_area.do" name="areaform" class="hidden">
+		<input type="checkbox" name="type" value="1" id="1">
+		<input type="checkbox" name="type" value="2" id="2">
+		<input type="checkbox" name="type" value="3" id="3">
+		<input type="checkbox" name="type" value="4" id="4">
+		<input type="checkbox" name="type" value="5" id="5">
+		<input type="checkbox" name="type" value="6" id="6">
+		<input type="checkbox" name="type" value="7" id="7">
+		<input type="checkbox" name="type" value="8" id="8">
+		<input type="checkbox" name="type" value="31" id="31">
+		<input type="checkbox" name="type" value="32" id="32">
+		<input type="checkbox" name="type" value="33" id="33">
+		<input type="checkbox" name="type" value="34" id="34">
+		<input type="checkbox" name="type" value="35" id="35">
+		<input type="checkbox" name="type" value="36" id="36">
+		<input type="checkbox" name="type" value="37" id="37">
+		<input type="checkbox" name="type" value="38" id="38">
+		<input type="checkbox" name="type" value="39" id="39">
+		<input type="text" name="areaStr" value="" id="areaStr">
+	</form>
 <script type="text/javascript">
 	$(document).on("click","#event_sel_btn",function(){
 		$(".event_main_sel_ul").fadeToggle(100);
 	});
 	$(document).on("click",".event_main_sel_ul button",function(){
-		if($(this).attr("id")==="a1"){
-			$("form[name=areaform] input#1").prop("checked",true);
-		}else if($(this).attr("id")==="a2"){
-			alert("부산");
-		}
 		let thisid=$(this).attr("id").substring(1);
 		$("form[name=areaform] input").map(function(index,el){
 			if($(el).attr("id")===thisid){
 				$(el).prop("checked",true);
 			}
-		})
-
+			if(thisid==="35"){
+				$("#4, #7, #36").prop("checked",true);
+			}else if(thisid==="37"){
+				$("#5, #38").prop("checked",true);
+			}else if(thisid==="33"){
+				$("#3, #8, #34").prop("checked",true);
+			}
+		});
+		$("#areaStr").val($(this).text());
+		$("form[name=areaform]").submit();
 	});
 
 </script>

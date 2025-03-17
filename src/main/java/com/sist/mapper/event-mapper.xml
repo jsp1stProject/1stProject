@@ -44,7 +44,10 @@
 				WHERE regexp_like(TITLE,#{key},'i')
 			</when>
 			<when test="areacode!=null">
-				WHERE AREACODE in (#{areacode})
+				WHERE AREACODE in
+				<foreach collection="areacode" item="c" separator="," open="(" close=")">
+					#{c}
+				</foreach>
 			</when>
 		</choose>
 		<if test="filtermin != null">
@@ -70,7 +73,10 @@
 				WHERE regexp_like(TITLE,#{key},'i')
 			</when>
 			<when test="areacode!=null">
-				WHERE AREACODE in (#{areacode})
+				WHERE AREACODE in
+				<foreach collection="areacode" item="c" separator="," open="(" close=")">
+					#{c}
+				</foreach>
 			</when>
 		</choose>
 

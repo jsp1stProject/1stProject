@@ -2,12 +2,17 @@ package com.sist.dao;
 
 import com.sist.commons.CreateSqlSessionFactory;
 import com.sist.vo.EventVO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class EventDAO {
 	private static SqlSessionFactory ssf;
@@ -73,7 +78,25 @@ public class EventDAO {
 			}
 		}
 	}
-	
+
+	public static JSONObject jsonParse(HttpServletRequest request, HttpServletResponse response) {
+		BufferedReader reader= null;
+		StringBuilder sb=new StringBuilder();
+		JSONParser jsonparse=new JSONParser();
+		JSONObject json;
+		try {
+			reader = request.getReader();
+			String line;
+			while((line=reader.readLine())!=null) {
+				sb.append(line);
+			}
+			json=(JSONObject)jsonparse.parse(sb.toString());
+		} catch (IOException | ParseException e) {
+			throw new RuntimeException(e);
+		}
+		return json;
+	}
+
 	public static List<EventVO> mainEventList() {
 		SqlSession session = null;
 		List<EventVO> list = null;

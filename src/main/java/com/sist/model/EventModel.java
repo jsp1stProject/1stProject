@@ -8,33 +8,31 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class EventModel {
 	@RequestMapping("event/main.do")
 	public String event_main(HttpServletRequest request, HttpServletResponse response) {
 		HashMap map = new HashMap();
-		map.put("areacode", "1");
+		String[] code={"1"};
+		map.put("areacode", code);
 		map.put("start", "1");
 		map.put("end", "8");
 		List<EventVO> arealist1= EventDAO.eventSearchList(map);
 		request.setAttribute("arealist1", arealist1);
 
-		map.put("areacode", "6");
+		code[0]="6";
+		map.put("areacode", code);
 		List<EventVO> arealist2= EventDAO.eventSearchList(map);
 		request.setAttribute("arealist2", arealist2);
 
-		map.put("areacode", "39");
+		code[0]="39";
+		map.put("areacode", code);
 		List<EventVO> arealist3= EventDAO.eventSearchList(map);
 		request.setAttribute("arealist3", arealist3);
 
@@ -46,6 +44,7 @@ public class EventModel {
 
 		request.setAttribute("wide", "y");
 		request.setAttribute("main_jsp", "../event/event_home.jsp");
+		request.setAttribute("event", "y"); //event page
 		request.setAttribute("title", "메인");
 		return "../main/main.jsp";
 	}
@@ -60,7 +59,7 @@ public class EventModel {
 		map.put("key", request.getParameter("key"));
 		//최대값,최소값,결과개수
 		EventVO vo=EventDAO.eventSearchDefault(map);
-		if(vo!=null){
+		if(vo.getMaxprice()!=null){
 			request.setAttribute("maxprice", vo.getMaxprice());
 			request.setAttribute("minprice", vo.getMinprice());
 		}else{ //row 없으면
@@ -70,6 +69,7 @@ public class EventModel {
 
 		request.setAttribute("wide", "y");//wide screen true
 		request.setAttribute("is", "y"); //infinite scroll true
+		request.setAttribute("event", "y"); //event page
 		request.setAttribute("main_jsp", "../event/event_list.jsp");
 		request.setAttribute("title", "검색결과");
 		return "../main/main.jsp";
@@ -79,20 +79,7 @@ public class EventModel {
 	public void event_list_data(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/x-json;charset=UTF-8");
 		//request 파싱
-        BufferedReader reader= null;
-		StringBuilder sb=new StringBuilder();
-		JSONParser jsonparse=new JSONParser();
-		JSONObject json;
-        try {
-            reader = request.getReader();
-			String line;
-			while((line=reader.readLine())!=null) {
-				sb.append(line);
-			}
-			json=(JSONObject)jsonparse.parse(sb.toString());
-        } catch (IOException | ParseException e) {
-            throw new RuntimeException(e);
-        }
+        JSONObject json=EventDAO.jsonParse(request,response);
 		String key=json.get("key").toString();
 		String page=json.get("curpage").toString();
 		String filter=json.get("filter").toString(); //filter true/false
@@ -170,7 +157,8 @@ public class EventModel {
 
 		//parameter 매핑
 		HashMap map = new HashMap();
-		map.put("areacode", request.getParameter("areacode"));
+		String[] catelist=request.getParameterValues("type");
+		map.put("areacode", catelist);
 		//최대값,최소값,결과개수
 		EventVO vo=EventDAO.eventSearchDefault(map);
 		if(vo!=null){
@@ -180,9 +168,11 @@ public class EventModel {
 			request.setAttribute("maxprice", 0);
 			request.setAttribute("minprice", 0);
 		}
+		request.setAttribute("areaStr",request.getParameter("areastr"));
 
 		request.setAttribute("wide", "y");//wide screen true
 		request.setAttribute("is", "y"); //infinite scroll true
+		request.setAttribute("event", "y"); //event page
 		request.setAttribute("main_jsp", "../event/event_area.jsp");
 		request.setAttribute("title", "검색결과");
 		return "../main/main.jsp";
@@ -192,28 +182,28 @@ public class EventModel {
 	public void event_arealist_data(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/x-json;charset=UTF-8");
 		//request 파싱
-		BufferedReader reader= null;
-		StringBuilder sb=new StringBuilder();
-		JSONParser jsonparse=new JSONParser();
-		JSONObject json;
-		try {
-			reader = request.getReader();
-			String line;
-			while((line=reader.readLine())!=null) {
-				sb.append(line);
+		JSONObject json=EventDAO.jsonParse(request, response);
+		String codestr=json.get("areacode").toString();
+		int[] codeArr2 = new int[0];
+		if(codestr.contains("[")){
+			codestr=codestr.substring(1,codestr.length()-1);
+			String[] codeArr=codestr.split(",");
+			codeArr2=new int[codeArr.length];
+			for(int i=0;i<codeArr.length;i++){
+				System.out.println(codeArr[i]);
+				if(!codeArr[i].equals("")) {
+					codeArr2[i]=Integer.parseInt(codeArr[i]);
+				}
 			}
-			json=(JSONObject)jsonparse.parse(sb.toString());
-		} catch (IOException | ParseException e) {
-			throw new RuntimeException(e);
 		}
-		String areacode=json.get("areacode").toString();
+
 		String page=json.get("curpage").toString();
 		String filter=json.get("filter").toString(); //filter true/false
 
 		//기본 parameter 매핑
 		HashMap map = new HashMap();
 		int curpage=Integer.parseInt(page);
-		map.put("areacode", areacode);
+		map.put("areacode", codeArr2);
 		map.put("start", (10*curpage)-9);
 		map.put("end", 10*curpage);
 
@@ -226,6 +216,7 @@ public class EventModel {
 			System.out.println("filtermax:"+json.get("filtermax").toString());
 		}
 		if(json.get("cate")!=null){ //카테고리 필터 적용했을 때만 매핑
+			System.out.println("cate:"+json.get("cate").toString());
 			catelist=json.get("cate").toString().split(",");
 			map.put("cate", catelist);
 		}
@@ -234,7 +225,6 @@ public class EventModel {
 		}
 
 		System.out.println("filter:"+filter);
-		System.out.println("cate:"+catelist.toString());
 
 		//검색결과 총개수
 		EventVO cvo=EventDAO.eventSearchDefault(map);

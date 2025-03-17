@@ -326,7 +326,9 @@ button[aria-expanded=true] .i_menu, button[aria-expanded=true] .i_menu:before, b
 .navbar .navbar-nav .nav-link.active {
     color: var(--primary);
 }
-
+.navbar .navbar-nav .nav-link.active{
+    font-weight: 800;
+}
 .navbar.fixed-top {
     transition: .5s;
 }
@@ -484,8 +486,8 @@ button[aria-expanded=true] .i_menu, button[aria-expanded=true] .i_menu:before, b
 .sch_wrap input[type=text]{
     width:100%;
     font-size: 18px;
-    line-height: 60px;
-    padding: 0 14px;
+    line-height: 50px;
+    padding: 0 14px 0 20px;
 }
 .sch_wrap select{
     width:90px;
@@ -493,7 +495,7 @@ button[aria-expanded=true] .i_menu, button[aria-expanded=true] .i_menu:before, b
     font-size: 14px;
 }
 
-.sch_wrap input[type=submit]{
+.sch_wrap input[type=submit], .event_main_schinner input[type=submit]{
     width: 59px;
     min-width: auto;
     background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3C!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--%3E%3Cpath style='fill:%231f9edd;' d='M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z'/%3E%3C/svg%3E") no-repeat center center / 24px;
@@ -1168,7 +1170,8 @@ ul.content-ul {
     flex-shrink: 0;
     width: 160px;
     padding-top: 120px;
-    background: url('../img/hotel1.jpg') no-repeat center center / cover;
+    background: no-repeat center center / cover;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200' fill='none'%3E%3Crect width='200' height='200' fill='%23F2F2F2'/%3E%3Crect x='44' y='56' width='111' height='87' rx='14' stroke='white' stroke-width='4'/%3E%3Cpath d='M53 120.705L77.1994 89.4879C79.2915 86.7891 83.4132 86.9349 85.3094 89.7748L104.705 118.824C106.676 121.775 111.007 121.792 113 118.856L123.901 102.802C125.855 99.9238 130.077 99.8708 132.102 102.699L145 120.705' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E");
     border-radius: 10px;
 }
 button.bookmark-btn {
@@ -1216,7 +1219,8 @@ button.bookmark-btn.on{background-image: url("data:image/svg+xml,%3Csvg xmlns='h
 }
 .content-ul .title-wrap p.content-name {
     margin-bottom:2px;
-    font-size: 20px;
+    font-size: 18px;
+    padding: 2px 0;
     max-height: 50px;
     line-height:1.2;
     text-overflow: ellipsis;
@@ -1503,9 +1507,12 @@ button.resetbtn:focus{
 .sch_wrap.area svg {
     width:30px;
 }
-.sch_wrap.area input:disabled{
+.sch_wrap.area p{
+    font-size:18px;
+    line-height: 50px;
     padding:0 6px;
     color:#000000;
+    margin:0;
 }
 
 /*search template*/
@@ -1513,7 +1520,8 @@ button.resetbtn:focus{
 /*event main*/
 .event_main_wrap {
     height:500px;
-    background:url(../assets/img/hotel.jpg) no-repeat center / cover;
+    background: no-repeat center center / cover;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200' fill='none'%3E%3Crect width='200' height='200' fill='%23F2F2F2'/%3E%3Crect x='44' y='56' width='111' height='87' rx='14' stroke='white' stroke-width='4'/%3E%3Cpath d='M53 120.705L77.1994 89.4879C79.2915 86.7891 83.4132 86.9349 85.3094 89.7748L104.705 118.824C106.676 121.775 111.007 121.792 113 118.856L123.901 102.802C125.855 99.9238 130.077 99.8708 132.102 102.699L145 120.705' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E");
     display: flex;
     justify-content: center;
     align-content: center;
@@ -1527,16 +1535,16 @@ button.resetbtn:focus{
     margin-bottom:10px;
 }
 
-.event_main_schinner,.event_main_selinner,.event_main_schwrap .event_main_sel_ul {
+.event_main_wrap .event_main_schinner,.event_main_wrap .event_main_selinner,.event_main_sel_ul {
     width: 100%;
     border-radius: 30px;
-    background-color:rgb(255 255 255);
+    background-color:rgb(255 255 255)!important;
     box-shadow: 0 0 15px 0 rgb(0 0 0 / 18%);
     -webkit-box-shadow: 0 0 15px 0 rgb(0 0 0 / 52%);
     -moz-box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.2);
 }
 
-.event_main_wrap input, .event_main_wrap button, .event_main_wrap ul, .event_main_wrap p{
+.event_main_wrap input, .event_main_wrap button, .event_main_wrap ul, .event_main_wrap p, .event_main_selinner button, .event_main_sel_ul{
     background:none;
     border:none;
     list-style:none;
@@ -1545,15 +1553,18 @@ button.resetbtn:focus{
     width:100%;
     text-align:left;
 }
-.event_main_wrap input:placeholder{
+.event_main_wrap input::placeholder {
     color:#dddddd;
 }
 .event_main_schwrap .event_main_schinner, .event_main_schwrap .event_main_selinner {
-    position:relative;
-    padding:14px 20px;
+    padding:14px 5px 14px 20px;
     font-size:18px;
 }
-.event_main_schwrap .event_main_selinner{
+.event_main_schinner{
+    display:flex;
+}
+.event_main_selinner{
+    position:relative;
     cursor:pointer;
 }
 .event_main_sel{
@@ -1565,12 +1576,12 @@ button.resetbtn:focus{
 .event_main_schwrap .event_main_selinner svg{
     width:30px;
 }
-.event_main_schwrap .event_main_sel_ul{
+.event_main_sel_ul{
     display:none;
     position:absolute;
     top:64px;
     left:0;
-    padding: 14px 0;
+    padding: 14px 0!important;
     z-index:2;
     overflow:hidden;
 }
@@ -1579,5 +1590,9 @@ button.resetbtn:focus{
 }
 .event_main_sel_ul li button:hover{
     background-color:#0000000d;
+}
+form.hidden{
+    height:0;
+    overflow:hidden;
 }
 /*event main*/
