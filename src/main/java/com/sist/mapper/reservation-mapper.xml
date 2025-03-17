@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sist.mapper.reservation-mapper">
+	<insert id="reservationInsert" parameterType="ReservationVO">
+		<!-- 
+			쿠폰 적용 여부
+			회원 여부
+			status
+				O: 예약가능
+				R: 예약 중
+				C: 예약 완료
+				X: 예약 취소
+		 -->
+		INSERT INTO reservation (reserve_id, content_id, room_id, offseason_minfee1, reserve_date, check_in_date, 
+								 check_out_date, people_count, arrival_type, pay_amount, status
+								 <if test="isCouponApplied">
+								 	, user_coupon
+								 </if>
+								 <if test="isMember">
+								 	, user_id 
+								 </if>
+								 )
+		 			VALUES(#{reserve_id}, #{content_id}, #{room_id}, #{offseason_minfee1}, #{reserve_date}, 
+		 				   #{check_in_date, #{check_out_date}, #{people_count}, #{arrival_type}, #{pay_amount}, #{status}
+		 				   <if test="isCouponApplied">
+		 				   		, #{user_coupon}
+		 				   </if>
+		 				   <if test="isMember">
+		 				   		, #{user_id}
+		 				   </if>
+		 				   )
+	</insert>
+</mapper>
