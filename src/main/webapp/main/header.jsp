@@ -2,10 +2,6 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
 <body>
 	<%// wow는 main에서만 적용 %>
     <nav class="navbar navbar-expand-lg fixed-top py-lg-0 px-lg-4 ${title eq '메인'?'wow':'bg-white' }">
@@ -126,7 +122,7 @@
 	let preScrollTop = 0;
 	window.addEventListener('scroll',() => {
 		let nextScrollTop = window.scrollY;
-		if(preScrollTop > nextScrollTop) {
+		if(preScrollTop > nextScrollTop && window.scrollY!==0) {
 			$(".scrollTopBtn").fadeIn();
 		}else{
 
