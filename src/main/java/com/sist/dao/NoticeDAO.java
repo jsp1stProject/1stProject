@@ -30,11 +30,13 @@ public class NoticeDAO {
 	}
 	public static NoticeVO noticeDetailData(int no) {
 		SqlSession session = ssf.openSession();
+		session.update("noticeHitIncrement", no);
+		session.commit();
 		NoticeVO vo = session.selectOne("noticeDetailData", no);
 		session.close();
 		return vo;
 	}
-	public static void noticeInsert(NoticeVO vo ) {
+	public static void noticeInsert(NoticeVO vo) {
 		SqlSession session = ssf.openSession();
 		session.insert("noticeInsert", vo);
 		session.commit();
