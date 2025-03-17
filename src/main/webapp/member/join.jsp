@@ -211,7 +211,7 @@ $(document).ready(function() {
 		    	<!-- <input type="date" class="form-control form_list" id="birthday" placeholder="생일" required style="background-image: url(../assets/img/date.png)">-->
 		    		<div style="position: relative; display: inline-block;">
 				    	<label for="birthday" id="birthdayLabel" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #aaa; pointer-events: none;"></label>
-				    	<input type="text" name="birthday" id="birthday" class="form-control" placeholder="생년월일" style="background-image: url('../assets/img/date.png'); background-repeat: no-repeat; background-position: 10px center; padding-left: 40px;">
+				    	<input type="text" name="birthday" id="birthday" class="form-control" placeholder="생년월일" required style="background-image: url('../assets/img/date.png'); background-repeat: no-repeat; background-position: 10px center; padding-left: 40px;">
 					</div>
 		    	<input type="text" class="form-control form_list" name="email" id="email" placeholder="이메일" required style="background-image: url(../assets/img/email.png)">
 		    	<input type="text" class="form-control form_list" name="addr1" id="addr1" placeholder="주소" required style="background-image: url(../assets/img/address.png)">
@@ -225,19 +225,13 @@ $(document).ready(function() {
 				</select>
 				 -->
 	    	</div>
-	    	</form>
 	    	<div class="user d-flex flex-column align-items-center">
-	    		<button class="btn btn-primary joinB" id="trans" type="button">회원가입</button>
+	    		<button class="btn btn-primary joinB" id="trans" type="submit">회원가입</button>
 	    	</div>
+	    	</form>
 		</div>
 	</div>
 <script type="text/javascript">
-$(function() {
-	$('#trans').click(function() {
-    	$('#frm').submit();
-    })
-})
-
 /*
 let prevEmptyFields = []; // 포커스 전 비어 있던 ID 저장
 

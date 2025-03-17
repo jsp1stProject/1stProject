@@ -2,10 +2,6 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
 <body>
 	<%// wow는 main에서만 적용 %>
     <nav class="navbar navbar-expand-lg fixed-top py-lg-0 px-lg-4 ${title eq '메인'?'wow':'bg-white' }">
@@ -16,7 +12,7 @@
 	        <div class="collapse navbar-collapse" id="navbarCollapse">
 	            <div class="navbar-nav mx-auto p-4 p-lg-0">
 	                <a href="../hotel/hotel_list.do" class="nav-item nav-link">숙소</a>
-	                <a href="index.html" class="nav-item nav-link">행사</a>
+	                <a href="../event/main.do" class="nav-item nav-link ${not empty event?'active':''}">행사</a>
 	                <a href="../fes/fes_list.do" class="nav-item nav-link">축제</a>
 	                <a href="about.html" class="nav-item nav-link">지도보기</a>
 	                <div class="nav-item">
@@ -126,7 +122,7 @@
 	let preScrollTop = 0;
 	window.addEventListener('scroll',() => {
 		let nextScrollTop = window.scrollY;
-		if(preScrollTop > nextScrollTop) {
+		if(preScrollTop > nextScrollTop && window.scrollY!==0) {
 			$(".scrollTopBtn").fadeIn();
 		}else{
 

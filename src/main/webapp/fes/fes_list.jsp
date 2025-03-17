@@ -48,17 +48,38 @@ $(function(){
 								<input type="checkbox" name="ss" id="t2" value="A02070200">
 								<label for="t2">일반축제</label>
 							</div>
-							<!-- <h6>지역별</h6>
+							<!-- 
+								서울   1
+								인천   2
+								대전   3
+								대구   4
+								광주   5
+								부산   6
+								울산   7
+								세종   8
+								경기   31
+								강원   32
+								충북   33		
+								충남   34
+								경북   35		
+								경남   36
+								전북   37		
+								전남   38
+								제주   39
+							
+							 -->
+							<h6 name="type" value="areacode">지역별</h6>
 							<div class="checkbtn-wrap">
-								<input type="checkbox" name="type" id="t3">
-								<label for="t1">서울</label>
-								<input type="checkbox" name="type" id="t4">
-								<label for="t2">경기</label>
-								<input type="checkbox" name="type" id="t5">
-								<label for="t2">강원</label>
-								<input type="checkbox" name="type" id="t6">
-								<label for="t2">부산</label>
+								<input type="checkbox" name="ac" id="t3" value=1>
+								<label for="t3">서울</label>
+								<input type="checkbox" name="ac" id="t4" value=2>
+								<label for="t4">인천</label>
+								<input type="checkbox" name="ac" id="t5" value=3>
+								<label for="t5">대전</label>
+								<input type="checkbox" name="ac" id="t6" value=4>
+								<label for="t6">대구</label>
 							</div>
+							<!-- 
 							<h6>정렬</h6>
 							<div class="checkbtn-wrap">
 								<input type="checkbox" name="type" id="t7">

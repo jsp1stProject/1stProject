@@ -53,7 +53,7 @@
 							</div>
 						</div>
 						<div class="filter-item">
-							<button type="button" class="filterschbtn" onclick="filtersubmit();">검색</button>
+							<button type="button" class="filterschbtn" onclick="filtersubmit();"><span>0</span>개 행사 보기</button>
 						</div>
 					</div>
 					</form>
@@ -138,7 +138,7 @@
 	});
 
 	//--------------------ajax
-	async function data(page,isScroll,isFilter,form){
+	async function data(page,isScroll,isFilter,form,isPreview){
 		let data={
 			"key": $("#key").val(),
 			"curpage": page,
@@ -172,8 +172,10 @@
 				},
 				data:JSON.stringify(data)
 			});
-			listadd(response.data,isScroll);
-			console.log(response);
+			$('.filterschbtn span').text(response.data[0].count==0?'0':response.data[0].count.toLocaleString('ko-KR'));
+			if(!isPreview){
+				listadd(response.data,isScroll);
+			}
 		} catch (e) {
 			console.log(e);
 			throw new Error(e);
@@ -193,7 +195,7 @@
 				data.map(function(vo){
 					html+=`<li>
 <a href="#" class="d-flex">
-<div class="thumb-wrap" style="background-image:url(`+vo.first_image+`)">
+<div class="thumb-wrap" `+(vo.first_image==="N/A"?"":" style='background-image:url("+vo.first_image+")'")+`>
 <button type="button" class="bookmark-btn on"></button>
 </div>
 <div class="d-flex flex-column flex-md-row right">
@@ -213,19 +215,18 @@
 </div>
 </a>
 </li>`
-
 				});
 			}
 			$('.content-ul').append(html);
 			$('#count').text(data[0].count==0?'0':data[0].count.toLocaleString('ko-KR'));
+			$('.filterschbtn span').text(data[0].count==0?'0':data[0].count.toLocaleString('ko-KR'));
 		}
-
 		if(data.length!=0 && data[0].listend===true){ //남은 페이지가 없는 경우 listend true
 			listend=true;
 		}
 	}
 	//filter 값 변경 시 filter 적용 되었는지 체크
-	$(document).on("click",$("#filter input, #range-slider"),function(){
+	$(document).on("click","#filter input, #range-slider",function(){
 		filteron=true;
 		if($("#range-slider input[name=start]").val()==${minprice}&&
 				$("#range-slider input[name=end]").val()==${maxprice}&&
@@ -238,12 +239,13 @@
 		}else{
 			$(".cpsbtn").removeClass("active");
 		}
+		data(1,false,true,document.filterform,true); //page,scroll,filter,form,preview
 	});
 
 	//filter검색버튼
 	function filtersubmit(){
 		if(filteron){ //filter 적용 되어있으면
-			filtersrh=true;
+			filtersrh=true; //현재 출력 중인 리스트 filter 여부
 		}else{
 			filtersrh=false;
 		}
@@ -253,10 +255,13 @@
 		data(1,false,filtersrh,document.filterform);
 
 	}
+
+	//filter 리셋 버튼
 	function reset(){
 		document.filterform.reset();
 		rs.value([${minprice},${maxprice}]);
 		filteron=false;
+		data(1,false,true,document.filterform,true);
 	}
 	data(1,false);
 	let page=2;
@@ -269,12 +274,8 @@
 
 		if(defaultST < nextScrollTop) {
 			if($(window).scrollTop() + $(window).height() === $(document).height()) {
-				if(filtersrh){ //filter 적용 중이면
-					data(page,true,filtersrh,document.filterform);
-				}else{//아니면
-					data(page,true,filtersrh);
-				}
 				if(listend===false){
+					data(page,true,filtersrh,document.filterform);
 					page++;
 				}
 				console.log(page);
