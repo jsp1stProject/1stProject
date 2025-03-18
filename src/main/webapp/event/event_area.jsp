@@ -16,46 +16,48 @@
 	<div class="container">
 		<div class="row justify-content-center">
 			<div class="col-lg-3 py-3 px-0" style="position:relative">
-				<div class="filter-container active">
+				<div class="filter-container">
 					<div class="d-flex justify-content-between px-2">
 						<button class="cpsbtn">필터</button>
 						<button type="button" class="btn btn-light resetbtn" onclick="reset()">초기화</button>
 					</div>
 					<form action="" name="filterform" method="post">
-					<div class="filter-wrap" id="filter">
-						<div class="filter-item col-lg-12 col-md-4 col-sm-12"> <!-- range 타입 -->
-							<h6>가격대</h6>
-							<div id="range-slider"></div>
-							<div class="d-flex justify-content-center range-value-wrap">
-								<input type="text" class="start" disabled value="<fmt:formatNumber value="${minprice }" pattern="#,###" />원"><span class="ignr"> ~ </span><input type="text" class="end" disabled value="<fmt:formatNumber value="${maxprice }" pattern="#,###" />원">
-							</div>
-						</div>
-						<div class="filter-item"> <!--checkbox 타입-->
-							<h6>행사 유형</h6>
-							<div class="checkbtn-wrap">
-								<c:forEach items="${catemap}" var="cate" varStatus="i">
-									<input type="checkbox" name="type" id="${cate.key}">
-									<label for="${cate.key}">${cate.value}</label>
-								</c:forEach>
-							</div>
-						</div>
-						<div class="filter-item"> <!--radio 타입-->
-							<h6>행사 기간</h6>
-							<div class="radio-wrap row">
-								<div class="col-3 col-lg-6">
-									<input type="radio" name="enddate" value="false" id="enddate1" checked>
-									<label for="enddate1">전체</label>
+						<div class="filter-inner">
+							<div class="filter-wrap" id="filter">
+								<div class="filter-item col-lg-12 col-md-4 col-sm-12"> <!-- range 타입 -->
+									<h6>가격대</h6>
+									<div id="range-slider"></div>
+									<div class="d-flex justify-content-center range-value-wrap">
+										<input type="text" class="start" disabled value="<fmt:formatNumber value="${minprice }" pattern="#,###" />원"><span class="ignr"> ~ </span><input type="text" class="end" disabled value="<fmt:formatNumber value="${maxprice }" pattern="#,###" />원">
+									</div>
 								</div>
-								<div class="col-3 col-lg-6">
-									<input type="radio" name="enddate" value="true" id="enddate2">
-									<label for="enddate2">진행 중</label>
+								<div class="filter-item"> <!--checkbox 타입-->
+									<h6>행사 유형</h6>
+									<div class="checkbtn-wrap">
+										<c:forEach items="${catemap}" var="cate" varStatus="i">
+											<input type="checkbox" name="type" id="${cate.key}">
+											<label for="${cate.key}">${cate.value}</label>
+										</c:forEach>
+									</div>
+								</div>
+								<div class="filter-item"> <!--radio 타입-->
+									<h6>행사 기간</h6>
+									<div class="radio-wrap row">
+										<div class="col-3 col-lg-6">
+											<input type="radio" name="enddate" value="false" id="enddate1" checked>
+											<label for="enddate1">전체</label>
+										</div>
+										<div class="col-3 col-lg-6">
+											<input type="radio" name="enddate" value="true" id="enddate2">
+											<label for="enddate2">진행 중</label>
+										</div>
+									</div>
+								</div>
+								<div class="filter-item">
+									<button type="button" class="filterschbtn" onclick="filtersubmit();"><span>0</span>개 행사 보기</button>
 								</div>
 							</div>
 						</div>
-						<div class="filter-item">
-							<button type="button" class="filterschbtn" onclick="filtersubmit();"><span>0</span>개 행사 보기</button>
-						</div>
-					</div>
 					</form>
 				</div>
 			</div>
@@ -123,10 +125,8 @@
 		var con=$(this).closest('.filter-container')
 		if(con.hasClass('active')){
 			con.removeClass('active');
-			$('.slimScrollDiv').fadeOut(300);
 		}else{
 			con.addClass('active');
-			$('.slimScrollDiv').fadeIn(300);
 		}
 	});
 	const rs= rangeSlider(document.querySelector('#range-slider'), {

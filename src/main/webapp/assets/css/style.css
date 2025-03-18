@@ -1289,6 +1289,23 @@ li.noresult {
     line-height: 150px;
     border-bottom: none;
 }
+
+.filter-container{
+    position:absolute;
+    width:100%;
+    top:14px;
+    transition: all .3s ease-out, -webkit-all .3s ease-out;
+    z-index: 1;
+}
+.cpsbtn,.resetbtn{
+    background-color:#ffffff!important;
+}
+#filter,.slimScrollDiv{
+    max-height: calc(-188px + 100vh)!important;
+}
+.slimScrollDiv{
+    margin-top:1rem;
+}
 button.cpsbtn {
     opacity: .7;
     border:1px solid #000000;
@@ -1302,8 +1319,6 @@ button.cpsbtn {
 .active button.cpsbtn{
     opacity:1;
 }
-
-button.cpsbtn{}
 button.cpsbtn:after {
     content:'';
     display:block;
@@ -1320,8 +1335,41 @@ button.cpsbtn:after {
 button.cpsbtn.active:after {
     opacity:1;
 }
-@media (max-width:991px){
-    .filter-container.active:before {
+@keyframes fadeIn {
+    100%{
+        opacity:1;
+        display:block;
+    }
+}
+@keyframes fadeOut {
+    100%{
+        opacity:0;
+        display:none;
+    }
+}
+
+@media (max-width:991px){ /* mobile */
+    .cpsbtn{
+        z-index:2;
+    }
+    .active .resetbtn{
+        z-index:1;
+    }
+    .filter-inner{
+        overflow:hidden;
+        animation: .3s ease-in 0s 1 normal forwards running fadeOut;
+        -moz-animation: .3s ease-in 0s 1 normal forwards running fadeOut;
+        -webkit-animation: .3s ease-in 0s 1 normal forwards running fadeOut;
+    }
+    .active .filter-inner{
+        animation: .3s ease-in 0s 1 normal forwards running fadeIn;
+        -moz-animation: .3s ease-in 0s 1 normal forwards running fadeIn;
+        -webkit-animation: .3s ease-in 0s 1 normal forwards running fadeIn;
+    }
+    .active.filter-container{
+        z-index:2;
+    }
+    .filter-container:before {
         content:'';
         display:block;
         background-color:rgba(0,0,0,0.4);
@@ -1330,7 +1378,21 @@ button.cpsbtn.active:after {
         left:0;
         right:0;
         bottom:0;
-        z-index:-1;
+        opacity: 0;
+        transition:.3s ease-out;
+    }
+    .active.filter-container:before {
+        opacity: 1;
+    }
+    button.resetbtn {
+        animation: .3s ease-in 0s 1 normal forwards running fadeOut;
+        -moz-animation: .3s ease-in 0s 1 normal forwards running fadeOut;
+        -webkit-animation: .3s ease-in 0s 1 normal forwards running fadeOut;
+    }
+    .active .resetbtn{
+        animation: .3s ease-in 0s 1 normal forwards running fadeIn;
+        -moz-animation: .3s ease-in 0s 1 normal forwards running fadeIn;
+        -webkit-animation: .3s ease-in 0s 1 normal forwards running fadeIn;
     }
 }
 .filter-wrap{
@@ -1345,18 +1407,23 @@ button.cpsbtn.active:after {
     margin-bottom: 14px;
 }
 button.resetbtn {
-    display:none;
     border:1px solid #dddddd;
     padding-left:30px!important;
     font-size:14px;
     background: no-repeat 8px center / 16px;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.2174 4.25C7.79916 4.25 4.25 7.73754 4.25 12C4.25 16.2625 7.79916 19.75 12.2174 19.75C15.7585 19.75 18.7478 17.5056 19.7894 14.4186C19.9218 14.0261 20.3473 13.8153 20.7398 13.9477C21.1322 14.0801 21.3431 14.5056 21.2106 14.8981C19.963 18.596 16.401 21.25 12.2174 21.25C7.00667 21.25 2.75 17.1264 2.75 12C2.75 6.87362 7.00667 2.75 12.2174 2.75C14.7443 2.75 17.0438 3.71803 18.7439 5.29906L20.6465 3.39646C20.7895 3.25346 21.0045 3.21068 21.1914 3.28807C21.3782 3.36547 21.5 3.54778 21.5 3.75001V8.75001C21.5 9.02616 21.2762 9.25001 21 9.25001L16 9.25001C15.7978 9.25001 15.6155 9.12819 15.5381 8.94136C15.4607 8.75452 15.5035 8.53946 15.6465 8.39646L17.6824 6.36053C16.2575 5.05348 14.3359 4.25 12.2174 4.25Z' fill='%23000000'%3E%3C/path%3E%3C/svg%3E");
 }
-.active .resetbtn{
-    display:block;
-}
 button.resetbtn:focus{
     box-shadow:none;
+}
+
+@media (min-width: 991px) {
+    .resetbtn{
+        display:block!important;
+    }
+    button.cpsbtn{
+        opacity:1;
+    }
 }
 #range-slider{
     margin: 14px 0;
@@ -1466,23 +1533,6 @@ button.resetbtn:focus{
 
 .radio-wrap input[type=radio]:checked+label:after{
     background-color:#000000;
-}
-
-.filter-container{
-    position:absolute;
-    width:100%;
-    top:14px;
-    transition: all .3s ease-out, -webkit-all .3s ease-out;
-    z-index: 1;
-}
-.cpsbtn,.resetbtn{
-    background-color:#ffffff!important;
-}
-#filter,.slimScrollDiv{
-    max-height: calc(-188px + 100vh)!important;
-}
-.slimScrollDiv{
-    margin-top:1rem;
 }
 .filterschbtn{
     background-color:#393939;
