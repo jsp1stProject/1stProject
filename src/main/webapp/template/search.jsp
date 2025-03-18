@@ -65,7 +65,7 @@
 
 			</div>
 			<div class="col-lg-9 px-0">
-				<div class="container-xxl py-3 px-0">
+				<div class="container-xxl py-lg-3 pt-5 pb-3 px-0">
 					<div class="container">
 						<form action="" method="post" name="page-search">
 							<div class="sch_wrap page">

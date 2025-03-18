@@ -1294,7 +1294,6 @@ li.noresult {
     position:absolute;
     width:100%;
     top:14px;
-    transition: all .3s ease-out, -webkit-all .3s ease-out;
     z-index: 1;
 }
 .cpsbtn,.resetbtn{
@@ -1336,12 +1335,18 @@ button.cpsbtn.active:after {
     opacity:1;
 }
 @keyframes fadeIn {
+    0%{
+        opacity:0;
+    }
     100%{
         opacity:1;
         display:block;
     }
 }
 @keyframes fadeOut {
+    0%{
+        opacity:1;
+    }
     100%{
         opacity:0;
         display:none;
@@ -1372,17 +1377,18 @@ button.cpsbtn.active:after {
     .filter-container:before {
         content:'';
         display:block;
-        background-color:rgba(0,0,0,0.4);
+        background-color:rgba(0,0,0,0);
         position:fixed;
         top:0;
         left:0;
         right:0;
         bottom:0;
-        opacity: 0;
-        transition:.3s ease-out;
+        transition:.3s ease-in;
+        animation: .3s ease-in 0s 1 normal forwards running fadeOut;
     }
     .active.filter-container:before {
-        opacity: 1;
+        background-color:rgba(0,0,0,0.4);
+        animation: .3s ease-in 0s 1 normal forwards running fadeIn;
     }
     button.resetbtn {
         animation: .3s ease-in 0s 1 normal forwards running fadeOut;
