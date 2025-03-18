@@ -19,8 +19,8 @@
 		SET hit = hit + 1
 		WHERE no = #{no}
 	</update>
-	<select id="noticeDetailData" parameterType="int">
-		SELECT no, type, subject, content, hit, TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI:SS') as dbday
+	<select id="noticeDetailData" resultType="NoticeVO" parameterType="int">
+		SELECT no, name, type, subject, content, hit, TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI:SS') as dbday
 	 	FROM notice_board 
 	 	WHERE no = #{no}
 	</select>

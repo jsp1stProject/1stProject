@@ -18,6 +18,7 @@
   		<typeAlias type="com.sist.vo.FesVO" alias="FesVO"/>
   		<typeAlias type="com.sist.vo.UserVO" alias="UserVO"/>
   		<typeAlias type="com.sist.vo.QnaVO" alias="QnaVO"/>
+  		<typeAlias type="com.sist.vo.NoticeVO" alias="NoticeVO"/>
   	</typeAliases>
   	<environments default="development">
   		<environment id="development">
@@ -37,5 +38,6 @@
   		<mapper resource="com/sist/mapper/fes-mapper.xml"/>
   		<mapper resource="com/sist/mapper/join-mapper.xml"/>
   		<mapper resource="com/sist/mapper/qna-mapper.xml"/>
+  		<mapper resource="com/sist/mapper/notice-mapper.xml"/>
   	</mappers>
   </configuration>

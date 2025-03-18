@@ -27,8 +27,24 @@ public class NoticeModel {
 		map.put("end", end);
 		
 		List<NoticeVO> list = NoticeDAO.noticeListData(map);
+		int count = NoticeDAO.noticeTotalPage();
+		int totalPage = (int)(Math.ceil(count / 10.0));
+		count = count - ((curPage * 10) - 10);
 		
+		final int BLOCK = 10;
+		int startPage = ((curPage - 1) / BLOCK * BLOCK) + 1;
+		int endPage = ((curPage - 1) / BLOCK * BLOCK) + BLOCK;
+		System.out.println("endPage: " + endPage);
 		
+		if (endPage > totalPage) {
+			endPage = totalPage;
+		}
+		request.setAttribute("curPage", curPage);
+		request.setAttribute("startPage", startPage);
+		request.setAttribute("endPage", endPage);
+		request.setAttribute("list", list);
+		request.setAttribute("totalPage", totalPage); 
+		request.setAttribute("count", count);
 		request.setAttribute("wide", "y");
 		request.setAttribute("main_jsp", "../notice/notice_admin_list.jsp");
 		return "../main/main.jsp";
@@ -42,10 +58,9 @@ public class NoticeModel {
 	@RequestMapping("notice/notice_admin_insert_ok.do")
 	public String notice_admin_insert_ok(HttpServletRequest request, HttpServletResponse response) {
 		String subject = request.getParameter("subject");
-		String beforeContent = request.getParameter("content");
-		String content = Jsoup.parse(beforeContent).text();
+		String content = request.getParameter("content");
+		//String content = Jsoup.parse(beforeContent).text();
 		String type = request.getParameter("type");
-		System.out.println("content: " + content);
 		NoticeVO vo = new NoticeVO();
 		
 		vo.setSubject(subject);
@@ -54,5 +69,15 @@ public class NoticeModel {
 		
 		NoticeDAO.noticeInsert(vo);
 		return "redirect:../notice/notice_admin_list.do";
+	}
+	@RequestMapping("notice/notice_detail.do")
+	public String notice_detail(HttpServletRequest request, HttpServletResponse response) {
+		
+		int no = Integer.parseInt(request.getParameter("no"));
+		NoticeVO vo = NoticeDAO.noticeDetailData(no);
+		request.setAttribute("vo", vo);
+		request.setAttribute("wide", "y");
+		request.setAttribute("main_jsp", "../notice/notice_detail.jsp");
+		return "../main/main.jsp";
 	}
 }

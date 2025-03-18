@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 public class NoticeVO {
 	private int no, hit;
-	private String title, subject, content, dbday, type;
+	private String name, subject, content, dbday, type;
 	private Date date;
 }
