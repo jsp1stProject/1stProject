@@ -14,56 +14,58 @@
 	<div class="container">
 		<div class="row justify-content-center">
 			<div class="col-lg-3 py-3 px-0" style="position:relative">
-				<div class="filter-container active">
+				<div class="filter-container">
 					<div class="d-flex justify-content-between px-2">
 						<button class="cpsbtn">필터</button>
 						<button type="button" class="btn btn-light resetbtn">초기화</button>
 					</div>
-					<div class="filter-wrap" id="filter">
-						<div class="filter-item col-lg-12 col-md-4 col-sm-12"> <!-- range 타입 -->
-							<h6>가격대</h6>
-							<div id="range-slider"></div>
-							<div class="d-flex justify-content-center range-value-wrap">
-								<input type="text" class="start" disabled value="0"><span class="ignr"> ~ </span><input type="text" class="end" disabled value="100000">
-							</div>
-						</div>
-						<div class="filter-item"> <!--checkbox 타입-->
-							<h6>축제 유형</h6>
-							<div class="checkbtn-wrap">
-								<input type="checkbox" name="type" id="t1">
-								<label for="t1">문화관광축제</label>
-								<input type="checkbox" name="type" id="t2">
-								<label for="t2">일반축제</label>
-								<input type="checkbox" name="type" id="t3">
-								<label for="t3">전통공연</label>
-								<input type="checkbox" name="type" id="t4">
-								<label for="t4">연극</label>
-								<input type="checkbox" name="type" id="t5">
-								<label for="t5">뮤지컬</label>
-							</div>
-						</div>
-						<div class="filter-item"> <!--radio 타입-->
-							<h6>행사 기간</h6>
-							<div class="radio-wrap row">
-								<div class="col-3 col-lg-6">
-									<input type="radio" name="enddate" value="false" id="enddate1" checked>
-									<label for="enddate1">전체</label>
-								</div>
-								<div class="col-3 col-lg-6">
-									<input type="radio" name="enddate" value="true" id="enddate2">
-									<label for="enddate2">진행 중</label>
+					<div class="filter-inner">
+						<div class="filter-wrap" id="filter">
+							<div class="filter-item col-lg-12 col-md-4 col-sm-12"> <!-- range 타입 -->
+								<h6>가격대</h6>
+								<div id="range-slider"></div>
+								<div class="d-flex justify-content-center range-value-wrap">
+									<input type="text" class="start" disabled value="0"><span class="ignr"> ~ </span><input type="text" class="end" disabled value="100000">
 								</div>
 							</div>
-						</div>
-						<div class="filter-item">
-							<button type="button" class="filterschbtn" onclick="filtersubmit();">검색</button>
+							<div class="filter-item"> <!--checkbox 타입-->
+								<h6>축제 유형</h6>
+								<div class="checkbtn-wrap">
+									<input type="checkbox" name="type" id="t1">
+									<label for="t1">문화관광축제</label>
+									<input type="checkbox" name="type" id="t2">
+									<label for="t2">일반축제</label>
+									<input type="checkbox" name="type" id="t3">
+									<label for="t3">전통공연</label>
+									<input type="checkbox" name="type" id="t4">
+									<label for="t4">연극</label>
+									<input type="checkbox" name="type" id="t5">
+									<label for="t5">뮤지컬</label>
+								</div>
+							</div>
+							<div class="filter-item"> <!--radio 타입-->
+								<h6>행사 기간</h6>
+								<div class="radio-wrap row">
+									<div class="col-3 col-lg-6">
+										<input type="radio" name="enddate" value="false" id="enddate1" checked>
+										<label for="enddate1">전체</label>
+									</div>
+									<div class="col-3 col-lg-6">
+										<input type="radio" name="enddate" value="true" id="enddate2">
+										<label for="enddate2">진행 중</label>
+									</div>
+								</div>
+							</div>
+							<div class="filter-item">
+								<button type="button" class="filterschbtn" onclick="filtersubmit();">검색</button>
+							</div>
 						</div>
 					</div>
 				</div>
 
 			</div>
 			<div class="col-lg-9 px-0">
-				<div class="container-xxl py-3 px-0">
+				<div class="container-xxl py-lg-3 pt-5 pb-3 px-0">
 					<div class="container">
 						<form action="" method="post" name="page-search">
 							<div class="sch_wrap page">
@@ -186,10 +188,8 @@
 			var con=$(this).closest('.filter-container')
 			if(con.hasClass('active')){
 				con.removeClass('active');
-				$('.slimScrollDiv').fadeOut(300);
 			}else{
 				con.addClass('active');
-				$('.slimScrollDiv').fadeIn(300);
 			}
 		});
 
