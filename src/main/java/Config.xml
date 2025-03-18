@@ -14,6 +14,8 @@
   		<typeAlias type="com.sist.vo.ContentVO" alias="ContentVO"/>
   		<typeAlias type="com.sist.vo.HotelVO" alias="HotelVO"/>
   		<typeAlias type="com.sist.vo.EventVO" alias="EventVO"/>
+  		<typeAlias type="com.sist.vo.EventDetailVO" alias="EventDetailVO"/>
+  		<typeAlias type="com.sist.vo.DetailImgVO" alias="DetailImgVO"/>
   		<typeAlias type="com.sist.vo.HotelRoomVO" alias="HotelRoomVO"/>
   		<typeAlias type="com.sist.vo.FesVO" alias="FesVO"/>
   		<typeAlias type="com.sist.vo.UserVO" alias="UserVO"/>

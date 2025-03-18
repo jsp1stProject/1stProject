@@ -33,24 +33,26 @@ public class EventDAO {
 		catemap.put("A02081200", "스포츠");
 		catemap.put("A02081300", "기타행사");
 	}
-
+	public static void categorySet(EventVO vo) {
+		String cat3=vo.getCvo().getCat3().substring(5,7);
+		switch (cat3){
+			case "01":vo.setDbcate("전통공연");break;
+			case "02":vo.setDbcate("연극");break;
+			case "03":vo.setDbcate("뮤지컬");break;
+			case "04":vo.setDbcate("오페라");break;
+			case "05":vo.setDbcate("전시회");break;
+			case "06":vo.setDbcate("박람회");break;
+			case "08":vo.setDbcate("무용");break;
+			case "09":vo.setDbcate("클래식");break;
+			case "10":vo.setDbcate("콘서트");break;
+			case "11":vo.setDbcate("영화");break;
+			case "12":vo.setDbcate("스포츠");break;
+			case "13":vo.setDbcate("기타행사");break;
+		}
+	}
 	public static void categorySet(List<EventVO> list){
 		for(EventVO vo:list){
-			String cat3=vo.getCvo().getCat3().substring(5,7);
-			switch (cat3){
-				case "01":vo.setDbcate("전통공연");break;
-				case "02":vo.setDbcate("연극");break;
-				case "03":vo.setDbcate("뮤지컬");break;
-				case "04":vo.setDbcate("오페라");break;
-				case "05":vo.setDbcate("전시회");break;
-				case "06":vo.setDbcate("박람회");break;
-				case "08":vo.setDbcate("무용");break;
-				case "09":vo.setDbcate("클래식");break;
-				case "10":vo.setDbcate("콘서트");break;
-				case "11":vo.setDbcate("영화");break;
-				case "12":vo.setDbcate("스포츠");break;
-				case "13":vo.setDbcate("기타행사");break;
-			}
+			categorySet(vo);
 		}
 	}
 	public static void areaSet(List<EventVO> list){
@@ -151,7 +153,25 @@ public class EventDAO {
 		session.close();
 		return vo;
 	}
-
+	public static EventVO eventDetailData(int contid){
+		SqlSession session = ssf.openSession();
+		EventVO vo= session.selectOne("eventDetailData", contid);
+		categorySet(vo);
+		session.close();
+		return vo;
+	}
+	public static List<EventVO> eventDetailInfo(int contid){
+		SqlSession session = ssf.openSession();
+		List<EventVO> list= session.selectList("eventDetailInfo", contid);
+		session.close();
+		return list;
+	}
+	public static List<EventVO> eventDetailImg(int contid){
+		SqlSession session = ssf.openSession();
+		List<EventVO> list= session.selectList("eventDetailImg", contid);
+		session.close();
+		return list;
+	}
 
 	/*
 	가격 정규화

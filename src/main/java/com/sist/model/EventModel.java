@@ -265,4 +265,21 @@ public class EventModel {
 			e.printStackTrace();
 		}
 	}
+
+	@RequestMapping("event/event_detail.do")
+	public String event_detail(HttpServletRequest request, HttpServletResponse response) {
+		String contid=request.getParameter("contid");
+		int id=Integer.parseInt(contid);
+		EventVO vo=EventDAO.eventDetailData(id);
+		List<EventVO> imglist=EventDAO.eventDetailImg(id);
+		List<EventVO> infolist=EventDAO.eventDetailInfo(id);
+		request.setAttribute("imglist", imglist);
+		request.setAttribute("infolist", infolist);
+		request.setAttribute("vo", vo);
+
+		request.setAttribute("event", "y"); //event page
+		request.setAttribute("main_jsp", "../event/event_detail.jsp");
+		request.setAttribute("title", "상세보기");
+		return "../main/main.jsp";
+	}
 }
