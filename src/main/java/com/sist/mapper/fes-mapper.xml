@@ -75,18 +75,24 @@ FROM (SELECT content_id, title, addr1, addr2, zipcode, sigungucode, areacode, fi
 FROM (SELECT content.content_id, title, addr1, addr2, zipcode, sigungucode, areacode, first_image, review_count, event_startdate, event_enddate, charge, agelimit, price, price_info
 FROM content, event
 WHERE content.content_id=event.content_id AND content.cat2='A0207'
-<!-- <if test="typeList!=null">
-	 AND<foreach collection="typeList" item="type" open="(" close=")"  separator="and"  >
-	    ${type} in 
-	    <choose>
-	    <where test="">
-	     <foreach collection="ssList" item="ss" open="(" close=")" separator=",">
-	    	#{ss}      
+ <trim prefix="AND" suffixOverrides="AND" >
+
+	<if test="cat3List!=null" >
+	  cat3 IN<foreach collection="cat3List" item="cat3" open="(" close=")" separator="," >
+	    	#{cat3}      
 	    </foreach>
-	    </where>
-	    </choose>
+	    AND
+	</if>
+	<if test="acList!=null">
+	  areacode IN   <foreach collection="acList" item="ac" open="(" close=")" separator=",">
+	    	${ac}      
 	    </foreach>
-</if> --> 
+	    AND
+	 </if>
+	 
+</trim>
+	 
+
 ))
 </select>
   
