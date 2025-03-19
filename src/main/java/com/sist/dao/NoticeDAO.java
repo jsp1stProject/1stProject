@@ -22,9 +22,9 @@ public class NoticeDAO {
 		session.close();
 		return list;
 	}
-	public static int noticeTotalPage() {
+	public static int noticeTotalPage(Map<String, Object> map) {
 		SqlSession session = ssf.openSession();
-		int total = session.selectOne("noticeTotalPage");
+		int total = session.selectOne("noticeTotalPage", map);
 		session.close();
 		return total;
 	}

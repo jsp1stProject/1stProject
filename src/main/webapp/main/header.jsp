@@ -18,7 +18,7 @@
 	                <div class="nav-item">
 	                    <a href="#" class="nav-link" data-bs-toggle="collapse" data-bs-target="#subnav1">게시판</a>
 	                    <div class="collapse subnav mb-lg-4" id="subnav1">
-	                        <a href="team.html" class="nav-item nav-link">공지사항</a>
+	                        <a href="../notice/notice_admin_list.do" class="nav-item nav-link">공지사항</a>
 	                        <a href="testimonial.html" class="nav-item nav-link">Q&A</a>
 	                        <a href="404.html" class="nav-item nav-link">404 Page</a>
 	                    </div>

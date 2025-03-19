@@ -92,7 +92,7 @@ $(document).ready(function() {
 	
 	// 입력 필드에 값이 있으면 label 숨기기
     $('#birthday').on('input', function() {
-        var inputVal = $(this).val();
+        let inputVal = $(this).val();
         if (inputVal) {
             $('#birthdayLabel').hide();  // 값이 있으면 label 숨김
         } else {
@@ -103,7 +103,13 @@ $(document).ready(function() {
         if (birthday.length > 8) {
         	birthday = birthday.slice(0, 8); // 8자리까지만 입력하도록 제한
         }
-		$('#birthday').val(birthday);
+        if (birthday.length <= 4) {
+            $(this).val(birthday); // 4자리 이하인 경우 그대로
+        } else if (birthday.length <= 6) {
+            $(this).val(birthday.replace(/(\d{4})(\d{0,2})/, '$1-$2')); // 6자리까지 - 추가
+        } else {
+            $(this).val(birthday.replace(/(\d{4})(\d{2})(\d{0,2})/, '$1-$2-$3')); // 8자리까지 - 추가
+        }
     });
 
     // 날짜 형식으로 자동 변환
@@ -157,7 +163,11 @@ $(document).ready(function() {
     		success: function(result) {
     			let count = parseInt(result);
     			if (count === 0) {
-					$('#idCheck').html('<span class="vaildationCheck" style="color: green;">•사용 가능한 아이디입니다.</span>')
+    				if (id.length < 5) {
+    		            $('#idCheck').html('<span style="color: red; margin-left: -181px;">•아이디는 5자리 이상이여야 합니다.</span>');
+    		        } else {
+					$('#idCheck').html('<span class="vaildationCheck" style="color: green;">•사용 가능한 아이디입니다.</span>');
+    		        }
 				} else {
 					$('#idCheck').html('<span class="vaildationCheck" style="color: red;">•이미 존재하는 아이디입니다.</span>');
 				}

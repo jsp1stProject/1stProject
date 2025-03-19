@@ -42,7 +42,7 @@
 			</tr>
 			<tr>
 				<td colspan="4" class="view_text">
-				<pre>${vo.content }</pre>
+				<pre style="white-space: normal;">${vo.content }</pre>
 				</td>
 			</tr>
 		</tbody>

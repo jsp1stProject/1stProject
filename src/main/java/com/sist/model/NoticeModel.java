@@ -14,6 +14,10 @@ public class NoticeModel {
 	@RequestMapping("notice/notice_admin_list.do")
 	public String notice_admin_list(HttpServletRequest request, HttpServletResponse response) {
 		String page = request.getParameter("page");
+		String searchType = request.getParameter("searchType");
+		String search = request.getParameter("search");
+		System.out.println("type: " + searchType);
+		System.out.println("search: " + search);
 		if (page == null) {
 			page = "1";
 		}
@@ -25,11 +29,16 @@ public class NoticeModel {
 		
 		map.put("start", start);
 		map.put("end", end);
+		map.put("search", search);
+		map.put("searchType", searchType);
 		
 		List<NoticeVO> list = NoticeDAO.noticeListData(map);
-		int count = NoticeDAO.noticeTotalPage();
+		int count = NoticeDAO.noticeTotalPage(map);
+		System.out.println("count1: " + count);
 		int totalPage = (int)(Math.ceil(count / 10.0));
 		count = count - ((curPage * 10) - 10);
+		System.out.println("count: " + count);
+		System.out.println("totalPage: " + totalPage);
 		
 		final int BLOCK = 10;
 		int startPage = ((curPage - 1) / BLOCK * BLOCK) + 1;
@@ -44,7 +53,6 @@ public class NoticeModel {
 		request.setAttribute("endPage", endPage);
 		request.setAttribute("list", list);
 		request.setAttribute("totalPage", totalPage); 
-		request.setAttribute("count", count);
 		request.setAttribute("wide", "y");
 		request.setAttribute("main_jsp", "../notice/notice_admin_list.jsp");
 		return "../main/main.jsp";
