@@ -10,16 +10,95 @@
 	<link href="${pageContext.request.contextPath }/assets/plugin/rangeslider/style.css" rel="stylesheet">
 	<script src="${pageContext.request.contextPath }/assets/plugin/scroll/slimscroll.js"></script>
 	<script type="text/javascript" src="http://code.jquery.com/jquery-js"></script>
-<script type="text/javascript">
-$(function(){
-	
-	$('#ss').click(function(){
-		console.log($(this).val());
 
-	})
-})
-</script>
 </head>
+<script type="text/javascript">
+/* 
+$(function(){
+	let cat3=[];
+	let ac=[];
+	$('#cat3').on("change",function(){
+	      $("input[name='cat3']:checked").each(function(i) { //인풋태그 네임명
+	    	 if($(this).is(":checked")==true)
+	    	 {
+		         cat3.push($(this).val()); //체크된 값을 넣기
+		         console.log(cat3)
+		         data_ajax(cat3,ac);
+	    	 }
+	      });
+	      
+	   });
+	
+	$('#areacode').on("click",function(){
+		   $("input[name='ac']:checked").each(function(i) { //인풋태그 네임명
+			   ac.push($(this).val()); //체크된 값을 넣기
+			   console.log(ac);
+	           data_ajax(cat3,ac);
+	          
+	       });
+		   
+	   });
+	
+}) */
+
+
+let cat3=[];
+let ac=[];
+
+function boxClick()
+{
+	
+	cat3=[];
+	$("input[name='cat3']:checked").each(function(i) { //인풋태그 네임명
+		
+		cat3.push($(this).val()); //체크된 값을 넣기
+	    console.log(cat3)
+	    data_ajax(cat3,ac);
+   	 
+     });
+}
+
+function acClick()
+{
+
+	ac=[];
+	$("input[name='ac']:checked").each(function(i) { //인풋태그 네임명
+			
+			ac.push($(this).val()); //체크된 값을 넣기
+			console.log(ac)
+			data_ajax(cat3,ac);
+		   	 
+		 });
+		 //data_ajax(cat3,ac);
+}
+
+/*
+
+Ajax에서 Controller에 배열(array)를 보내는 방법 
+1. Ajax에 traditional: true, 기본값이 false로 되어있다
+traditional 옵션이란 직역해서 "전통적인 스타일의 파라미터 직렬화를 사용하냐 마느냐를 결정"하는 것이다.
+
+
+
+ */ 
+function data_ajax(cat3, ac)
+{
+	console.log("ajax"+cat3)
+	console.log("ajax"+ac)
+	 $.ajax({
+         type: "post",
+         url: "../fes/fes_list_ajax.do",
+         traditional: true,
+         data: {'cat3': cat3, 'ac': ac},
+         
+         success: function() {
+        	 console.log("ajax데이터 성공");
+         }
+      }); // ajax 종료
+
+}
+
+</script>
 <body>
 	<div class="container">
 		<div class="row justify-content-center">
@@ -40,12 +119,12 @@ $(function(){
 						
 						<div class="filter-item"> <!--checkbox 타입-->
 						<form method=post action="../fes/fes_list.do">
-						<button>send</button>
-							<h6 name="type" value="cat3">축제 유형</h6>
-							<div class="checkbtn-wrap" >
-								<input type="checkbox" name="ss" id="t1" value="A02070100">
+						
+							<h6>축제 유형</h6>
+							<div class="checkbtn-wrap" id="cat3" >
+								<input type="checkbox" name="cat3" id="t1" value="A02070100" onclick="boxClick()">
 								<label for="t1">문화관광축제</label>
-								<input type="checkbox" name="ss" id="t2" value="A02070200">
+								<input type="checkbox" name="cat3" id="t2" value="A02070200" onclick="boxClick()" >
 								<label for="t2">일반축제</label>
 							</div>
 							<!-- 
@@ -68,15 +147,15 @@ $(function(){
 								제주   39
 							
 							 -->
-							<h6 name="type" value="areacode">지역별</h6>
-							<div class="checkbtn-wrap">
-								<input type="checkbox" name="ac" id="t3" value=1>
+							<h6>지역별</h6>
+							<div class="checkbtn-wrap" id="areacode">
+								<input type="checkbox" name="ac" id="t3" value=1  onclick="acClick()">
 								<label for="t3">서울</label>
-								<input type="checkbox" name="ac" id="t4" value=2>
+								<input type="checkbox" name="ac" id="t4" value=2  onclick="acClick()">
 								<label for="t4">인천</label>
-								<input type="checkbox" name="ac" id="t5" value=3>
+								<input type="checkbox" name="ac" id="t5" value=3 onclick="acClick()">
 								<label for="t5">대전</label>
-								<input type="checkbox" name="ac" id="t6" value=4>
+								<input type="checkbox" name="ac" id="t6" value=4 onclick="acClick()">
 								<label for="t6">대구</label>
 							</div>
 							<!-- 
@@ -122,7 +201,7 @@ $(function(){
 							<%-- <c:forEach begin="0" end="3"> --%>
 							<c:forEach var="vo" items="${list }">
 								<li><!--호텔 li-->
-									<a href="#" class="d-flex">
+									<a href="../fes/fes_detail.do" class="d-flex">
 										<div class="thumb-wrap" style="background-image:url(${vo.first_image})">
 											<button type="button" class="bookmark-btn" name="bm-btn" data-id="${conid}"></button>
 										</div>
@@ -134,7 +213,12 @@ $(function(){
 												<p class="score">4.3(23)</p>
 											</div>
 											<div class="price-wrap">
+												<c:if test="${vo.price==0}">
+												<p class="price">무료</p>
+												</c:if>
+												<c:if test="${vo.price!=0}">	
 												<p class="price">${vo.price }</p>
+												</c:if>
 											</div>
 										</div>
 									</a>
@@ -183,11 +267,14 @@ $(function(){
 	</div>
 
 	<script type="text/javascript">
+		
 		let listend=false;
+		
 		$('.bookmark-btn').on('click',function(e){
 			e.preventDefault();
 			$(this).toggleClass('on');
 		});
+		//가격필터
 		$(document).on("click",".cpsbtn",function(){
 			var con=$(this).closest('.filter-container')
 			if(con.hasClass('active')){
@@ -203,14 +290,23 @@ $(function(){
 			max: 100000,
 			step: 1000, //step size
 			value: [0,100000], //initial values
+			//onInput 태그 안의 값들이 변경 될 때마다 이벤트가 발tod
 			onInput: function(valueSet) {
 				console.log(valueSet);
 				rangeset(valueSet[0],valueSet[1]);
+				
 			},
 		});
 		function rangeset(min, max){
 			$('input.start').val(min.toLocaleString('ko-KR')+'원');
 			$('input.end').val(max.toLocaleString('ko-KR')+'원');
+			$.ajax({
+				type:'post',
+				url:'../fes/fes_list.do',
+				data:{"max":max,"min":min}
+				
+			});
+				
 		}
 		rangeset(0,100000);
 		let floatPosition = parseInt($(".filter-container").css('top'));
