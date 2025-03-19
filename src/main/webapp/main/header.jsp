@@ -14,7 +14,7 @@
 	                <a href="../hotel/hotel_list.do" class="nav-item nav-link">숙소</a>
 	                <a href="../event/main.do" class="nav-item nav-link ${not empty event?'active':''}">행사</a>
 	                <a href="../fes/fes_list.do" class="nav-item nav-link">축제</a>
-	                <a href="about.html" class="nav-item nav-link">지도보기</a>
+	                <a href="about.html" class="nav-item nav-link">맛집</a>
 	                <div class="nav-item">
 	                    <a href="#" class="nav-link" data-bs-toggle="collapse" data-bs-target="#subnav1">게시판</a>
 	                    <div class="collapse subnav mb-lg-4" id="subnav1">
