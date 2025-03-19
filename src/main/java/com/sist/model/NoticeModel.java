@@ -88,4 +88,38 @@ public class NoticeModel {
 		request.setAttribute("main_jsp", "../notice/notice_detail.jsp");
 		return "../main/main.jsp";
 	}
+	@RequestMapping("notice/notice_admin_update.do")
+	public String notice_update(HttpServletRequest request, HttpServletResponse response) {
+		int no = Integer.parseInt(request.getParameter("no"));
+		
+		NoticeVO vo = NoticeDAO.noticeDetailData(no);
+		
+		request.setAttribute("vo", vo);
+		request.setAttribute("main_jsp", "../notice/notice_admin_update.jsp");
+		
+		return "../main/main.jsp";
+	}
+	@RequestMapping("notice/notice_admin_update_ok.do")
+	public String notice_update_ok(HttpServletRequest request, HttpServletResponse response) {
+		int no = Integer.parseInt(request.getParameter("no"));
+		String subject = request.getParameter("subject");
+		String content = request.getParameter("content");
+		String type = request.getParameter("type");
+		//System.out.println("no: " + no);
+		//System.out.println("sub: " + subject);
+		//System.out.println("con: " + content);
+		//System.out.println("type: " + type);
+		
+		NoticeVO vo = new NoticeVO();
+		
+		vo.setNo(no);
+		vo.setSubject(subject);
+		vo.setContent(content);
+		vo.setType(type);
+		
+		NoticeDAO.noticeUpdate(vo);
+		
+		return "redirect:../notice/notice_detail.do?no=" + no;
+		
+	}
 }

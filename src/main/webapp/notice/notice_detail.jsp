@@ -47,6 +47,7 @@
 			</tr>
 		</tbody>
 	</table>
+	<a href="../notice/notice_admin_update.do?no=${vo.no }"><button class="btn btn-primary" id="trans" style="margin-right: 0;">등록</button></a>
 </div>
 </body>
 </html>

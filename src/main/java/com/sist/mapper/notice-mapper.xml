@@ -45,5 +45,9 @@
 	 	FROM notice_board 
 	 	WHERE no = #{no}
 	</select>
-	
+	<update id="noticeUpdate" parameterType="NoticeVO">
+		UPDATE notice_board 
+		SET type = #{type}, subject = #{subject}, content = #{content}
+		WHERE no = #{no}
+	</update>
 </mapper>

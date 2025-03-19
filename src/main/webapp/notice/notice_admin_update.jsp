@@ -90,6 +90,7 @@ p {
 	2. 검색 분류 셀렉트 배경색
 	3. 뒤로가기 시 조회수 증가 -> O
  */
+ 
 </script>
 </head>
 <body>
@@ -98,19 +99,20 @@ p {
         <h2 style="margin: 10px 0 0 100px;">공지사항</h2>
         <hr class="text-muted">
     </div>
-    <form method="post" action="../notice/notice_admin_insert_ok.do" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <form method="post" action="../notice/notice_admin_update_ok.do" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
         <div class="form-group">
-            <select name="type" style="height: 28px; padding: 2px;">
+            <select name="type" id="type" style="height: 28px; padding: 2px;">
                 <option value="일반">일반</option>
                 <option value="행사">행사</option>
                 <option value="축제">축제</option>
                 <option value="숙소">숙소</option>
             </select>
-            <input type="text" placeholder="제목을 입력해주세요." name="subject" id="subject" style="width: 100%; max-width: 727px;">
+            <input type="text" placeholder="제목을 입력해주세요." name="subject" id="subject" style="width: 100%; max-width: 727px;" value="${vo.subject }">
+            <input type="hidden" id="no" name="no" value="${vo.no }">
         </div>
         <div id="classic" style="width: 100%; max-width: 727px;">
             <!-- 에디터 부분 -->
-            <textarea id="editor" name="content" style="display: none;"></textarea>
+            <textarea id="editor" name="content" style="display: none;">${vo.content }</textarea>
         </div>
         <div class="submit-btn-container">
             <button class="btn btn-primary" id="trans" type="submit" style="margin-right: 0;">등록</button>

@@ -42,4 +42,14 @@ public class NoticeDAO {
 		session.commit();
 		session.close();
 	}
+	public static void noticeUpdate(NoticeVO vo) {
+		System.out.println("no: " + vo.getNo());
+		System.out.println("sub: " + vo.getSubject());
+		System.out.println("con: " + vo.getContent());
+		System.out.println("type: " + vo.getType());
+		SqlSession session = ssf.openSession();
+		session.update("noticeUpdate", vo);
+		session.commit();
+		session.close();
+	}
 }
