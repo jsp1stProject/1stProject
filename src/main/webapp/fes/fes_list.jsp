@@ -42,15 +42,17 @@ $(function(){
 }) */
 
 
-let cat3=[];
-let ac=[];
+
+let ac;
+let max_price;
+let min_price;
 
 function boxClick()
 {
-	
-	cat3=[];
+	console.log("버튼클릭")	;
+	let cat3=[];
 	$("input[name='cat3']:checked").each(function(i) { //인풋태그 네임명
-		
+		console.log("cat3");	
 		cat3.push($(this).val()); //체크된 값을 넣기
 	    console.log(cat3)
 	    data_ajax(cat3,ac);
@@ -91,8 +93,10 @@ function data_ajax(cat3, ac)
          traditional: true,
          data: {'cat3': cat3, 'ac': ac},
          
-         success: function() {
-        	 console.log("ajax데이터 성공");
+         success: function(result){
+        	 //alert(result) //데이터는 가져오는 것 확인
+        	 
+        	 /* let json=JSON.parse(result); */
          }
       }); // ajax 종료
 
@@ -294,19 +298,45 @@ function data_ajax(cat3, ac)
 			onInput: function(valueSet) {
 				console.log(valueSet);
 				rangeset(valueSet[0],valueSet[1]);
-				
+				$.ajax({
+			         type: "post",
+			         url: "../fes/fes_list_ajax.do",
+			         //traditional: true,
+			         data: {'min_price': valueSet[0], 'max_price': valueSet[1]},
+			         
+			         success: function(result){
+		
+			         }
+			      }); // ajax 종료
 			},
+			
+			
 		});
+		
 		function rangeset(min, max){
 			$('input.start').val(min.toLocaleString('ko-KR')+'원');
 			$('input.end').val(max.toLocaleString('ko-KR')+'원');
-			$.ajax({
-				type:'post',
-				url:'../fes/fes_list.do',
-				data:{"max":max,"min":min}
+			
+			
 				
-			});
-				
+		}
+		function data_ajax(cat3, ac)
+		{
+			console.log("ajax"+cat3)
+			console.log("ajax"+ac)
+			 $.ajax({
+		         type: "post",
+		         url: "../fes/fes_list_ajax.do",
+		         traditional: true,
+		         data: {'cat3': cat3, 'ac': ac},
+		         
+		         success: function(result){
+		        	 //alert(result) //데이터는 가져오는 것 확인
+		        	 
+		        	 /* let json=JSON.parse(result); */
+		         }
+		      }); // ajax 종료
+
 		}
 		rangeset(0,100000);
 		let floatPosition = parseInt($(".filter-container").css('top'));
