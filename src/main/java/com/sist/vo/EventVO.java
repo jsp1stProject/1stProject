@@ -9,4 +9,6 @@ public class EventVO {
     private String sponsor1,sponsor2,playtime,charge,spendtime,agelimit,dbstart,dbend,dbcate,dbarea,price_info,maxprice,minprice,count;
     private Date event_startdate, event_enddate;
     private ContentVO cvo=new ContentVO();
+    private EventDetailVO dvo=new EventDetailVO();
+    private DetailImgVO divo=new DetailImgVO();
 }

@@ -342,14 +342,14 @@ a:hover{
 	rangeset(0,100000);
 	
 	let floatPosition = parseInt($(".filter-container").css('top'));
-	
 	$(window).scroll(function() {
 		var scrollTop = $(window).scrollTop();
 		var newPosition = scrollTop + floatPosition + "px";
-		$(".filter-container").stop().animate({
-			"top" : newPosition
-		}, 50);
-
+		if(scrollTop + $(window).height()+300 < $(document).height()||$("body").hasClass('is')) {
+			$(".filter-container").stop().animate({
+				"top" : newPosition
+			}, 50);
+		}
 	}).scroll();
 
 	$(function(){
