@@ -24,7 +24,7 @@
 
 	<select id="mainEventList" resultMap="eventMap">
 		<![CDATA[
-		SELECT title,addr1,CAT3,TO_CHAR(EVENT_STARTDATE,'YYYY.MM.DD') as dbstart,TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend,FIRST_IMAGE,rownum
+		SELECT EVENT.CONTENT_ID, title,addr1,CAT3,TO_CHAR(EVENT_STARTDATE,'YYYY.MM.DD') as dbstart,TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend,FIRST_IMAGE,rownum
 		from EVENT,CONTENT
 		where event.CONTENT_ID=content.CONTENT_ID
 		and EVENT_ENDDATE >= sysdate
@@ -33,7 +33,7 @@
 		]]>
 	</select>
 	<select id="mainFesList" resultMap="eventMap">
-		SELECT title,FIRST_IMAGE,AREACODE
+		SELECT EVENT.CONTENT_ID,title,FIRST_IMAGE,AREACODE
 		from EVENT, CONTENT
 		where event.CONTENT_ID=content.CONTENT_ID
 		and cat2='A0207'
@@ -71,7 +71,7 @@
 	</select>
 	<!--검색 리스트-->
 	<select id="eventSearchList" resultMap="eventMap" parameterType="hashmap">
-		SELECT TITLE, addr1, addr2, TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, CAT3, FIRST_IMAGE, price, num
+		SELECT content_id, TITLE, addr1, addr2, TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, CAT3, FIRST_IMAGE, price, num
 		FROM (SELECT e.*,rownum as num
 		FROM event_list_view e
 		<choose>
@@ -102,16 +102,16 @@
 		where num between #{start} and #{end}
 	</select>
 	<select id="eventDetailData" resultMap="eventMap" parameterType="int">
-		SELECT TITLE, ADDR1, ADDR2, ZIPCODE, MAPX, MAPY, TEL, OVERVIEW, REVIEW_COUNT, TO_CHAR(EVENT_STARTDATE,'YYYY.MM.DD') as dbstart, TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, CAT3, FIRST_IMAGE, SPONSOR1, SPONSOR2, PLAYTIME, CHARGE, SPENDTIME, AGELIMIT, PRICE, PRICE_INFO
+		SELECT e.content_id, TITLE, ADDR1, ADDR2, ZIPCODE, MAPX, MAPY, TEL, OVERVIEW, REVIEW_COUNT, TO_CHAR(EVENT_STARTDATE,'YYYY.MM.DD') as dbstart, TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, CAT3, FIRST_IMAGE, SPONSOR1, SPONSOR2, PLAYTIME, CHARGE, SPENDTIME, AGELIMIT, PRICE, PRICE_INFO
 		from EVENT e join CONTENT c on e.CONTENT_ID=c.CONTENT_ID
 		WHERE e.CONTENT_ID=#{contid}
 	</select>
 	<select id="eventDetailInfo" resultMap="eventMap" parameterType="int">
-		SELECT INFO_ID, INFONAME, INFOTEXT FROM EVENT e join EVENT_DETAIL d ON e.CONTENT_ID=d.CONTENT_ID
+		SELECT e.CONTENT_ID, INFO_ID, INFONAME, INFOTEXT FROM EVENT e join EVENT_DETAIL d ON e.CONTENT_ID=d.CONTENT_ID
 		WHERE e.CONTENT_ID=#{contid}
 	</select>
 	<select id="eventDetailImg" resultMap="eventMap" parameterType="int">
-		SELECT IMG_ID, ORIGIN_IMG, THUMB_IMG FROM EVENT e join DETAIL_IMAGE d ON e.CONTENT_ID=d.CONTENT_ID
+		SELECT e.content_id, IMG_ID, ORIGIN_IMG, THUMB_IMG FROM EVENT e join DETAIL_IMAGE d ON e.CONTENT_ID=d.CONTENT_ID
 		WHERE e.CONTENT_ID=#{contid}
 	</select>
 
