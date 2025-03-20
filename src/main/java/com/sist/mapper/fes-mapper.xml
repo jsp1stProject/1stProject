@@ -75,6 +75,7 @@ FROM (SELECT content_id, title, addr1, addr2, zipcode, sigungucode, areacode, fi
 FROM (SELECT content.content_id, title, addr1, addr2, zipcode, sigungucode, areacode, first_image, review_count, event_startdate, event_enddate, charge, agelimit, price, price_info
 FROM content, event
 WHERE content.content_id=event.content_id AND content.cat2='A0207'
+
  <trim prefix="AND" suffixOverrides="AND" >
 
 	<if test="cat3List!=null" >
