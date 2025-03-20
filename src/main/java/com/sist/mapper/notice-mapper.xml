@@ -5,11 +5,32 @@
 		SELECT no, type, subject, name, TO_CHAR(regdate, 'YYYY-MM-DD') as dbday, hit, num
 		FROM (SELECT no, type, subject, name, regdate, hit, rownum as num
 			  FROM (SELECT no, type, subject, name, regdate, hit
-			  		FROM notice_board ORDER BY no DESC))
+			  		FROM notice_board 
+			  		<where>
+			  		<if test="search != null and search != ''">
+			  		subject LIKE '%'||#{search}||'%'
+			  		</if>
+			  		<if test="searchType != null and searchType != ''">
+			  		AND type LIKE '%'||#{searchType}||'%'
+			  		</if>
+			  		</where>
+			  		ORDER BY no DESC))
  		WHERE num BETWEEN #{start} AND #{end}
 	</select>
-	<select id="noticeTotalPage" resultType="int">
-		SELECT COUNT(*) FROM notice_board
+	<select id="noticeTotalPage" resultType="int" parameterType="hashmap">
+		SELECT COUNT(*) FROM (SELECT no, type, subject, name, TO_CHAR(regdate, 'YYYY-MM-DD') as dbday, hit, num
+							  FROM (SELECT no, type, subject, name, regdate, hit, rownum as num
+			  						FROM (SELECT no, type, subject, name, regdate, hit
+			  							  FROM notice_board 
+								  		  <where>
+								  		  <if test="search != null and search != ''">
+								  		  subject LIKE '%'||#{search}||'%'
+								  		  </if>
+								  		  <if test="searchType != null and searchType != ''">
+								  		  AND type LIKE '%'||#{searchType}||'%'
+								  		  </if>
+								  		  </where>
+								  		  ORDER BY no DESC)))
 	</select>
 	<insert id="noticeInsert" parameterType="NoticeVO">
 		INSERT INTO notice_board (no, type, subject, content) VALUES(nb_no_seq.nextval, #{type}, #{subject}, #{content})
@@ -24,4 +45,9 @@
 	 	FROM notice_board 
 	 	WHERE no = #{no}
 	</select>
+	<update id="noticeUpdate" parameterType="NoticeVO">
+		UPDATE notice_board 
+		SET type = #{type}, subject = #{subject}, content = #{content}
+		WHERE no = #{no}
+	</update>
 </mapper>

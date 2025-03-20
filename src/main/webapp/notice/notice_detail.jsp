@@ -42,11 +42,12 @@
 			</tr>
 			<tr>
 				<td colspan="4" class="view_text">
-				<pre>${vo.content }</pre>
+				<pre style="white-space: normal;">${vo.content }</pre>
 				</td>
 			</tr>
 		</tbody>
 	</table>
+	<a href="../notice/notice_admin_update.do?no=${vo.no }"><button class="btn btn-primary" id="trans" style="margin-right: 0;">등록</button></a>
 </div>
 </body>
 </html>

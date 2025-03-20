@@ -18,23 +18,15 @@ window.onpageshow = function(event){   // onpageshow는 page 호출되면 캐시
         window.location.reload();
     }
 };
-
 	$(function() {
-		let type = $('.dropdownButton').val();
-		console.log('type:' + type);
-	});
-	function search(title, type) {
-		let subject = $('#subject').val();
-		$.ajax({
-			type: 'post',
-			url: '../notice/notice_admin_list.do',
-			data: {
-				'subject': subject,
-				'type': type
+		$('#search').keydown(function(event) {
+			if (event.key === "Enter") {
+				event.preventDefault();
+				$('#searchForm').submit();
 			}
-		});		
-	}
-
+		});
+	});
+	
 </script>
 <style type="text/css">
 .select-type {
@@ -56,15 +48,17 @@ window.onpageshow = function(event){   // onpageshow는 page 호출되면 캐시
 				<a href="../notice/notice_admin_insert.do" class="btn btn-secondary">새글</a>
 			</div>
 			<div class="col-5" style="margin-bottom: 4px">
+				<form method="post" action="../notice/notice_admin_list.do" id="searchForm">
 				<div class="input-group mb-3">
-					<select class="form-select select-type" aria-label="Default select example" style="flex-grow: 0; width: 81px;">
-						<option selected>일반</option>
-						<option value="1">행사</option>
-						<option value="2">축제</option>
-						<option value="3">숙소</option>
+					<select class="form-select select-type" id="searchType" name="searchType" aria-label="Default select example" style="flex-grow: 0; width: 81px;">
+						<option value="일반" selected>일반</option>
+						<option value="행사">행사</option>
+						<option value="축제">축제</option>
+						<option value="숙소">숙소</option>
 					</select>
-					<input type="text" style="margin-left: 10px; width: 75%;">
+					<input type="text" id="search" name="search" style="margin-left: 10px; width: 75%;">
 				</div>
+				</form>
 			</div>
 		</div>
 		<table class="table table-hover">
@@ -79,16 +73,25 @@ window.onpageshow = function(event){   // onpageshow는 page 호출되면 캐시
 			</tr>
 			</thead>
 			<tbody>
-			<c:forEach var="vo" items="${list }">
-			<tr>
-				<td width="9%" class="text-center">${vo.no }</td>
-				<td width="11%" class="text-center">${vo.type }</td>
-				<td width="45%"><a href="../notice/notice_detail.do?no=${vo.no }">${vo.subject }</a></td>
-				<td width="10%" class="text-center">${vo.name}</td>
-				<td width="15%" class="text-center">${vo.dbday }</td>
-				<td width="10%" class="text-center">${vo.hit }</td>
-			</tr>
-			</c:forEach>
+			<c:choose>
+            <c:when test="${empty list}">
+                <tr>
+                    <td colspan="6" class="text-center">검색결과가 없습니다.</td>
+                </tr>
+            </c:when>
+            <c:otherwise>
+                <c:forEach var="vo" items="${list}">
+                    <tr>
+                        <td width="9%" class="text-center">${vo.no}</td>
+                        <td width="11%" class="text-center">${vo.type}</td>
+                        <td width="45%"><a href="../notice/notice_detail.do?no=${vo.no}">${vo.subject}</a></td>
+                        <td width="10%" class="text-center">${vo.name}</td>
+                        <td width="15%" class="text-center">${vo.dbday}</td>
+                        <td width="10%" class="text-center">${vo.hit}</td>
+                    </tr>
+                </c:forEach>
+            </c:otherwise>
+        </c:choose>
 			</tbody>
 		</table>
 		<div class="container d-flex">

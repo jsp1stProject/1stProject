@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <!DOCTYPE html>
 <html>
+<link rel="stylesheet" href="../shadow/css/shadowbox.css">
 <body>
 	<%// wow는 main에서만 적용 %>
     <nav class="navbar navbar-expand-lg fixed-top py-lg-0 px-lg-4 ${title eq '메인'?'wow':'bg-white' }">
@@ -14,11 +16,11 @@
 	                <a href="../hotel/hotel_list.do" class="nav-item nav-link">숙소</a>
 	                <a href="../event/main.do" class="nav-item nav-link ${not empty event?'active':''}">행사</a>
 	                <a href="../fes/fes_list.do" class="nav-item nav-link">축제</a>
-	                <a href="about.html" class="nav-item nav-link">지도보기</a>
+	                <a href="about.html" class="nav-item nav-link">맛집</a>
 	                <div class="nav-item">
 	                    <a href="#" class="nav-link" data-bs-toggle="collapse" data-bs-target="#subnav1">게시판</a>
 	                    <div class="collapse subnav mb-lg-4" id="subnav1">
-	                        <a href="team.html" class="nav-item nav-link">공지사항</a>
+	                        <a href="../notice/notice_admin_list.do" class="nav-item nav-link">공지사항</a>
 	                        <a href="testimonial.html" class="nav-item nav-link">Q&A</a>
 	                        <a href="404.html" class="nav-item nav-link">404 Page</a>
 	                    </div>
@@ -44,12 +46,18 @@
 					<div class="flex-shrink-0 btn-square rounded-circle userbtn">
 						<div class="user-wrapper">
 							<ul>
-								<li><a href="#">로그인</a></li>
+							<c:if test="${sessionScope.user_id==null }">
+								<li><a href="#" id="loginBtn">로그인</a></li>
 								<li><a href="../member/join.do">회원가입</a></li>
 								<li><a href="#">비회원 예약</a></li>
+							</c:if>
 								<!--로그인 상태에 따라 다른 메뉴 보이기-->
+							<c:if test="${sessionScope.user_id!=null }">
+								<h6>${sessionScope.name}님 로그인되었습니다&nbsp;</h6>
+								<li><a href="#">내정보</a></li>
 								<li><a href="#">마이페이지</a></li>
-								<li><a href="#">로그아웃</a></li>
+								<li><a href="../member/logout.do">로그아웃</a></li>
+							</c:if>
 							</ul>
 						</div>
 	                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/></svg>
@@ -93,6 +101,8 @@
 	<div class="scrollTopBtn">
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2 160 448c0 17.7 14.3 32 32 32s32-14.3 32-32l0-306.7L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"></path></svg>
 	</div>
+	<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+	<script type="text/javascript" src="../shadow/js/shadowbox.js"></script>
     <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function(){
     	const inputWrap = document.querySelector(".sch_wrap");
@@ -117,6 +127,23 @@
 	$(document).on("click",".userbtn", function(){
 		$(this).toggleClass('active');
 	});
+	
+	Shadowbox.init({
+        players: ['iframe']
+    });
+
+    // 로그인 버튼 클릭 시 Shadowbox로 팝업 띄우기
+    document.getElementById("loginBtn").addEventListener("click", function(event){
+        event.preventDefault(); // a 태그의 기본 동작 방지
+
+        Shadowbox.open({
+            content: '../member/login.do',
+            player: 'iframe',
+            width: 320,
+            height: 300,
+            title: '로그인'
+        });
+    });
 
 	//scroll-top btn
 	let preScrollTop = 0;
