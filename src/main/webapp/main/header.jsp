@@ -27,7 +27,7 @@
 	                </div>
 	                <a href="../adminpage/admin_main.do" class="nav-item nav-link">관리자페이지</a>
 	            </div>
-	        </div>
+	        </div> 
 	        <div class="d-flex justify-content-end align-self-baseline">
 	        	<div class="d-flex" id="nav-wide-right">
 	            	<div class="flex-shrink-0 btn-square rounded-circle srhbtn">
