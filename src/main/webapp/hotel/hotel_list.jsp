@@ -109,8 +109,6 @@ a:hover{
 				}
 				*/
 				// 숙소 반복 출력
-				//console.log('off: ' + hotel.offseason_minfee1.toLocaleString('ko-KR') + '원');
-				//console.log('peak: ' + hotel.peakseason_minfee1.toLocaleString('ko-KR') + '원');
 			   html += '<li>'
 			        + '<a href="../hotel/hotel_detail.do?content_id=' + hotel.content_id + '" class="d-flex">'
 			        + '<div class="thumb-wrap" style="background-image:url(' + hotel.first_image + ')">'
@@ -182,15 +180,12 @@ a:hover{
 		            + '<div class="arr right" style="left: 16px;"></div>'
 		            + '</a>';
 		    }
-	
 		    htmlPage += '</ul></div>';
-		    
 		    $('#view').html(html);
 		    $('#viewPage').html(htmlPage);
 		    //console.log('TC: ' + json[0].totalCount);
 		    //console.log('TC1: ' + totalCount);
 		    $('#totalCount').html(json[0].totalCount);
-	    
 		} catch(error) {
 			//console.log('검색 결과 존재하지 않음');
 			$('#view').html('요청하신 검색 결과가 존재하지 않습니다.');

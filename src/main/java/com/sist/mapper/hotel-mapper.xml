@@ -66,8 +66,8 @@
 					AND title LIKE '%'||#{title}||'%'
 				</if>
 				
-				<if test="minRange != null and maxRange != null">
-					AND offseason_minfee1 BETWEEN #{minRange} AND #{maxRange}
+				<if test="min != null and max != null">
+					AND offseason_minfee1 BETWEEN #{min} AND #{max}
 				</if>
 			</where>
 			) 
@@ -95,8 +95,8 @@
 					AND title LIKE '%'||#{title}||'%'
 				</if>
 				
-				<if test="minRange != null and maxRange != null">
-					AND offseason_minfee1 BETWEEN #{minRange} AND #{maxRange}
+				<if test="min != null and max != null">
+					AND offseason_minfee1 BETWEEN #{min} AND #{max}
 				</if>
 			</where>	
 	</select>
