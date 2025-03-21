@@ -14,9 +14,9 @@
 			<span style="color: white;">오늘은 어떤 축제를<br></span>
 			<span  style="color: white; margin-bottom: 10px">즐겨볼까요?</span>
 			<div class="event_main_schwrap">
-				<form method="post" action="../event/event_list.do" name="keywordform">
+				<form method="post" action="../fes/fes_list.do" name="keywordform">
 					<div class="event_main_schinner">
-						<input type="text" name="key" placeholder="축제명 또는 지역을 입력하세요">
+						<input type="text" name="search" placeholder="축제명 또는 지역을 입력하세요">
 						<input type="submit">
 					</div>
 				</form>

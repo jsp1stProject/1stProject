@@ -13,51 +13,30 @@
 
 </head>
 <script type="text/javascript">
-/* 
-$(function(){
-	let cat3=[];
-	let ac=[];
-	$('#cat3').on("change",function(){
-	      $("input[name='cat3']:checked").each(function(i) { //인풋태그 네임명
-	    	 if($(this).is(":checked")==true)
-	    	 {
-		         cat3.push($(this).val()); //체크된 값을 넣기
-		         console.log(cat3)
-		         data_ajax(cat3,ac);
-	    	 }
-	      });
-	      
-	   });
-	
-	$('#areacode').on("click",function(){
-		   $("input[name='ac']:checked").each(function(i) { //인풋태그 네임명
-			   ac.push($(this).val()); //체크된 값을 넣기
-			   console.log(ac);
-	           data_ajax(cat3,ac);
-	          
-	       });
-		   
-	   });
-	
-}) */
 
 
 
-let ac;
+
+let ac=[];
+let cat3=[];
 let max_price;
 let min_price;
+let sd="${search}";
 
 function boxClick()
 {
-	console.log("버튼클릭")	;
-	let cat3=[];
+	console.log("버튼클릭");
+	console.log(sd)
+	cat3=[];
 	$("input[name='cat3']:checked").each(function(i) { //인풋태그 네임명
-		console.log("cat3");	
-		cat3.push($(this).val()); //체크된 값을 넣기
-	    console.log(cat3)
-	    data_ajax(cat3,ac);
-   	 
-     });
+			console.log("cat3");	
+			cat3.push($(this).val()); //체크된 값을 넣기
+		    console.log(cat3)
+		    
+	   	 
+	 });
+	data_ajax(cat3,ac,sd);
+	
 }
 
 function acClick()
@@ -65,14 +44,14 @@ function acClick()
 
 	ac=[];
 	$("input[name='ac']:checked").each(function(i) { //인풋태그 네임명
-			
+			console.log("ac");	
 			ac.push($(this).val()); //체크된 값을 넣기
-			console.log(ac)
-			data_ajax(cat3,ac);
-		   	 
-		 });
-		 //data_ajax(cat3,ac);
-}
+		    console.log(ac)
+		    
+	   	 
+	 });
+	data_ajax(cat3,ac,sd);
+} 
 
 /*
 
@@ -83,15 +62,17 @@ traditional 옵션이란 직역해서 "전통적인 스타일의 파라미터 �
 
 
  */ 
-function data_ajax(cat3, ac)
+function data_ajax(cat3,ac,sd)
 {
-	console.log("ajax"+cat3)
-	console.log("ajax"+ac)
+	console.log("ajaxcat3:"+cat3);
+	console.log("ajaxac:"+ac);
+	console.log("ajaxsd:"+sd);
+	
 	 $.ajax({
          type: "post",
          url: "../fes/fes_list_ajax.do",
          traditional: true,
-         data: {'cat3': cat3, 'ac': ac},
+         data: {'cat3': cat3, 'ac': ac,"search":'${search}'},
          
          success: function(result){
         	 //alert(result) //데이터는 가져오는 것 확인
@@ -152,7 +133,7 @@ function data_ajax(cat3, ac)
 							
 							 -->
 							<h6>지역별</h6>
-							<div class="checkbtn-wrap" id="areacode">
+							<div class="checkbtn-wrap" id="ac">
 								<input type="checkbox" name="ac" id="t3" value=1  onclick="acClick()">
 								<label for="t3">서울</label>
 								<input type="checkbox" name="ac" id="t4" value=2  onclick="acClick()">
@@ -192,7 +173,7 @@ function data_ajax(cat3, ac)
 					<div class="container">
 						<form action="" method="post" name="page-search">
 							<div class="sch_wrap page">
-								<input type="text" name="searchWord" placeholder="검색어를 입력하세요.">
+								<input type="text" name="searchWord" placeholder=${search }>
 								<input type="submit" value="검색">
 							</div>
 						</form>
@@ -200,7 +181,7 @@ function data_ajax(cat3, ac)
 				</div> 
 				<div class="container-xxl py-3 px-0">
 					<div class="container">
-						<h4 class="search-title mb-3"><span>제주도</span>에 대한 총 <span>${list.size()}</span> 건의 검색 결과</h4>
+						<h4 class="search-title mb-3"><span>${search }</span>에 대한 총 <span>${totalcount}</span> 건의 검색 결과</h4>
 						<ul class="content-ul event">
 							<%-- <c:forEach begin="0" end="3"> --%>
 							<c:forEach var="vo" items="${list }">
@@ -211,7 +192,7 @@ function data_ajax(cat3, ac)
 										</div>
 										<div class="d-flex flex-column flex-md-row right">
 											<div class="title-wrap">
-												<p class="cat"><span class="hotel">축제</span><!--cat3으로 구분--></p>
+												<p class="cat"><span class="hotel"></span><!--cat3으로 구분--></p>
 												<p class="content-name">${vo.title}</p>
 												<p class="location">${vo.addr1}</p>
 												<p class="score">4.3(23)</p>
