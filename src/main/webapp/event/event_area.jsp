@@ -229,7 +229,7 @@
 			}else{
 				data.map(function(vo){
 					html+=`<li>
-<a href="#" class="d-flex">
+<a href="../event/event_detail.do?id=`+vo.content_id+`" class="d-flex">
 <div class="thumb-wrap" `+(vo.first_image==="N/A"?"":" style='background-image:url("+vo.first_image+")'")+`>
 <button type="button" class="bookmark-btn on"></button>
 </div>
@@ -283,6 +283,9 @@
 			filtersrh=true; //현재 출력 중인 리스트 filter 여부
 		}else{
 			filtersrh=false;
+		}
+		if($(".filter-container").hasClass("active")){
+			$(".filter-container").removeClass("active");
 		}
 		$("html").scrollTop(0);
 		page=2;

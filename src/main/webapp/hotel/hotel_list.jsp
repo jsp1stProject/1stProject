@@ -43,7 +43,7 @@ a:hover{
  		
  */
 	
-	function commons(page, title, cat3, locations) {
+	function commons(page, title, cat3, locations, min, max) {
  		/*
 		console.log('commons 호출');
 	    console.log('page:', page);
@@ -57,7 +57,9 @@ a:hover{
 			data: {'title': title, 
 				   'cat3': cat3,
 				   'locations': locations,
-				   'page': page
+				   'page': page,
+				   'min': min,
+				   'max': max
 		    },
 		    traditional: true,
 			success: function(result) {
@@ -212,7 +214,7 @@ a:hover{
 							<h6>가격대</h6>
 							<div id="range-slider"></div>
 							<div class="d-flex justify-content-center range-value-wrap">
-								<input type="text" class="start" disabled value="0"><span class="ignr"> ~ </span><input type="text" class="end" disabled value="100000">
+								<input type="text" class="start" id="start" disabled value="0"><span class="ignr"> ~ </span><input type="text" class="end" id="end" disabled value="100000">
 							</div>
 						</div>
 					<div class="filter-item"> <!--checkbox 타입-->
@@ -322,14 +324,13 @@ a:hover{
 			$('.slimScrollDiv').fadeIn(300);
 		}
 	});
-	
 	rangeSlider(document.querySelector('#range-slider'), {
 		min: 0,
 		max: 100000,
 		step: 1000, //step size
 		value: [0,100000], //initial values
 		onInput: function(valueSet) {
-			console.log(valueSet);
+			//console.log(valueSet);
 			rangeset(valueSet[0],valueSet[1]);
 		},
 	});
@@ -339,7 +340,7 @@ a:hover{
 		$('input.end').val(max.toLocaleString('ko-KR')+'원');
 	}
 	
-	rangeset(0,100000);
+	//rangeset(0,100000);
 	
 	let floatPosition = parseInt($(".filter-container").css('top'));
 	$(window).scroll(function() {
@@ -366,17 +367,19 @@ a:hover{
 	
 	
 	
+	
 	// ==========================================================
 	let cat3 = [];
 	let locations = [];
 	//let title = $('#title').val() === '' || $('#title').val() === null ? '서울' : $('#title').val();
 	let title = '';
-	//console.log('title: ' + title);
+	
+	
+	/** 검색 필터 */
 	function updateFilters() {
 		cat3 = [];
 		locations = [];
 		let title = $('#title').val();
-		
 		
 		$('input[name="cat3"]:checked').each(function() {
 			cat3.push($(this).val());
@@ -386,10 +389,13 @@ a:hover{
 			locations.push($(this).val());
 		});
 		
+		let min = $('#start').val();
+		let max = $('#end').val();
+		
 		//console.log('cat3:', cat3);
 		//console.log('locations:', locations);
 		
-		commons(1, title, cat3, locations);
+		commons(1, title, cat3, locations, min, max);
 	}
 	
 	$('input[name="cat3"]').on('change', function() {
@@ -398,7 +404,15 @@ a:hover{
 	$('input[name="location1"]').on('change', function() {
 		updateFilters();
 	});
+	$(document).on('click', '#filter input, #range-slider', function() {
+		let min = $('#start').val();
+		let max = $('#end').val();
+		console.log('min: ' + min);
+		console.log('max: ' + max);
+		updateFilters();
+	});
 	
+	/** 숙소 이름 검색 */
 	$(function() {
 		console.log("title: " + title);
 		commons(1, title);

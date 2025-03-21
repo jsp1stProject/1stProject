@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style type="text/css">
 .custom-ok-btn {
     display: block;
@@ -105,60 +106,85 @@
  		시간 ~ 시간 형식으로 대실 시간 지정
  		시간 선택하는 select 옵션
  	숙박: 
- 		
+ 		// 날짜 활성화
+ 		const randomDates = [
+ 			  "2025-03-20",
+ 			  "2025-03-22",
+ 			  "2025-03-24"
+ 			];
+
+ 			flatpickr("#datepicker", {
+ 			  enable: randomDates
+ 			});
+		
+		// 날짜 비활성화
+		const randomDisabledDates = [
+			  "2025-03-19",
+			  "2025-03-21",
+			  "2025-03-23"
+			];
+
+			flatpickr("#datepicker", {
+			  disable: randomDisabledDates
+			});
+
  */
 
 
-	const showCalendar = (options) => {
-		let reserveDate = document.getElementById("reserveDate");
-		reserveDate.style.display = "inline";
-		flatpickr(reserveDate, {
-			locale: "ko",
-			...options,
-			onReady: (selectedDates, dateStr, instance) => {
-				if (!document.querySelector(".custom-ok-btn")) {
-					let okButton = document.createElement("button");
-					okButton.innerText = "OK";
-					okButton.className = "custom-ok-btn";
-					okButton.addEventListener("click", () => instance.close());
-					
-					instance.calendarContainer.appendChild(okButton);
-				}
-			},
-			onDayCreate: function(dObj, dStr, fp, dayElem) {
-				let date = dayElem.dateObj;
-	            let day = date.getDay(); // 0: 일요일, 6: 토요일
-	            let currentMonth = fp.currentMonth; // 현재 보고 있는 달 (0: 1월, 1: 2월, ...)
-	            let dateMonth = date.getMonth(); // 날짜의 달 (0: 1월, 1: 2월, ...)
-	            let minDate = new Date(fp.config.minDate); // minDate를 Date 객체로 변환
+ 	$(document).ready(function () {
+	    const showCalendar = (options) => {
+	        let reserveDate = document.getElementById("reserveDate");
+	        reserveDate.style.display = "inline";
 
-	            if (date >= minDate && dateMonth === currentMonth && (day === 0 || day === 6)) {
-	                dayElem.classList.add("weekend"); // 현재 달의 주말만 빨간색
+	        flatpickr(reserveDate, {
+	            locale: "ko",
+	            ...options,
+	            onReady: (selectedDates, dateStr, instance) => {
+	                if (!$(".custom-ok-btn").length) {
+	                    let $okButton = $("<button>")
+	                        .text("OK")
+	                        .addClass("custom-ok-btn")
+	                        .on("click", () => instance.close());
+
+	                    $(instance.calendarContainer).append($okButton);
+	                }
+	            },
+	            onDayCreate: function (dObj, dStr, fp, dayElem) {
+	                let date = dayElem.dateObj;
+	                let day = date.getDay(); // 0: 일요일, 6: 토요일
+	                let currentMonth = fp.currentMonth; // 현재 보고 있는 달
+	                let dateMonth = date.getMonth(); // 날짜의 달
+	                let minDate = new Date(fp.config.minDate); // minDate를 Date 객체로 변환
+
+	                if (date >= minDate && dateMonth === currentMonth && (day === 0 || day === 6)) {
+	                    $(dayElem).addClass("weekend"); // 현재 달의 주말만 빨간색
+	                }
 	            }
-	        }
-		});
-	};
-	
-	document.getElementById("Time").addEventListener("click", () => {
-		showCalendar({
-			enableTime: true,
-			noCalendar: false,
-			dateFormat: "Y-m-d H:i",
-			minDate: "today",
-			//maxDate: "today",
-			defaultHour: 12,
-		});
+	        });
+	    };
+
+	    $("#Time").on("click", function () {
+	        showCalendar({
+	            enableTime: true,
+	            noCalendar: false,
+	            dateFormat: "Y-m-d H:i",
+	            minDate: "today",
+	            defaultHour: 12,
+	        });
+	    });
+
+	    $("#Stay").on("click", function () {
+	        showCalendar({
+	            enableTime: false,
+	            noCalendar: false,
+	            dateFormat: "Y-m-d",
+	            minDate: "today",
+	            mode: "range",
+	        });
+	    });
 	});
-	
-	document.getElementById("Stay").addEventListener("click", () => {
-		showCalendar({
-			enableTime: false,
-			noCalendar: false,
-			dateFormat: "Y-m-d",
-			minDate: "today",
-			mode: "range",
-		});
-	});
+
+
 </script>
 </body>
 </html>

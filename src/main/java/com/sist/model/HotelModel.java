@@ -36,6 +36,14 @@ public class HotelModel {
 		System.out.println("title:" + title);
 		String[] cat3 = request.getParameterValues("cat3");
 		String[] locations = request.getParameterValues("locations");
+		String min = request.getParameter("min");
+		String max = request.getParameter("max");
+		if (min == null || max == null) {
+			min = "0";
+			max = "100000";
+		}
+		min = min.replaceAll("[^0-9]", "");
+		max = max.replaceAll("[^0-9]", "");
 		/*
 		String[] cat3 = null;
 		String[] locations = null;
@@ -82,6 +90,8 @@ public class HotelModel {
 		map.put("locations", locations);
 		map.put("title", title);
 		map.put("searchTitle", map);
+		map.put("min", min);
+		map.put("max", max);
 		
 		//System.out.println("cat3: " + cat3.toString() + " and " + cat3);;
 		//System.out.println("locations:" + locations.toString());;

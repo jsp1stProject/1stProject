@@ -8,6 +8,7 @@
 <title></title>
 </head>
 <body>
+		<jsp:include page="notice_popup.jsp"/>
 	<div class="container-fluid p-0 pb-4 wow fadeIn" data-wow-delay="0.1s">
 		<div class="owl-carousel-inner">
             <div class="container">
@@ -375,6 +376,5 @@
 			</div>
 		</div>
 	</div>
-
 </body>
 </html>

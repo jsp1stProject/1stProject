@@ -65,6 +65,10 @@
 				<if test="title != null and title != ''">
 					AND title LIKE '%'||#{title}||'%'
 				</if>
+				
+				<if test="minRange != null and maxRange != null">
+					AND offseason_minfee1 BETWEEN #{minRange} AND #{maxRange}
+				</if>
 			</where>
 			) 
 			WHERE num BETWEEN #{start} AND #{end}
@@ -90,6 +94,10 @@
 				<if test="title != null and title != ''">
 					AND title LIKE '%'||#{title}||'%'
 				</if>
+				
+				<if test="minRange != null and maxRange != null">
+					AND offseason_minfee1 BETWEEN #{minRange} AND #{maxRange}
+				</if>
 			</where>	
 	</select>
 	<select id="hotelTotalCount" resultType="int" parameterType="hashmap">
@@ -112,6 +120,10 @@
 				
 				<if test="title != null and title != ''">
 					AND title LIKE '%'||#{title}||'%'
+				</if>
+				
+				<if test="min != null and max != null">
+					AND offseason_minfee1 BETWEEN #{min} AND #{max}
 				</if>
 			</where>	
 	</select>
