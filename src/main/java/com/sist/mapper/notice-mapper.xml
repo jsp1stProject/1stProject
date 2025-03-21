@@ -50,4 +50,9 @@
 		SET type = #{type}, subject = #{subject}, content = #{content}
 		WHERE no = #{no}
 	</update>
+	<select id="noticePopUp" resultType="NoticeVO">
+		SELECT * FROM notice_board
+		ORDER BY regdate DESC
+		FETCH FIRST 1 ROW ONLY;
+	</select>
 </mapper>

@@ -32,8 +32,6 @@
 	<c:if test="${empty is}"> <%//infinite scroll true일 때만 푸터 표시%>
 		<jsp:include page="footer.jsp"></jsp:include>
 	</c:if>
-
-	
 	<!-- JavaScript Libraries -->
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
