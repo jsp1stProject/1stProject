@@ -14,6 +14,8 @@
 		<result property="cvo.cat2" column="cat2"/>
 		<result property="cvo.cat3" column="cat3"/>
 		<result property="cvo.areacode" column="areacode"/>
+		<result property="cvo.overview" column="overview"/>
+		<result property="cvo.review_count" column="review_count"/>
 		<result property="dvo.info_id" column="info_id"/>
 		<result property="dvo.infoname" column="infoname"/>
 		<result property="dvo.infotext" column="infotext"/>
