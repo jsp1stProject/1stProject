@@ -78,13 +78,22 @@ a:hover{
 		});
 	}
 	function prev(page) {
-		commons(page, title, cat3, locations);
+		let min = $('#start').val();
+		let max = $('#end').val();
+		
+		commons(page, title, cat3, locations, min, max);
 	}
 	function next(page) {
-		commons(page, title, cat3, locations);
+		let min = $('#start').val();
+		let max = $('#end').val();
+		
+		commons(page, title, cat3, locations, min, max);
 	}
 	function pageChange(page) {
-		commons(page, title, cat3, locations);
+		let min = $('#start').val();
+		let max = $('#end').val();
+		
+		commons(page, title, cat3, locations, min, max);
 	}
 	function jsonView(json) {
 		let html = '';
@@ -387,9 +396,6 @@ a:hover{
 		let min = $('#start').val();
 		let max = $('#end').val();
 		
-		//console.log('cat3:', cat3);
-		//console.log('locations:', locations);
-		
 		commons(1, title, cat3, locations, min, max);
 	}
 	
@@ -400,10 +406,6 @@ a:hover{
 		updateFilters();
 	});
 	$(document).on('click', '#filter input, #range-slider', function() {
-		let min = $('#start').val();
-		let max = $('#end').val();
-		console.log('min: ' + min);
-		console.log('max: ' + max);
 		updateFilters();
 	});
 	
