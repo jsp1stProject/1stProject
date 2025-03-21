@@ -69,8 +69,70 @@ public class QnaDAO {
 		session.close();
 		return count;
 	}
+	/*
+	<select id="qnaDetailData" resultType="QnABoardVO" parameterType="int">
+    SELECT no,name,user_id,subject,email,phone,type,type_detail,reserve_no,filename,filesize,content,hit,TO_CHAR(regdate,'YYYY-MM-DD') as dbday,group_id
+    FROM qna_board
+    WHERE no=#{no}
+	</select>
+	*/
+	public static QnaVO qnaDetailData(int no)
+	{
+		SqlSession session = ssf.openSession();
+		session.update("qnaHitIncrement",no);
+		session.commit();
+		QnaVO vo = session.selectOne("qnaDetailData",no);
+		session.close();
+		return vo;
+	}
 	
+	public static QnaVO qnaAdminDetailData(int group_id)
+	{
+		SqlSession session=ssf.openSession();
+		QnaVO vo=session.selectOne("qnaAdminDetailData",group_id);
+		session.close();
+		return vo;
+	}
 	
+	public static void qnaAdminInsert(QnaVO vo)
+	{
+		SqlSession session=null;
+		try
+		{
+			session=ssf.openSession();
+			session.update("qnaAdminAnOKChange",vo.getGroup_id());
+			session.insert("qnaAdminInsert",vo);
+			session.commit();// 동시에 저장 
+		}catch(Exception ex){
+			System.out.println("실패");
+			session.rollback(); // 동시에 취소 
+		}finally{
+			if(session!=null)
+				session.close();
+		}
+		   
+	 }
+	
+	public static void qnaAdminDelete(int group_id)
+	{
+		SqlSession session=null;
+		try
+		{
+			session=ssf.openSession();
+			System.out.println("qnaAdminDeleteOk");
+			session.update("qnaAdminDeleteOk",group_id);
+			System.out.println("qnaAdminDelete");
+			session.delete("qnaAdminDelete",group_id);
+			session.commit();// 동시에 저장 
+		}catch(Exception ex){
+			ex.printStackTrace();
+			session.rollback(); // 동시에 취소 
+		}finally{
+			if(session!=null)
+				session.close();
+		}
+	}
+	   
 }
 
 

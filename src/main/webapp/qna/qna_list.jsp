@@ -42,7 +42,7 @@
     <section class="archive-area section_padding_80">
         <div class="container">
             <div class="row" style="width:800px; ">
-            <c:if test="${sessionScope.user_id!=null and sessionScope.admin=='Y' }">
+            <%-- <c:if test="${sessionScope.user_id!=null and sessionScope.admin=='n' }"> --%>
              <table class="table">
               <tr>
                <td>
@@ -50,7 +50,7 @@
                </td>
               </tr>
              </table>
-             </c:if>
+             <%-- </c:if> --%>
              <table class="table">
               <tr>
                <th width=10% class="text-center">번호</th>
@@ -62,15 +62,18 @@
               <c:set var="count" value="${count }"/>
               <c:forEach var="vo" items="${list }">
               <tr>
-               <td width=10% class="text-center">${count }</td>
+               <td width=10% class="text-center">${vo.no }</td>
                <td width=45%>
+                 <c:if test="${vo.group_tab==1 }">
+                    &nbsp;&nbsp;<img src="../img/images/re_icon.png">
+                  </c:if>
                  <c:if test="${vo.group_tab==1 }">
                   &nbsp;&nbsp;<img src="../img/images/re_icon.png">
                  </c:if>
                  <a href="../qna/qna_detail.do?no=${vo.no }">${vo.subject }
                  </a>
                 <c:if test="${vo.dbday==today }">
-                 <sup><img src="../img/images/new.gif"></sup>
+                 <sup><img src="../assets/img/new.gif"></sup>
                 </c:if>
                </td>
                <td width=15% class="text-center">${vo.name }</td>
@@ -83,9 +86,9 @@
               <tr>
            
                <td class="text-right">
-                <a href="..//board_list.do?page=${curpage>1?curpage-1:curpage }" class="btn btn-outline-info btn-sm">이전</a>
+                <a href="../qna/qna_list.do?page=${curpage>1?curpage-1:curpage }" class="btn btn-outline-info btn-sm">이전</a>
                 ${curpage } page / ${totalpage } pages
-                <a href="../board/board_list.do?page=${curpage<totalpage?curpage+1:curpage }" class="btn btn-outline-success btn-sm">다음</a>
+                <a href="../qna/qna_list.do?page=${curpage<totalpage?curpage+1:curpage }" class="btn btn-outline-success btn-sm">다음</a>
                </td>
               </tr>
               <c:set var="count" value="${count -1}"/>
