@@ -130,6 +130,119 @@ h6,
     border-radius: 50px;
 }
 
+/*popup*/
+.layerPopup *{
+    box-sizing: border-box;
+}
+.layerPopup img{
+    margin-bottom : 12px;
+}
+.layerPopup:before {
+    display:block;
+    content:"";
+    position:fixed;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.5);
+    z-index:9000;
+}
+.layerPopup .layerBox {
+    display: flex;
+    width: calc(100% - 24px);
+    max-width: 500px;
+    max-height: calc(100vh - 30px);
+    position:fixed;
+    left:50%;
+    top:50%;
+    transform:translate(-50%, -50%);
+    background:#ffffff;
+    border-radius:6px;
+    flex-direction: column;
+    overflow: hidden;
+    z-index:10000;
+}
+.layerPopup .layerBox .title {
+    padding: 16px;
+    font-weight:600;
+}
+.layerPopup .layerBox .title h4{
+    margin:0;
+}
+.layerPopup .layerBox .btnTodayHide {
+    font-size:14px;
+    font-weight:600;
+    color:black;
+    float: left;
+    text-decoration:none;
+    width: 150px;
+    height : 30px;
+    line-height:30px;
+    border:black solid 1px;
+    text-align : center;
+    text-decoration:none;
+}
+.layerPopup .cont{
+    overflow-y: auto;
+    padding: 14px;
+    border-top: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
+}
+
+.layerPopup #close {
+    font-size:16px;
+    font-weight:600;
+    width: 40px;
+    color:black;
+    float: right;
+    text-align : center;
+    text-decoration:underline;
+}
+.layerPopup a{
+    text-decoration : none;
+    color : black;
+    width: 50px;
+    height : 40px;
+}
+.check-df input[type=checkbox]{
+    width:0;
+    visibility: hidden;
+}
+.check-df input[type=checkbox]+label{
+    position:relative;
+    padding-left:30px;
+    cursor:pointer;
+}
+.check-df input[type=checkbox]+label:before{
+    content:'';
+    display:block;
+    position:absolute;
+    left:0;
+    width:24px;
+    height:24px;
+    border:1px solid #c4c4c4;
+    border-radius:4px;
+}
+.check-df input[type=checkbox]:checked+label:after{
+    content:'';
+    display:block;
+    position:absolute;
+    top:0;
+    left:0;
+    width:24px;
+    height:24px;
+    background:no-repeat  center center / 120%;
+    background-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M24.684 7.51731C26.0552 8.44737 26.4128 10.3129 25.4827 11.6841L17.3432 23.6841C16.8018 24.4823 15.9095 24.9715 14.9454 24.9988C13.9813 25.0262 13.0628 24.5882 12.477 23.822L6.61656 16.1553C5.61035 14.839 5.86175 12.9562 7.17807 11.95C8.49439 10.9438 10.3772 11.1952 11.3834 12.5115L14.7151 16.87L20.5172 8.31602C21.4473 6.94484 23.3128 6.58724 24.684 7.51731Z' fill='%230084FF'/%3E%3C/svg%3E%0A");
+}
+.check-df input[type=checkbox]:checked+label:before{
+    border-color:var(--primary);
+}
+.check-df input[type=checkbox]:checked+label{
+    font-weight:600;
+}
+/*popup*/
+
 /*** Navbar ***/
 body.on{
 	overflow:hidden;
@@ -1683,10 +1796,11 @@ form.hidden{
     width: calc((100% / 3 * 2) + 4px);
     flex-shrink: 0;
 }
-.thumb_list a:first-child,.thumb_list a:nth-child(2){
+.thumb_list:not(.nosub) a:first-child,.thumb_list:not(.nosub) a:nth-child(2){
     display:inline-block;
 }
 .thumb_list.nosub a{
+    display:inline-block;
     width:100%;
     padding-top:50%;
 }
@@ -1711,6 +1825,7 @@ form.hidden{
     right:0;
     top:0;
     bottom:0;
+    margin-bottom: 0!important;
     text-align:center;
     background-color:rgba(0,0,0,0.5);
     color:#ffffff;
@@ -1870,4 +1985,53 @@ li.submitwrap {
         bottom:-100vh;
         display:none;
     }
+}
+
+.detail_subWrap {
+    padding: 24px 12px;
+    border-bottom: 14px solid #eeeeee;
+}
+
+.tabWrap {
+    display: flex;
+    justify-content: space-around;
+    background-color:#ffffff;
+    border-bottom:1px solid #dddddd;
+}
+.tabWrap.sticky{
+    position:fixed;
+    top:70px;
+}
+@media (min-width: 992px){
+    .tabWrap.sticky{
+        top:80px;
+    }
+}
+
+.tabWrap .item button {
+    position:relative;
+    border: none;
+    background-color: transparent;
+    padding: 12px;
+    transition:.2s ease-out;
+}
+
+.tabWrap .item button:after{
+    content:'';
+    display:block;
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:3px;
+    transition:.2s ease-out;
+}
+
+.tabWrap .item.active button{
+    color:var(--primary);
+    font-weight:700;
+}
+
+.tabWrap .item.active button:after {
+    background-color:var(--primary);
 }
