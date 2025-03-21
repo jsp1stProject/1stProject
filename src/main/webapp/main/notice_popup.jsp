@@ -62,6 +62,28 @@ $("#closeBtn").click(function() {
 	    } else {
 	        $("#layer_popup").hide();
 	    }	
+		
+		let popupContent = '';
+		$.ajax({
+			type: 'get',
+			url: '../main/notice_popup.do',
+			dataType: 'json',
+			success: function(data) {
+				if (data) {
+					popupContent += '<div class="notice-item">'
+						 + '<h3>' + data.subject + '</h3>'
+						 + '<p>' + data.content + '</p>'
+						 + '</div>';
+		 			$('#popup_content').html(popupContent);	
+				} else {
+					console.log('데이터 비어있음');
+				}
+				
+			},
+			error: function(xhr, status, error) {
+				console.log('데이터 출력 실패: ' + error);
+			}
+		});
 	});
 
     // 쿠키 설정 함수

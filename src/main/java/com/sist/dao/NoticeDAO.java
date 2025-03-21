@@ -56,4 +56,17 @@ public class NoticeDAO {
 		session.commit();
 		session.close();
 	}
+	/*
+	 	 <select id="noticePopUp" resultType="NoticeVO">
+		SELECT * FROM notice_board
+		ORDER BY regdate DESC
+		FETCH FIRST 1 ROW ONLY;
+	</select>
+	 */
+	public static NoticeVO noticePopUp() {
+		SqlSession session = ssf.openSession();
+		NoticeVO vo = session.selectOne("noticePopUp");
+		session.close();
+		return vo;
+	}
 }
