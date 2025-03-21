@@ -204,6 +204,7 @@
 	});
 	$(document).on("click",".event_main_sel_ul button",function(){
 		let thisid=$(this).attr("id").substring(1);
+		$("form[name=areaform] input").prop("checked",false);
 		$("form[name=areaform] input").map(function(index,el){
 			if($(el).attr("id")===thisid){
 				$(el).prop("checked",true);

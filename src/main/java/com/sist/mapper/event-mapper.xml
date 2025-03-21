@@ -16,6 +16,8 @@
 		<result property="cvo.areacode" column="areacode"/>
 		<result property="cvo.overview" column="overview"/>
 		<result property="cvo.review_count" column="review_count"/>
+		<result property="cvo.mapx" column="mapx"/>
+		<result property="cvo.mapy" column="mapy"/>
 		<result property="dvo.info_id" column="info_id"/>
 		<result property="dvo.infoname" column="infoname"/>
 		<result property="dvo.infotext" column="infotext"/>

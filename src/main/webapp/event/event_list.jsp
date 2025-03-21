@@ -106,7 +106,7 @@
 		</div>
 	</div>
 	<c:if test="${mode eq 'area'}">
-		<form method="post" action="../event/event_area.do" name="areaform" class="hidden">
+		<form method="post" action="../event/event_list.do" name="areaform" class="hidden">
 			<input type="checkbox" name="type" value="1" id="1">
 			<input type="checkbox" name="type" value="2" id="2">
 			<input type="checkbox" name="type" value="3" id="3">
@@ -354,6 +354,7 @@
 	});
 	$(document).on("click",".event_main_sel_ul button",function(){
 		let thisid=$(this).attr("id").substring(1);
+		$("form[name=areaform] input").prop("checked",false);
 		$("form[name=areaform] input").map(function(index,el){
 			if($(el).attr("id")===thisid){
 				$(el).prop("checked",true);
