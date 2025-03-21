@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sist.mapper.sights-mapper">
+	<select id="sightsMainData" resultType="SightsVO">
+    SELECT * FROM (SELECT * FROM content
+      ORDER BY DBMS_RANDOM.RANDOM
+    )
+    WHERE rownum&lt;=1
+  </select>
+  <select id="sightsMainData8" resultType="SightsVO">
+    SELECT * FROM (SELECT * FROM content
+      ORDER BY DBMS_RANDOM.RANDOM
+    )
+    WHERE rownum&lt;=8
+  </select>
+  <select id="sightsListData" resultType="SightsVO" parameterType="hashMap">
+   SELECT content_id, title, contenttype_id,first_image, addr1, num
+	FROM (SELECT content_id, title, contenttype_id,first_image, addr1, rownum as num
+	FROM (SELECT content.content_id, title, contenttype_id,first_image, addr1  
+	FROM content WHERE contenttype_id = 12))
+	WHERE num BETWEEN #{start} AND #{end}  
+  </select>
+  <select id="sightsTotalPage" resultType="int">
+   SELECT CEIL(COUNT(*)/12.0) FROM content WHERE contenttype_id = 12 
+  </select>
+</mapper>
