@@ -9,5 +9,5 @@ public class HotelVO {
 	private int barbecue, beauty, beverage, bicycle, campfire, karaoke, fitness, publicbath, sauna, sports, seminar;
 	private ContentVO cvo = new ContentVO();
 	private HotelRoomVO hrvo = new HotelRoomVO();
-	
+	private HotelDetailImgVO hdivo = new HotelDetailImgVO();
 }

@@ -120,7 +120,7 @@ a:hover{
 				// 숙소 반복 출력
 			   html += '<li>'
 			        + '<a href="../hotel/hotel_detail.do?content_id=' + hotel.content_id + '" class="d-flex">'
-			        + '<div class="thumb-wrap" style="background-image:url(' + hotel.first_image + ')">'
+			        + '<div class="thumb-wrap" style="background-image:url(' + (hotel.first_image && hotel.first_image !== 'N/A' ? hotel.first_image : '../assets/img/no_image.jpg') + ')">'
 			        + '<button type="button" class="bookmark-btn" name="bm-btn" data-id=""></button>'
 			        + '</div>'
 			        + '<div class="d-flex flex-column flex-md-row right">'

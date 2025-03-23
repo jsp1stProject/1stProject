@@ -25,6 +25,9 @@
 		<result property="cvo.first_image2" column="first_image2"/>
 		<result property="cvo.cat3" column="cat3"/>
 		<result property="cvo.content_id" column="content_id"/>
+		<result property="cvo.mapy" column="mapy"/> 
+		<result property="cvo.mapx" column="mapx"/>
+		<result property="cvo.overview" column="overview"/>
 		<!-- hotel_room TABLE(hrvo) -->
 		<result property="hrvo.roomtitle" column="roomtitle"/>
 		<result property="hrvo.offseason_minfee1" column="offseason_minfee1"/>
@@ -40,6 +43,9 @@
 		<result property="hrvo.img1" column="img1"/>
 		<result property="hrvo.img2" column="img2"/>
 		<result property="hrvo.img3" column="img3"/>
+		<!-- hotel_detail_img -->
+		<result property="hdivo.origin_img" column="origin_img"/>
+		<result property="hdivo.thumb_img" column="thumb_img"/>
 	</resultMap>
 	
 	
@@ -128,9 +134,10 @@
 			</where>	
 	</select>
 	<select id="hotelDetailData" resultMap="hotelMap" parameterType="int">
-		SELECT c.content_id, title, addr1, first_image, cat3, 
-		       check_in_time, check_out_time, chkcooking, info_center, parking, room_count, subfacility, 
-		       barbecue, beverage, campfire, karaoke, fitness, publicbath, sauna, refund_regulation 
+		SELECT c.content_id, c.title, c.addr1, c.first_image, c.cat3, 
+		       h.check_in_time, h.check_out_time, h.chkcooking, h.info_center, h.parking, h.room_count, h.subfacility, 
+		       h.barbecue, h.beverage, h.campfire, h.karaoke, h.fitness, h.publicbath, h.sauna, h.refund_regulation, c.mapy, c.mapx,
+		       c.overview
 		FROM content c 
 		JOIN hotel h ON c.content_id = h.content_id 
 		WHERE c.content_id = #{content_id} 
@@ -141,5 +148,11 @@
 		FROM hotel_room 
 		WHERE content_id = ${content_id}
 	</select>
-    
+    <select id="hotelDetailImg" resultMap="hotelMap" parameterType="int">
+    	SELECT no, c.content_id, origin_img, thumb_img
+    	FROM content c
+    	JOIN  hotel_detail_img hdi
+    	ON c.content_id = hdi.content_id
+    	WHERE c.content_id = #{content_id}
+    </select>
 </mapper>

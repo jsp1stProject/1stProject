@@ -51,4 +51,11 @@ public class HotelDAO {
 		session.close();
 		return totalCount;
 	}
+	/** 숙박 상세보기 - 호텔, 객실 이미지 */
+	public static List<HotelVO> hotelDetailImg(int content_id) {
+		SqlSession session = ssf.openSession();
+		List<HotelVO> list = session.selectList("hotelDetailImg", content_id);
+		session.close();
+		return list;
+	}
 }

@@ -161,35 +161,21 @@ public class HotelModel {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
-		
 	}
 	@RequestMapping("hotel/hotel_detail.do")
 	public String hotel_detail(HttpServletRequest request, HttpServletResponse response) {
 		int content_id = Integer.parseInt(request.getParameter("content_id")); 
 		HotelVO vo = HotelDAO.hotelDetailData(content_id);
-		//System.out.println("vo: " + vo.toString());
+		
+		System.out.println("map: " + vo.getCvo().getMapx());
+		
 		List<HotelVO> list = HotelDAO.hotelRoomData(content_id);
-		System.out.println("list: " + list.toString());
-		
-		
+		List<HotelVO> imglist = HotelDAO.hotelDetailImg(content_id);
+		request.setAttribute("imglist", imglist);
 		request.setAttribute("list", list);
 		request.setAttribute("vo", vo);
 		request.setAttribute("main_jsp", "../hotel/hotel_detail.jsp");
-		return "../hotel/hotel_detail.jsp";
-	}
-	
-	
-	
-	
-	
-	
-	
-	@RequestMapping("hotel/hotel_detail_1.do")
-	public String hotel_detail_1(HttpServletRequest request, HttpServletResponse response) {
-		request.setAttribute("main_jsp", "../hotel/hotel_detail_1.jsp");
 		return "../main/main.jsp";
 	}
-	
 }
 
