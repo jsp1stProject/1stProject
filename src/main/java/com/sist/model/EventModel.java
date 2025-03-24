@@ -35,7 +35,6 @@ public class EventModel {
 		HttpSession session=request.getSession();
 		session.setAttribute("code", code);
 		session.setAttribute("expireTime", System.currentTimeMillis() + (300 * 1000)); //5분
-		session.setMaxInactiveInterval(5);
 
 		JSONObject obj=new JSONObject();
 		obj.put("statement", "success");
@@ -65,8 +64,10 @@ public class EventModel {
 				}else{
 					obj.put("statement", "fail");
 				}
-			}else {
+			}else { //만료
 				obj.put("statement", "expired");
+				session.removeAttribute("code");
+				session.removeAttribute("expireTime");
 			}
 		}
 
