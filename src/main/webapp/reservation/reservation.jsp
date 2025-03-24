@@ -9,7 +9,13 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/l10n/ko.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
 <style type="text/css">
+.btn-primary {
+    color: #fff;
+    background-color: #3A8FFA;
+    border-color: #1f9edd;
+}
 .custom-ok-btn {
     display: block;
     width: 100%;
@@ -45,19 +51,19 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 반투명한 어두운 배경 */
-    z-index: 9999; /* 달력보다 위에 표시 */
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
 }
 </style>
 <script type="text/javascript">
 	$(function() {
 		  var today = new Date();
-		  var mm = String(today.getMonth() + 1).padStart(2, '0'); // 월
-		  var dd = String(today.getDate()).padStart(2, '0'); // 일
+		  var mm = String(today.getMonth() + 1).padStart(2, '0');
+		  var dd = String(today.getDate()).padStart(2, '0');
 		  var daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
-		  var dayOfWeek = daysOfWeek[today.getDay()]; // 오늘의 요일
+		  var dayOfWeek = daysOfWeek[today.getDay()];
 
-		  var currentDate = mm + '-' + dd + ' (' + dayOfWeek + ')'; // MM-DD (요일) 형식으로 결합
+		  var currentDate = mm + '-' + dd + ' (' + dayOfWeek + ')';
 
 		  $('#dateInput').attr('placeholder', currentDate);
 		});
@@ -70,8 +76,10 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-8 col-12 order-2 order-md-1">
+				<hr class="text-muted">
+				<h5>예약 날짜</h5>
 				<div class="input-group input-group-lg">
-				  <input type="text" class="form-control" id="dateInput" placeholder="날짜 선택하기" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" readonly>
+				  <input type="text" class="form-control" id="dateInput" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" readonly>
 				</div>
 				<p id="selectedDateTime"></p>
 				<hr class="text-muted">
@@ -84,6 +92,11 @@
 					<div class="mb-3">
 						<label for="phone" class="form-label text-secondary small">전화번호</label>
 						<input type="tel" class="form-control" id="phone" placeholder="전화번호를 입력하세요" style="width: 300px;">
+					</div>
+					<div class="mb-3">
+						<h5 style="margin-top: 10px;">방문 방법</h5>
+						<button type="button" class="btn btn-outline-secondary" data-bs-toggle="button" autocomplete="off">도보</button>
+						<button type="button" class="btn btn-outline-secondary" data-bs-toggle="button" autocomplete="off">차량</button>
 					</div>
 				</form>
 				<hr class="text-muted">
@@ -108,16 +121,16 @@
 						</p>
 						<p class="card-text small">
 							<span class="text-secondary">일정</span>
-							<span class="fst-italic">2025-03-28 11:00 - 2025-03-29 12:00</span>
+							<span class="fst-italic" id="selectedDate"></span>
 						</p>
 					</div>
 				</div>
 				<div class="card" style="width: 18rem;">
 					<div class="card-body">
 						<p class="card-title">결제 정보</p>
-						<p class="card-subtitle mb-2 text-muted fs-6" style="display: inline">객실 가격</p><span>50,000원</span>
+						<p class="card-subtitle mb-2 text-muted fs-6" style="display: inline">객실 가격&nbsp;&nbsp;</p><span>50,000원</span>
 						<hr class="text-muted">
-						<p class="card-subtitle mb-2 fs-6" style="display: inline">총 결제 금액</p><span>50,000원</span>
+						<p class="card-subtitle mb-2 fs-6" style="display: inline">총 결제 금액&nbsp;&nbsp;</p><span>50,000원</span>
 						<hr class="text-muted">
 						<button type="button" class="btn btn-primary btn-lg">50,000원 결제하기</button>
 					</div>
@@ -126,98 +139,64 @@
 		</div>
 	</div>
 <script type="text/javascript">
-	
-	const datepickr = $('#dateInput').flatpickr();
-	
-	flatpickr(datepickr, {
-		onOpen: function () {
-			$('body').append('<div id="overlay"></div>');
+	const datepickr = $('#dateInput').flatpickr({
+		locale: 'ko',
+		mode: 'range',
+		showMonths: 2,
+		minDate: 'today',
+		dateFormat: 'm.d (D)',
+		defaultDate: [new Date(), new Date()],
+	    onOpen: function() {
+	        $('body').append('<div id="overlay"></div>');
 	    },
-	    onClose: function () {
-	    	$('#overlay').remove();
+	    onClose: function() {
+	        $('#overlay').remove();
+	    },
+	    onDayCreate: function(dObj, dStr, fp, dayElem) {
+	        let date = new Date(dayElem.dateObj);
+	        let day = date.getDay(); 
+	
+	        if (day === 0 || day === 6) { 
+	            $(dayElem).css('color', 'red'); 
+	        }
+	        if ($(dayElem).hasClass('flatpickr-disabled')) {
+	            $(dayElem).css('color', ''); 
+	        }
+	    },
+	    onChange: function(selectedDates, dateStr, instance) {
+	        if (selectedDates.length === 2) {
+	            const startDate = selectedDates[0];
+	            const endDate = selectedDates[1];
+	
+	            const startFormatted = formatDate(startDate);
+	            const endFormatted = formatDate(endDate);
+	
+	            $('#selectedDate').text(startFormatted + ' ~ ' + endFormatted);
+	        }
 	    }
 	});
+
+	function formatDate(date) {
+		const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+	    const year = date.getFullYear();
+	    const month = String(date.getMonth() + 1).padStart(2, '0');
+	    const day = String(date.getDate()).padStart(2, '0');
+	    const dayOfWeek = dayNames[date.getDay()];
 	
+	    return year + '.' + month + '.' + day + ' (' + dayOfWeek + ')';
+	}
+	$(document).ready(function() {
+	    const selectedDates = datepickr.selectedDates;
+	    if (selectedDates.length === 2) {
+	        const startDate = selectedDates[0];
+	        const endDate = selectedDates[1];
 
-/*
- 	달력: 
- 		주말 빨간색 표시
- 		국경일 빨간색 표시
- 		OK 버튼
- 	대실:
- 		시간 ~ 시간 형식으로 대실 시간 지정
- 		시간 선택하는 select 옵션
- 	숙박: 
- 		// 날짜 활성화
- 		const randomDates = [
- 			  "2025-03-20",
- 			  "2025-03-22",
- 			  "2025-03-24"
- 			];
+	        const startFormatted = formatDate(startDate);
+	        const endFormatted = formatDate(endDate);
 
- 			flatpickr("#datepicker", {
- 			  enable: randomDates
- 			});
-		
-		// 날짜 비활성화
-		const randomDisabledDates = [
-			  "2025-03-19",
-			  "2025-03-21",
-			  "2025-03-23"
-			];
-
-			flatpickr("#datepicker", {
-			  disable: randomDisabledDates
-			});
-
- */
-
-/*
- 	$(document).ready(function () {
-	    const showCalendar = (options) => {
-	        let reserveDate = document.getElementById("dateInput");
-	        //reserveDate.style.display = "block";
-
-	        flatpickr(reserveDate, {
-	            locale: "ko",
-	            ...options,
-	            onReady: (selectedDates, dateStr, instance) => {
-	                if (!$(".custom-ok-btn").length) {
-	                    let $okButton = $("<button>")
-	                        .text("OK")
-	                        .addClass("custom-ok-btn")
-	                        .on("click", () => instance.close());
-
-	                    $(instance.calendarContainer).append($okButton);
-	                }
-	            },
-	            onDayCreate: function (dObj, dStr, fp, dayElem) {
-	                let date = dayElem.dateObj;
-	                let day = date.getDay(); // 0: 일요일, 6: 토요일
-	                let currentMonth = fp.currentMonth; // 현재 보고 있는 달
-	                let dateMonth = date.getMonth(); // 날짜의 달
-	                let minDate = new Date(fp.config.minDate); // minDate를 Date 객체로 변환
-
-	                if (date >= minDate && dateMonth === currentMonth && (day === 0 || day === 6)) {
-	                    $(dayElem).addClass("weekend"); // 현재 달의 주말만 빨간색
-	                }
-	            }
-	        });
-	    };
-
-	    $("#dateInput").on("click", function () {
-	        showCalendar({
-	            enableTime: true,
-	            noCalendar: false,
-	            dateFormat: "Y-m-d (1)",
-	            minDate: "today",
-	            defaultHour: 12,
-	        });
-	    });
-
+	        $('#selectedDate').text(startFormatted + ' ~ ' + endFormatted);
+	    }
 	});
-
-*/
 </script>
 </body>
 </html>
