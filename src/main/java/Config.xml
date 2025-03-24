@@ -25,6 +25,7 @@
   		<typeAlias type="com.sist.vo.ReservationVO" alias="ReservationVO"/>
   		<typeAlias type="com.sist.vo.SightsVO" alias="SightsVO"/>
   		<typeAlias type="com.sist.vo.HotelDetailImgVO" alias="HotelDetailImgVO"/>
+  		<typeAlias type="com.sist.vo.FoodVO" alias="FoodVO"/>
   	</typeAliases>
   	<environments default="development">
   		<environment id="development">
@@ -49,5 +50,6 @@
   		<mapper resource="com/sist/mapper/reservation-mapper.xml"/>
   		<mapper resource="com/sist/mapper/sights-mapper.xml"/>
   		<mapper resource="com/sist/mapper/userfind-mapper.xml"/>
+  		<mapper resource="com/sist/mapper/food-mapper.xml"/>
   	</mappers>
   </configuration>
