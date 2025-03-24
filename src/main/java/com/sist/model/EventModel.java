@@ -3,9 +3,12 @@ package com.sist.model;
 import com.sist.controller.Controller;
 import com.sist.controller.RequestMapping;
 import com.sist.dao.EventDAO;
+import com.sist.dao.MailDAO;
 import com.sist.vo.EventVO;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -14,8 +17,70 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 
+
 @Controller
 public class EventModel {
+	@RequestMapping("mail/mail.do")
+	public String mail(HttpServletRequest request, HttpServletResponse response)  {
+		request.setAttribute("main_jsp", "../event/mail.jsp");
+		return "../main/main.jsp";
+	}
+	@RequestMapping("mail/codeSending.do")
+	public void codeSending(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("application/json;charset=UTF-8");
+		String email=request.getParameter("email");
+		System.out.println(email);
+		
+		String code=MailDAO.sendMail(email);
+		HttpSession session=request.getSession();
+		session.setAttribute("code", code);
+		session.setAttribute("expireTime", System.currentTimeMillis() + (300 * 1000)); //5분
+		session.setMaxInactiveInterval(5);
+
+		JSONObject obj=new JSONObject();
+		obj.put("statement", "success");
+		PrintWriter out=null;
+        try {
+			out=response.getWriter();
+            out.write(obj.toJSONString());
+			out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+			System.out.println("ioe오류");
+        }
+    }
+	@RequestMapping("mail/verification.do")
+	public void verification(HttpServletRequest request, HttpServletResponse response){
+		HttpSession session=request.getSession();
+		response.setContentType("application/json;charset=UTF-8");
+		JSONObject obj=new JSONObject();
+		String authCode=request.getParameter("code");
+		Long expireTime = (Long) session.getAttribute("expireTime");
+		if(authCode!=null && expireTime!=null){
+			if(System.currentTimeMillis() <= expireTime){
+				System.out.println(session.getAttribute("code"));
+				String code=session.getAttribute("code").toString();
+				if(authCode.equals(code)){
+					obj.put("statement", "success");
+				}else{
+					obj.put("statement", "fail");
+				}
+			}else {
+				obj.put("statement", "expired");
+			}
+		}
+
+		PrintWriter out=null;
+		try {
+			out=response.getWriter();
+			out.write(obj.toJSONString());
+			out.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("ioe오류");
+		}
+	}
+
 	@RequestMapping("event/main.do")
 	public String event_main(HttpServletRequest request, HttpServletResponse response) {
 		HashMap map = new HashMap();
