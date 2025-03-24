@@ -48,5 +48,6 @@
   		<mapper resource="com/sist/mapper/member-mapper.xml"/>
   		<mapper resource="com/sist/mapper/reservation-mapper.xml"/>
   		<mapper resource="com/sist/mapper/sights-mapper.xml"/>
+  		<mapper resource="com/sist/mapper/userfind-mapper.xml"/>
   	</mappers>
   </configuration>
