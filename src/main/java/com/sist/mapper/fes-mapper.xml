@@ -67,7 +67,29 @@ SELECT * FROM (SELECT * FROM content
 
   
   
-<!-- 축제 검색하기 -->
+<!-- 축제 홈에서 검색하기 -->
+
+<select id="fesHomeFindData" resultType="FesVO" parameterType="hashmap">
+SELECT content_id, title, addr1, addr2,first_image, review_count, event_startdate, event_enddate, charge, agelimit, price, num
+FROM (SELECT content_id, title, addr1, addr2, first_image, review_count, event_startdate, event_enddate, charge, agelimit, price, rownum as num
+FROM (SELECT content.content_id, title, addr1, addr2, first_image, review_count, event_startdate, event_enddate, charge, agelimit, price
+FROM content, event
+WHERE content.content_id=event.content_id AND content.cat2='A0207' 
+	 AND title||addr1||addr2 LIKE '%'||#{search}||'%'
+))
+WHERE num BETWEEN #{start} AND #{end}	 
+
+</select>
+
+<select id="fesHomeTotalCount" resultType="int" parameterType="string"> 
+  SELECT COUNT(*)
+  FROM content,event 
+  WHERE content.content_id=event.content_id 
+  AND content.cat2='A0207'
+  AND  title||addr1||addr2 LIKE '%'||#{search}||'%' 
+</select>
+
+
 <!-- 축제 검색하기 -->
 <select id="fesFindData" resultType="FesVO" parameterType="hashmap">
 SELECT content_id, title, addr1, addr2, zipcode, sigungucode, areacode, first_image, review_count, event_startdate, event_enddate, charge, agelimit, price, price_info, num

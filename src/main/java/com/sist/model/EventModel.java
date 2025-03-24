@@ -54,15 +54,29 @@ public class EventModel {
 		//필터 카테고리 목록
 		request.setAttribute("catemap",EventDAO.catemap);
 
+		//mode 없으면 행사 메인페이지로
+		String mode=request.getParameter("mode");
+		if(mode==null){
+			return "redirect:../event/main.do";
+		}
+		request.setAttribute("mode", mode);
+
 		//parameter 매핑
 		HashMap map = new HashMap();
-		map.put("key", request.getParameter("key"));
+
+		if(mode.equals("search")){
+			map.put("key", request.getParameter("key"));
+		}else if(mode.equals("area")){
+			map.put("areacode", request.getParameterValues("type"));
+			request.setAttribute("areaStr",request.getParameter("areastr"));
+		}
+
 		//최대값,최소값,결과개수
 		EventVO vo=EventDAO.eventSearchDefault(map);
 		if(vo.getMaxprice()!=null){
 			request.setAttribute("maxprice", vo.getMaxprice());
 			request.setAttribute("minprice", vo.getMinprice());
-		}else{ //row 없으면
+		}else { //row 없으면
 			request.setAttribute("maxprice", 0);
 			request.setAttribute("minprice", 0);
 		}
@@ -80,16 +94,38 @@ public class EventModel {
 		response.setContentType("application/x-json;charset=UTF-8");
 		//request 파싱
         JSONObject json=EventDAO.jsonParse(request,response);
-		String key=json.get("key").toString();
-		String page=json.get("curpage").toString();
-		String filter=json.get("filter").toString(); //filter true/false
 
 		//기본 parameter 매핑
+		String page=json.get("curpage").toString();
+		String filter=json.get("filter").toString(); //filter true/false
 		HashMap map = new HashMap();
 		int curpage=Integer.parseInt(page);
-		map.put("key", key);
 		map.put("start", (10*curpage)-9);
 		map.put("end", 10*curpage);
+
+		//mode:{search||area}
+		String mode=request.getParameter("mode");
+		if(mode.equals("search")){ //검색 페이지
+			System.out.println("mode인식:"+mode);
+			String key=json.get("key").toString();
+			map.put("key", key);
+		}else if(mode.equals("area")){ //지역별 페이지
+			System.out.println("mode인식:"+mode);
+			String codestr=json.get("areacode").toString();
+			int[] codeArr2 = new int[0];
+			if(codestr.contains("[")){
+				codestr=codestr.substring(1,codestr.length()-1);
+				String[] codeArr=codestr.split(",");
+				codeArr2=new int[codeArr.length];
+				for(int i=0;i<codeArr.length;i++){
+					System.out.println(codeArr[i]);
+					if(!codeArr[i].equals("")) {
+						codeArr2[i]=Integer.parseInt(codeArr[i]);
+					}
+				}
+			}
+			map.put("areacode", codeArr2);
+		}
 
 		//filter parameter 추출/매핑
 		String[] catelist=new String[0];
@@ -106,124 +142,6 @@ public class EventModel {
 		if(json.get("enddate")!=null){ //기간 필터 적용했을 때만 매핑
 			map.put("enddate", json.get("enddate").toString());
 		}
-
-		System.out.println("filter:"+filter);
-		System.out.println("cate:"+catelist.toString());
-
-		//검색결과 총개수
-		EventVO cvo=EventDAO.eventSearchDefault(map);
-		//검색결과 목록
-		List<EventVO> list= EventDAO.eventSearchList(map);
-		JSONArray arr=new JSONArray();
-		int i=0;
-		for(EventVO vo:list){
-			JSONObject obj=new JSONObject();
-			obj.put("title", vo.getCvo().getTitle());
-			obj.put("addr1", vo.getCvo().getAddr1());
-			obj.put("addr2", vo.getCvo().getAddr2());
-			obj.put("dbend", vo.getDbend());
-			obj.put("dbcate", vo.getDbcate());
-			obj.put("first_image", vo.getCvo().getFirst_image());
-			obj.put("price", vo.getPrice());
-			if(i==0){
-				obj.put("curpage", curpage);
-				obj.put("count", cvo.getCount());
-				if(10*curpage>=Integer.parseInt(cvo.getCount())){ //페이지 끝이면
-					obj.put("listend", true);
-				}
-			}
-			arr.add(obj);
-			i++;
-		}
-		if(list==null||list.size()==0){ //row 없으면
-			JSONObject obj=new JSONObject();
-			obj.put("count", 0);
-			arr.add(obj);
-		}
-
-		PrintWriter out;
-		try {
-			out = response.getWriter();
-			out.write(arr.toJSONString());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@RequestMapping("event/event_area.do")
-	public String event_arealist(HttpServletRequest request, HttpServletResponse response) {
-		//필터 카테고리 목록
-		request.setAttribute("catemap",EventDAO.catemap);
-
-		//parameter 매핑
-		HashMap map = new HashMap();
-		String[] catelist=request.getParameterValues("type");
-		map.put("areacode", catelist);
-		//최대값,최소값,결과개수
-		EventVO vo=EventDAO.eventSearchDefault(map);
-		if(vo!=null){
-			request.setAttribute("maxprice", vo.getMaxprice());
-			request.setAttribute("minprice", vo.getMinprice());
-		}else{ //row 없으면
-			request.setAttribute("maxprice", 0);
-			request.setAttribute("minprice", 0);
-		}
-		request.setAttribute("areaStr",request.getParameter("areastr"));
-
-		request.setAttribute("wide", "y");//wide screen true
-		request.setAttribute("is", "y"); //infinite scroll true
-		request.setAttribute("event", "y"); //event page
-		request.setAttribute("main_jsp", "../event/event_area.jsp");
-		request.setAttribute("title", "검색결과");
-		return "../main/main.jsp";
-	}
-
-	@RequestMapping("event/event_area_data.do")
-	public void event_arealist_data(HttpServletRequest request, HttpServletResponse response) {
-		response.setContentType("application/x-json;charset=UTF-8");
-		//request 파싱
-		JSONObject json=EventDAO.jsonParse(request, response);
-		String codestr=json.get("areacode").toString();
-		int[] codeArr2 = new int[0];
-		if(codestr.contains("[")){
-			codestr=codestr.substring(1,codestr.length()-1);
-			String[] codeArr=codestr.split(",");
-			codeArr2=new int[codeArr.length];
-			for(int i=0;i<codeArr.length;i++){
-				System.out.println(codeArr[i]);
-				if(!codeArr[i].equals("")) {
-					codeArr2[i]=Integer.parseInt(codeArr[i]);
-				}
-			}
-		}
-
-		String page=json.get("curpage").toString();
-		String filter=json.get("filter").toString(); //filter true/false
-
-		//기본 parameter 매핑
-		HashMap map = new HashMap();
-		int curpage=Integer.parseInt(page);
-		map.put("areacode", codeArr2);
-		map.put("start", (10*curpage)-9);
-		map.put("end", 10*curpage);
-
-		//filter parameter 추출/매핑
-		String[] catelist=new String[0];
-		if(json.get("filtermin")!=null){ //가격 필터 적용했을 때만 매핑
-			map.put("filtermin", json.get("filtermin").toString());
-			map.put("filtermax", json.get("filtermax").toString());
-			System.out.println("filtermin:"+json.get("filtermin").toString());
-			System.out.println("filtermax:"+json.get("filtermax").toString());
-		}
-		if(json.get("cate")!=null){ //카테고리 필터 적용했을 때만 매핑
-			System.out.println("cate:"+json.get("cate").toString());
-			catelist=json.get("cate").toString().split(",");
-			map.put("cate", catelist);
-		}
-		if(json.get("enddate")!=null){ //기간 필터 적용했을 때만 매핑
-			map.put("enddate", json.get("enddate").toString());
-		}
-
 		System.out.println("filter:"+filter);
 
 		//검색결과 총개수
@@ -234,6 +152,7 @@ public class EventModel {
 		int i=0;
 		for(EventVO vo:list){
 			JSONObject obj=new JSONObject();
+			obj.put("content_id", vo.getContent_id());
 			obj.put("title", vo.getCvo().getTitle());
 			obj.put("addr1", vo.getCvo().getAddr1());
 			obj.put("addr2", vo.getCvo().getAddr2());
@@ -268,7 +187,7 @@ public class EventModel {
 
 	@RequestMapping("event/event_detail.do")
 	public String event_detail(HttpServletRequest request, HttpServletResponse response) {
-		String contid=request.getParameter("contid");
+		String contid=request.getParameter("id");
 		int id=Integer.parseInt(contid);
 		EventVO vo=EventDAO.eventDetailData(id);
 		List<EventVO> imglist=EventDAO.eventDetailImg(id);

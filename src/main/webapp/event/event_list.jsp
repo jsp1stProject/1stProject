@@ -64,12 +64,36 @@
 			<div class="col-lg-9 px-0">
 				<div class="container-xxl py-lg-3 pt-5 pb-3 px-0">
 					<div class="container">
-						<form action="../event/event_list.do" method="post" name="page-search">
-							<div class="sch_wrap page">
-								<input type="text" name="key" id="key" placeholder="검색어를 입력하세요." value="${param.key}">
-								<input type="submit" value="검색">
-							</div>
-						</form>
+						<c:choose>
+							<c:when test="${mode eq 'search'}">
+								<form action="../event/event_list.do" method="post" name="page-search">
+									<div class="sch_wrap page">
+										<input type="text" name="key" id="key" placeholder="검색어를 입력하세요." value="${param.key}">
+										<input type="submit" value="검색">
+										<input type="hidden" name="mode" value="search">
+									</div>
+								</form>
+							</c:when>
+							<c:when test="${mode eq 'area'}">
+								<div class="event_main_selinner">
+									<div class="sch_wrap area" id="event_sel_btn">
+										<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M12 3.5C8.41015 3.5 5.5 6.41015 5.5 10C5.5 12.0175 6.40035 14.1225 7.61299 16.026C8.81776 17.9172 10.2807 19.5319 11.2953 20.552C11.6963 20.9552 12.3096 20.9561 12.711 20.5552C13.7258 19.5417 15.1868 17.9369 16.3898 16.0491C17.6001 14.1497 18.5 12.04 18.5 10C18.5 6.41015 15.5899 3.5 12 3.5ZM4 10C4 5.58172 7.58172 2 12 2C16.4183 2 20 5.58172 20 10C20 12.4534 18.9312 14.8521 17.6548 16.8552C16.3711 18.8697 14.8277 20.5611 13.771 21.6165C12.7816 22.6046 11.217 22.6003 10.2318 21.6098C9.17624 20.5486 7.63235 18.8482 6.3479 16.832C5.07132 14.8281 4 12.4333 4 10Z"></path><path clip-rule="evenodd" d="M10.055 8.30857C10.5856 7.77623 11.247 7.5 11.9981 7.5C12.7484 7.5 13.4097 7.77494 13.9414 8.30499C14.4738 8.83562 14.75 9.49704 14.75 10.2481C14.75 10.9984 14.4751 11.6597 13.945 12.1914C13.4144 12.7238 12.753 13 12.0019 13C11.2516 13 10.5903 12.7251 10.0586 12.195C9.52623 11.6644 9.25 11.003 9.25 10.2519C9.25 9.50164 9.52494 8.84032 10.055 8.30857ZM11.9981 9C11.6481 9 11.3683 9.1158 11.1173 9.36753C10.8658 9.61984 10.75 9.90107 10.75 10.2519C10.75 10.6019 10.8658 10.8817 11.1175 11.1327C11.3698 11.3842 11.6511 11.5 12.0019 11.5C12.3519 11.5 12.6317 11.3842 12.8827 11.1325C13.1342 10.8802 13.25 10.5989 13.25 10.2481C13.25 9.89815 13.1342 9.61827 12.8825 9.36735C12.6302 9.11584 12.3489 9 11.9981 9Z"></path></svg>
+										<p id="area">${param.areaStr}</p>
+									</div>
+									<ul class="event_main_sel_ul">
+										<li><button type="button" id="a1">서울</button></li>
+										<li><button type="button" id="a6">부산</button></li>
+										<li><button type="button" id="a39">제주</button></li>
+										<li><button type="button" id="a31">경기</button></li>
+										<li><button type="button" id="a2">인천</button></li>
+										<li><button type="button" id="a32">강원</button></li>
+										<li><button type="button" id="a35">경북, 경남, 울산, 대구</button></li>
+										<li><button type="button" id="a37">전북, 전남, 광주</button></li>
+										<li><button type="button" id="a33">충북, 충남, 대전, 세종</button></li>
+									</ul>
+								</div>
+							</c:when>
+						</c:choose>
 					</div>
 				</div>
 				<div class="container-xxl pb-3 px-0">
@@ -81,7 +105,29 @@
 			</div>
 		</div>
 	</div>
-
+	<c:if test="${mode eq 'area'}">
+		<form method="post" action="../event/event_list.do" name="areaform" class="hidden">
+			<input type="checkbox" name="type" value="1" id="1">
+			<input type="checkbox" name="type" value="2" id="2">
+			<input type="checkbox" name="type" value="3" id="3">
+			<input type="checkbox" name="type" value="4" id="4">
+			<input type="checkbox" name="type" value="5" id="5">
+			<input type="checkbox" name="type" value="6" id="6">
+			<input type="checkbox" name="type" value="7" id="7">
+			<input type="checkbox" name="type" value="8" id="8">
+			<input type="checkbox" name="type" value="31" id="31">
+			<input type="checkbox" name="type" value="32" id="32">
+			<input type="checkbox" name="type" value="33" id="33">
+			<input type="checkbox" name="type" value="34" id="34">
+			<input type="checkbox" name="type" value="35" id="35">
+			<input type="checkbox" name="type" value="36" id="36">
+			<input type="checkbox" name="type" value="37" id="37">
+			<input type="checkbox" name="type" value="38" id="38">
+			<input type="checkbox" name="type" value="39" id="39">
+			<input type="text" name="areaStr" value="" id="areaStr">
+			<input type="hidden" name="mode" value="area">
+		</form>
+	</c:if>
 <script type="text/javascript">
 	let listend=false;
 	let filteron=false;
@@ -139,8 +185,18 @@
 
 	//--------------------ajax
 	async function data(page,isScroll,isFilter,form,isPreview){
+		<c:if test="${mode eq 'area'}">
+			var codeArr = [
+				<c:forEach var="item" items="${paramValues.type}">
+					<c:out value="${item}"/>,
+				</c:forEach>
+			];
+		</c:if>
 		let data={
-			"key": $("#key").val(),
+			<c:choose>
+				<c:when test="${mode eq 'search'}">"key": $("#key").val(),</c:when>
+				<c:when test="${mode eq 'area'}">"areacode": codeArr,</c:when>
+			</c:choose>
 			"curpage": page,
 			"filter":"false"
 		}
@@ -170,6 +226,9 @@
 				hearders:{
 					"Content-Type":"application/json"
 				},
+				params:{
+					"mode":"${mode}"
+				},
 				data:JSON.stringify(data)
 			});
 			$('.filterschbtn span').text(response.data[0].count==0?'0':response.data[0].count.toLocaleString('ko-KR'));
@@ -194,7 +253,7 @@
 			}else{
 				data.map(function(vo){
 					html+=`<li>
-<a href="#" class="d-flex">
+<a href="../event/event_detail.do?id=`+vo.content_id+`" class="d-flex">
 <div class="thumb-wrap" `+(vo.first_image==="N/A"?"":" style='background-image:url("+vo.first_image+")'")+`>
 <button type="button" class="bookmark-btn on"></button>
 </div>
@@ -249,6 +308,9 @@
 		}else{
 			filtersrh=false;
 		}
+		if($(".filter-container").hasClass("active")){
+			$(".filter-container").removeClass("active");
+		}
 		$("html").scrollTop(0);
 		page=2;
 		listend=false; //page, listend 초기화
@@ -261,6 +323,7 @@
 		document.filterform.reset();
 		rs.value([${minprice},${maxprice}]);
 		filteron=false;
+		$(".cpsbtn").removeClass("active");
 		data(1,false,true,document.filterform,true);
 	}
 	data(1,false);
@@ -283,6 +346,31 @@
 		}
 		defaultST = nextScrollTop;
 	});
+
+	<c:if test="${mode eq 'area'}">
+	//area select
+	$(document).on("click","#event_sel_btn",function(){
+		$(".event_main_sel_ul").fadeToggle(100);
+	});
+	$(document).on("click",".event_main_sel_ul button",function(){
+		let thisid=$(this).attr("id").substring(1);
+		$("form[name=areaform] input").prop("checked",false);
+		$("form[name=areaform] input").map(function(index,el){
+			if($(el).attr("id")===thisid){
+				$(el).prop("checked",true);
+			}
+			if(thisid==="35"){
+				$("#4, #7, #36").prop("checked",true);
+			}else if(thisid==="37"){
+				$("#5, #38").prop("checked",true);
+			}else if(thisid==="33"){
+				$("#3, #8, #34").prop("checked",true);
+			}
+		});
+		$("#areaStr").val($(this).text());
+		$("form[name=areaform]").submit();
+	});
+	</c:if>
 </script>
 </body>
 </html>

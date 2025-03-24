@@ -6,6 +6,13 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style type="text/css">
+.submit-btn-container {
+    width: 100%;
+    margin-top: 20px;
+    text-align: right;
+}
+</style>
 </head>
 <body>
 <div class="container">
@@ -47,7 +54,10 @@
 			</tr>
 		</tbody>
 	</table>
-	<a href="../notice/notice_admin_update.do?no=${vo.no }"><button class="btn btn-primary" id="trans" style="margin-right: 0;">등록</button></a>
+	<div class="submit-btn-container">
+	<button class="btn btn-primary" onclick="history.back()">목록</button>
+	<a href="../notice/notice_admin_update.do?no=${vo.no }"><button class="btn btn-primary" id="trans" style="margin-right: 0;">수정</button></a>
+	</div>
 </div>
 </body>
 </html>

@@ -15,18 +15,19 @@
 	            <div class="navbar-nav mx-auto p-4 p-lg-0">
 	                <a href="../hotel/hotel_list.do" class="nav-item nav-link">숙소</a>
 	                <a href="../event/main.do" class="nav-item nav-link ${not empty event?'active':''}">행사</a>
-	                <a href="../fes/fes_list.do" class="nav-item nav-link">축제</a>
+	                <a href="../fes/fes_home.do" class="nav-item nav-link">축제</a>
 	                <a href="about.html" class="nav-item nav-link">맛집</a>
 	                <div class="nav-item">
 	                    <a href="#" class="nav-link" data-bs-toggle="collapse" data-bs-target="#subnav1">게시판</a>
 	                    <div class="collapse subnav mb-lg-4" id="subnav1">
 	                        <a href="../notice/notice_admin_list.do" class="nav-item nav-link">공지사항</a>
-	                        <a href="testimonial.html" class="nav-item nav-link">Q&A</a>
+	                        <a href="../qna/qna_list.do" class="nav-item nav-link">Q&A</a>
 	                        <a href="404.html" class="nav-item nav-link">404 Page</a>
 	                    </div>
 	                </div>
+	                <a href="../adminpage/admin_main.do" class="nav-item nav-link">관리자페이지</a>
 	            </div>
-	        </div>
+	        </div> 
 	        <div class="d-flex justify-content-end align-self-baseline">
 	        	<div class="d-flex" id="nav-wide-right">
 	            	<div class="flex-shrink-0 btn-square rounded-circle srhbtn">

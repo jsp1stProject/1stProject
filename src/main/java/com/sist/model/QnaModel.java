@@ -59,6 +59,7 @@ public class QnaModel {
 	{
 		System.out.println("인서트 진입");
 		QnaVO vo =new QnaVO();
+		
 		String email=request.getParameter("email");
 		String phone=request.getParameter("phone");
 		String type=request.getParameter("type");
@@ -67,11 +68,15 @@ public class QnaModel {
 		String subject=request.getParameter("subject");
 		String content=request.getParameter("content");
 		String pwd=request.getParameter("pwd");
-		
+		System.out.println("스트링으로 데이터받고");
 		//id와 name는 session에서 받아오기
 		HttpSession session=request.getSession();
 		String user_id=(String)session.getAttribute("user_id");
+		System.out.println();
 		String name=(String)session.getAttribute("name");
+		user_id="dahye_23";
+		name="방다혜";
+		
 		System.out.println("try진입전");
 		try {
 			Part filePart=request.getPart("filename"); //항상 ("")안에는 name 속성값이 들어가야한다
@@ -80,7 +85,8 @@ public class QnaModel {
 			if(filename==null || filename.equals(""))//업로드가 안된상태
 			{
 				System.out.println("파일없을때");
-				vo.setFilename("");
+				vo.setFilename(" ");
+				System.out.println(vo.getFilename());
 				vo.setFilesize(0);
 			}
 			else
@@ -106,6 +112,7 @@ public class QnaModel {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			System.out.println("파일오류");
 		}
 		System.out.println("트라이나와서");
 		vo.setUser_id(user_id);
@@ -124,6 +131,28 @@ public class QnaModel {
 		return "redirect:../qna/qna_list.do";
 	}
 	
+	@RequestMapping("qna/qna_detail.do")
+	public String qna_detail(HttpServletRequest request, HttpServletResponse response)
+	{
+		String no=request.getParameter("no");
+		QnaVO vo=QnaDAO.qnaDetailData(Integer.parseInt(no));
+		request.setAttribute("vo", vo);
+		request.setAttribute("main_jsp", "../qna/qna_detail.jsp");
+		return "../main/main.jsp";
+	}
+	
+	@RequestMapping("qna/qna_delete.do")
+	public String qna_delete(HttpServletRequest request, HttpServletResponse response)
+	{
+		String gi=request.getParameter("group_id");
+		return "";
+	}
+	
+	@RequestMapping("qna/qna_update.do")
+	public String qna_update(HttpServletRequest request, HttpServletResponse response)
+	{
+		return "";
+	}
 	
 	/* 관리자모드 */
 	@RequestMapping("qna/qna_admin_list.do")
@@ -153,6 +182,49 @@ public class QnaModel {
 		return "../main/main.jsp";
 	}
 	
+	@RequestMapping("qna/qna_admin_insert.do")
+	public String qna_admin_insert(HttpServletRequest request,HttpServletResponse response)
+	  {
+		   String gi=request.getParameter("gi"); //groud_id
+		   QnaVO vo=QnaDAO.qnaAdminDetailData(Integer.parseInt(gi));
+		   request.setAttribute("vo", vo);
+		   request.setAttribute("admin_jsp", "../qna/qna_admin_insert.jsp");
+		   request.setAttribute("main_jsp", "../adminpage/admin_main.jsp");
+		   return "../main/main.jsp";
+	  }  
+	
+	@RequestMapping("qna/qna_admin_insert_ok.do")
+	  public String qna_admin_insert_ok(HttpServletRequest request,HttpServletResponse response)
+	  {
+		  System.out.println("insert_ok");
+		  String subject=request.getParameter("subject");
+		  String content=request.getParameter("content");
+		  String group_id=request.getParameter("group_id");
+		  
+		  HttpSession session=request.getSession();
+		  String user_id=(String)session.getAttribute("user_id");
+		  user_id="test";
+		  // 데이터 유지 => 서버 자체 저장
+		  System.out.println("user_id : "+user_id);
+		  QnaVO vo=new QnaVO();
+		  vo.setUser_id(user_id);
+		  vo.setGroup_id(Integer.parseInt(group_id));
+		  vo.setSubject(subject);
+		  vo.setContent(content);
+		  System.out.println();
+		  System.out.println("dao 진입");
+		  QnaDAO.qnaAdminInsert(vo);
+		  System.out.println("dao 성공");
+		  return "redirect:../qna/qna_admin_list.do";
+	  }  
+	
+	@RequestMapping("qna/qna_admin_delete.do")
+	public String qna_admin_delete(HttpServletRequest request,HttpServletResponse response)
+	{
+		String gi=request.getParameter("gi");
+		QnaDAO.qnaAdminDelete(Integer.parseInt(gi));;
+		return  "redirect:../qna/qna_admin_list.do";
+	}
 	
 
 }

@@ -36,6 +36,14 @@ public class HotelModel {
 		System.out.println("title:" + title);
 		String[] cat3 = request.getParameterValues("cat3");
 		String[] locations = request.getParameterValues("locations");
+		String min = request.getParameter("min");
+		String max = request.getParameter("max");
+		if (min == null || max == null) {
+			min = "0";
+			max = "100000";
+		}
+		min = min.replaceAll("[^0-9]", "");
+		max = max.replaceAll("[^0-9]", "");
 		/*
 		String[] cat3 = null;
 		String[] locations = null;
@@ -82,6 +90,8 @@ public class HotelModel {
 		map.put("locations", locations);
 		map.put("title", title);
 		map.put("searchTitle", map);
+		map.put("min", min);
+		map.put("max", max);
 		
 		//System.out.println("cat3: " + cat3.toString() + " and " + cat3);;
 		//System.out.println("locations:" + locations.toString());;
@@ -151,35 +161,21 @@ public class HotelModel {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
-		
 	}
 	@RequestMapping("hotel/hotel_detail.do")
 	public String hotel_detail(HttpServletRequest request, HttpServletResponse response) {
 		int content_id = Integer.parseInt(request.getParameter("content_id")); 
 		HotelVO vo = HotelDAO.hotelDetailData(content_id);
-		//System.out.println("vo: " + vo.toString());
+		
+		System.out.println("map: " + vo.getCvo().getMapx());
+		
 		List<HotelVO> list = HotelDAO.hotelRoomData(content_id);
-		System.out.println("list: " + list.toString());
-		
-		
+		List<HotelVO> imglist = HotelDAO.hotelDetailImg(content_id);
+		request.setAttribute("imglist", imglist);
 		request.setAttribute("list", list);
 		request.setAttribute("vo", vo);
 		request.setAttribute("main_jsp", "../hotel/hotel_detail.jsp");
-		return "../hotel/hotel_detail.jsp";
-	}
-	
-	
-	
-	
-	
-	
-	
-	@RequestMapping("hotel/hotel_detail_1.do")
-	public String hotel_detail_1(HttpServletRequest request, HttpServletResponse response) {
-		request.setAttribute("main_jsp", "../hotel/hotel_detail_1.jsp");
 		return "../main/main.jsp";
 	}
-	
 }
 

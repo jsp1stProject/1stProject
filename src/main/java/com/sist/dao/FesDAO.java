@@ -14,21 +14,73 @@ public class FesDAO {
 	}
 	
 	/*
-		<select id="fesMainHouseData" resultType="FesVO">
-		SELECT * FROM (SELECT * FROM content
-		      ORDER BY DBMS_RANDOM.RANDOM
-		    )
-		    WHERE rownum&lt;=1
-		</select>
-		
-		<select id="fesMainHouseData8" resultType="FesVO">
-		    SELECT * FROM (SELECT * FROM content 
-		      ORDER BY DBMS_RANDOM.RANDOM
-		    )
-		    WHERE rownum&lt;=8
-		  </select>	 
+	<select id="fesHomeFindData" resultType="FesVO" parameterType="hashmap">
+	SELECT content_id, title, addr1, addr2,first_image, review_count, event_startdate, event_enddate, charge, agelimit, price, num
+	FROM (SELECT content_id, title, addr1, addr2, first_image, review_count, event_startdate, event_enddate, charge, agelimit, price, rownum as num
+	FROM (SELECT content.content_id, title, addr1, addr2, first_image, review_count, event_startdate, event_enddate, charge, agelimit, price
+	FROM content, event
+	WHERE content.content_id=event.content_id AND content.cat2='A0207' 
+		 AND title LIKE '%'||#{search}||'%' ORDER BY content_id
+	))
+	WHERE WHERE num BETWEEN #{start} AND #{end}	 
+
+	</select>
+	*/
+	public static List<FesVO> fesHomeFindData(Map map)
+	{
+		List<FesVO> list=null;
+		SqlSession session=null;
+		try
+		{
+		  session=ssf.openSession();
+		  list=session.selectList("fesHomeFindData",map);
+		}
+		catch (Exception e) 
+		{
+			// TODO: handle exception
+		  e.printStackTrace();
+		}
+		finally
+		{
+		  if(session!=null)
+			  session.close();
+		}
+		return list;
+	}
+	
+	/*
+	<select id="fesHomeTotalPage" resultType="int" parameterType="string"> 
+	  SELECT CEIL(COUNT(*)/12.0) 
+	  FROM content,event 
+	  WHERE content.content_id=event.content_id 
+	  AND content.cat2='A0207'
+	  AND  title||addr1 LIKE '%'||#{search}||'%' 
+	</select>
 	
 	 */
+	
+	public static int fesHomeTotalCount(String search)
+	{
+		int total=0;
+		SqlSession session=null;
+		try
+		{
+		 session=ssf.openSession();
+		 total=session.selectOne("fesHomeTotalCount", search);
+		}
+		catch (Exception e) 
+		{
+		// TODO: handle exception
+		 e.printStackTrace();
+		}
+		finally
+		{
+		 if(session!=null)
+		  session.close();
+		}
+		  
+		return total;
+	}
 	
 	public static FesVO fesMainHouseData()
 	{
