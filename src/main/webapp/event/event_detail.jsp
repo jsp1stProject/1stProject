@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <html>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.3/css/lightgallery.min.css">
@@ -141,10 +142,25 @@
             <li class="d-flex justify-content-between align-items-center">
                 <div>
                     <p class="product">입장권</p>
-                    <p class="price">${vo.price eq 0?'무료':vo.price}</p>
+                    <p class="price">
+                        <c:choose>
+                            <c:when test="${vo.price eq 0}">
+                                무료
+                            </c:when>
+                            <c:otherwise>
+                                <fmt:formatNumber value="${vo.price }" pattern="#,###" />원
+                            </c:otherwise>
+                        </c:choose>
+                    </p>
                 </div>
                 <div class="countwrap">
                     <button type="button" class="count-down">-</button><input type="text" name="product_count" value="1" disabled><button type="button" class="count-up">+</button>
+                </div>
+            </li>
+            <li class="d-flex justify-content-end">
+                <div>
+                    <p class="product">합계</p>
+                    <p class="totalPrice"></p>
                 </div>
             </li>
             <li class="submitwrap">
@@ -182,6 +198,16 @@
                    $("input[name=product_count]").val(count+1);
                }
            }
+           let total=0;
+           $("p.price").map(function(index,el){
+               var str = $(el).text();
+               var regex = /[^0-9]/g;
+               var result = str.replace(regex, "");
+               console.log("result: " + result);
+               total+=total+result;
+           });
+           $(".totalPrice").text(total.toLocaleString('ko-KR')+'원');
+
         });
 
         //kakao map
