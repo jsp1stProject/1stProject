@@ -49,22 +49,22 @@
     font-weight: 600;
     margin-left: 5px;
 }
-.frame-1321316148,
-.frame-1321316148 * {
+.rsv-card,
+.rsv-card * {
   box-sizing: border-box;
 }
-.frame-1321316148 {
-  background: #d9eafd;
-  border-radius: var(--corner-large, 16px);
-  padding: 10px;
-  display: flex;
-  flex-direction: row;
-  gap: 18px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  height: 470px;
-  position: relative;
-  margin-bottom: 10px;
+.rsv-card {
+    background: #F5F7FA;
+    border-radius: var(--corner-large, 16px);
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 18px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    height: 450px;
+    position: relative;
+    margin-bottom: 10px;
 }
 .rectangle-2 {
   border-radius: var(--corner-large, 16px);
@@ -101,14 +101,13 @@
 .div {
   color: #000000;
   text-align: left;
-  font-family: "NotoSansKr-Bold", sans-serif;
   font-size: 24px;
   font-weight: 700;
   position: relative;
   align-self: stretch;
 }
 .frame-1321316144 {
-  background: #fbfbfb;
+  background: #FFFFFF;
   border-radius: var(--corner-large, 16px);
   padding: 10px;
   display: flex;
@@ -141,57 +140,55 @@
 .div2 {
   color: #000000;
   text-align: left;
-  font-family: "NotoSansKr-Bold", sans-serif;
   font-size: 20px;
   font-weight: 700;
   position: relative;
   align-self: stretch;
 }
 ._4 {
-  color: #000000;
-  text-align: left;
-  font-family: "NotoSansKr-Bold", sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  position: relative;
+    color: #000000;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    position: relative;
+    opacity: 0.5;
 }
 .rsv-day {
-  display: flex;
-  flex-direction: column;
-  gap: 45px;
-  align-items: flex-end;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  width: 100px;
-  position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    width: 100px;
+    position: relative;
 }
 ._50-000 {
   color: #000000;
   text-align: right;
-  font-family: "NotoSansKr-Bold", sans-serif;
   font-size: 20px;
   font-weight: 700;
   position: relative;
 }
 .reservation-button {
-  background: #81bfda;
-  border-radius: var(--corner-large, 16px);
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  padding: 10px 31px 10px 31px;
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  align-items: center;
-  justify-content: center;
-  align-self: stretch;
-  flex-shrink: 0;
-  height: 45px;
-  position: relative;
+    background: #1D8BFF;
+    border-radius: var(--corner-large, 16px);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    padding: 10px 31px 10px 31px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    flex-shrink: 0;
+    height: 40px;
+    position: relative;
+    max-width: fit-content;
 }
 .div3 {
   color: #f7f7f7;
   text-align: left;
-  font-family: "NotoSansKr-Bold", sans-serif;
   font-size: 15px;
   font-weight: 700;
   position: relative;
@@ -218,28 +215,27 @@
 .div4 {
   color: #000000;
   text-align: left;
-  font-family: "NotoSansKr-Bold", sans-serif;
   font-size: 20px;
   font-weight: 700;
   position: relative;
 }
 ._18-00-12-00 {
-  color: #000000;
-  text-align: left;
-  font-family: "NotoSansKr-Bold", sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  position: relative;
+    color: #000000;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    position: relative;
+    opacity: 0.5;
 }
 .rsv-stay {
-  display: flex;
-  flex-direction: column;
-  gap: 45px;
-  align-items: flex-end;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  width: 100px;
-  position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    width: 100px;
+    position: relative;
 }
 .frame-1321316145 {
   background: #fbfbfb;
@@ -258,7 +254,6 @@
 ._2-tv {
   color: #000000;
   text-align: left;
-  font-family: "NotoSansKr-Bold", sans-serif;
   font-size: 14px;
   font-weight: 700;
   position: relative;
@@ -373,7 +368,7 @@ $(function() {
         </div>
         <div class="detail_subWrap scrollTab_cont" id="sub2">
         	<c:forEach var="hrvo" items="${list }">
-        	<div class="frame-1321316148">
+        	<div class="rsv-card">
 			  <img class="rectangle-2" src="${hrvo.img1 }" />
 			  <div class="frame-1321316147">
 			    <div class="frame-1321316146">

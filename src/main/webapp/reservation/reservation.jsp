@@ -5,10 +5,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/l10n/ko.js"></script>
 <style type="text/css">
 .custom-ok-btn {
     display: block;
@@ -31,7 +31,37 @@
 .form-label {
 	margin-bottom: 0 !important;
 }
+@media (min-width: 992px) {
+  .input-group {
+    max-width: 280px;
+  }
+}
+#dateInput {
+	margin-top: 20px;
+}
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 반투명한 어두운 배경 */
+    z-index: 9999; /* 달력보다 위에 표시 */
+}
 </style>
+<script type="text/javascript">
+	$(function() {
+		  var today = new Date();
+		  var mm = String(today.getMonth() + 1).padStart(2, '0'); // 월
+		  var dd = String(today.getDate()).padStart(2, '0'); // 일
+		  var daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
+		  var dayOfWeek = daysOfWeek[today.getDay()]; // 오늘의 요일
+
+		  var currentDate = mm + '-' + dd + ' (' + dayOfWeek + ')'; // MM-DD (요일) 형식으로 결합
+
+		  $('#dateInput').attr('placeholder', currentDate);
+		});
+</script>
 </head>
 <body>
 	<div class="container">
@@ -40,10 +70,9 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-8 col-12 order-2 order-md-1">
-				=============================================================<br>
-				<input type="button" class="btn btn-secondary" value="대실" id="Time">
-				<input type="button" class="btn btn-secondary" value="숙박" id="Stay"><br>
-				<input type="date" id="reserveDate" placeholder="날짜 및 시간 선택" size="30" style="display: none; margin-top: 20px;">
+				<div class="input-group input-group-lg">
+				  <input type="text" class="form-control" id="dateInput" placeholder="날짜 선택하기" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" readonly>
+				</div>
 				<p id="selectedDateTime"></p>
 				<hr class="text-muted">
 				<h5>예약자 정보</h5>
@@ -97,6 +126,19 @@
 		</div>
 	</div>
 <script type="text/javascript">
+	
+	const datepickr = $('#dateInput').flatpickr();
+	
+	flatpickr(datepickr, {
+		onOpen: function () {
+			$('body').append('<div id="overlay"></div>');
+	    },
+	    onClose: function () {
+	    	$('#overlay').remove();
+	    }
+	});
+	
+
 /*
  	달력: 
  		주말 빨간색 표시
@@ -130,11 +172,11 @@
 
  */
 
-
+/*
  	$(document).ready(function () {
 	    const showCalendar = (options) => {
-	        let reserveDate = document.getElementById("reserveDate");
-	        reserveDate.style.display = "inline";
+	        let reserveDate = document.getElementById("dateInput");
+	        //reserveDate.style.display = "block";
 
 	        flatpickr(reserveDate, {
 	            locale: "ko",
@@ -163,28 +205,19 @@
 	        });
 	    };
 
-	    $("#Time").on("click", function () {
+	    $("#dateInput").on("click", function () {
 	        showCalendar({
 	            enableTime: true,
 	            noCalendar: false,
-	            dateFormat: "Y-m-d H:i",
+	            dateFormat: "Y-m-d (1)",
 	            minDate: "today",
 	            defaultHour: 12,
 	        });
 	    });
 
-	    $("#Stay").on("click", function () {
-	        showCalendar({
-	            enableTime: false,
-	            noCalendar: false,
-	            dateFormat: "Y-m-d",
-	            minDate: "today",
-	            mode: "range",
-	        });
-	    });
 	});
 
-
+*/
 </script>
 </body>
 </html>
