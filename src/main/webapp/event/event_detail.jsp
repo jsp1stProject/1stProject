@@ -97,14 +97,43 @@
                 </c:if>
                 <h4>오시는 길</h4>
                 <div id="map" style="width:100%; height:400px;"><a href="https://map.kakao.com/link/to/${vo.cvo.title},${vo.cvo.mapy},${vo.cvo.mapx}" target="_blank" class="findWay">길 찾기</a></div>
-
-            </div>
-            <div>
-
             </div>
         </div>
         <div class="detail_subWrap scrollTab_cont" id="sub3">
-            리뷰영역
+            <div>
+                <h4>리뷰 <b class="text-blue">231</b></h4>
+                <div class="d-flex align-content-center flex-column flex-wrap">
+                    <div class="score-avg align-self-center">
+                        <div class="bigstar">
+                            4.2
+                        </div>
+                    </div>
+                    <ul class="review-ul">
+                        <c:forEach begin="1" end="5" var="i">
+                            <li>
+                                <div class="review-header">
+                                    <div class="user-score" data-score="${i}">
+                                        <div class="star"></div>
+                                        <div class="star"></div>
+                                        <div class="star"></div>
+                                        <div class="star"></div>
+                                        <div class="star"></div>
+                                    </div>
+                                    <div class="user-name">
+                                        <span class="name">홍길동</span>
+                                        <span class="created-time">2025년 3월 12일</span>
+                                    </div>
+                                </div>
+                                <div class="review-cont">
+                                    내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용
+                                </div>
+                            </li>
+                        </c:forEach>
+
+                    </ul>
+                    <button class="morebtn btn-white">리뷰 전체보기</button>
+                </div>
+            </div>
         </div>
     </div>
     <div class="buy-wrap">
@@ -130,6 +159,8 @@
             thumbnail: true,
             selector: '.item'
         });
+
+        //구매 팝업
         $(document).on("click","#buybtn",function(){
             $(".buy-wrap").addClass("active");
             $(".buy-wrap").removeClass("off");
