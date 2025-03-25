@@ -23,6 +23,16 @@ import java.util.List;
 
 @Controller
 public class EventModel {
+//내정보
+	@RequestMapping("mypage/myinfo.do")
+	public String myinfo(HttpServletRequest request, HttpServletResponse response) {
+
+		request.setAttribute("title", "내 정보");
+		request.setAttribute("main_jsp", "../mypage/myinfo.jsp");
+		return "../main/main.jsp";
+	}
+
+//메일
 	@RequestMapping("mail/mail.do")
 	public String mail(HttpServletRequest request, HttpServletResponse response)  {
 		request.setAttribute("main_jsp", "../event/mail.jsp");

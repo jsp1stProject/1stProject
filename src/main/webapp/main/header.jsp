@@ -56,8 +56,7 @@
 								<!--로그인 상태에 따라 다른 메뉴 보이기-->
 							<c:if test="${sessionScope.user_id!=null }">
 								<h6>${sessionScope.name}님 로그인되었습니다&nbsp;</h6>
-								<li><a href="#">내정보</a></li>
-								<li><a href="#">마이페이지</a></li>
+								<li><a href="../mypage/myinfo.do">마이페이지</a></li>
 								<li><a href="../member/logout.do">로그아웃</a></li>
 							</c:if>
 							</ul>
