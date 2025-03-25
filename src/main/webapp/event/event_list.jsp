@@ -223,7 +223,7 @@
 			let response=await axios({
 				method:'post',
 				url:'event_list_data.do',
-				hearders:{
+				headers:{
 					"Content-Type":"application/json"
 				},
 				params:{

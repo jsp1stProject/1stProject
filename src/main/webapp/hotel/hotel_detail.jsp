@@ -346,7 +346,7 @@ $(function() {
                     <button type="button" data-target="sub1">소개</button>
                 </div>
                 <div class="item">
-                    <button type="button" data-target="sub2">객실정보</button>
+                    <button type="button" data-target="sub2">객실</button>
                 </div>
                 <div class="item">
                     <button type="button" data-target="sub3">지도</button>
@@ -381,9 +381,13 @@ $(function() {
 			          </div>
 			          <div class="rsv-day">
 			            <div class="_50-000">50,000 원</div>
-			            <button class="reservation-button">
-			              <div class="div3">대실</div>
-			            </button>
+			            <form method="post" action="../reservation/reservation.do">
+			            	<input type="hidden" name="room_id" value="${hrvo.room_id }">
+			            	<input type="hidden" name="content_id" value="${vo.cvo.content_id }">
+			            	<button class="reservation-button" type="submit">
+			              	<div class="div3">대실</div>
+			            	</button>
+			            </form>
 			          </div>
 			        </div>
 			        <div class="frame-1321316143">
@@ -397,9 +401,13 @@ $(function() {
 			          </div>
 			          <div class="rsv-stay">
 			            <div class="_50-000">50,000 원</div>
-			            <button class="reservation-button">
-			              <div class="div3">대실</div>
+			            <form method="post" action="../reservation/reservation.do">
+			            	<input type="hidden" name="room_id" value="${hrvo.room_id }">
+			            	<input type="hidden" name="content_id" value="${vo.cvo.content_id }">
+			            <button class="reservation-button" type="submit">
+			              <div class="div3">숙박</div>
 			            </button>
+			            </form>
 			          </div>
 			        </div>
 			      </div>

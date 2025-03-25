@@ -16,7 +16,7 @@
 	                <a href="../hotel/hotel_list.do" class="nav-item nav-link">숙소</a>
 	                <a href="../event/main.do" class="nav-item nav-link ${not empty event?'active':''}">행사</a>
 	                <a href="../fes/fes_home.do" class="nav-item nav-link">축제</a>
-	                <a href="about.html" class="nav-item nav-link">맛집</a>
+	                <a href="../food/food_find.do" class="nav-item nav-link">맛집</a>
 	                <div class="nav-item">
 	                    <a href="#" class="nav-link" data-bs-toggle="collapse" data-bs-target="#subnav1">게시판</a>
 	                    <div class="collapse subnav mb-lg-4" id="subnav1">
@@ -50,6 +50,7 @@
 							<c:if test="${sessionScope.user_id==null }">
 								<li><a href="#" id="loginBtn">로그인</a></li>
 								<li><a href="../member/join.do">회원가입</a></li>
+								<li><a href="../member/idfind.do">아이디찾기</a></li>
 								<li><a href="#">비회원 예약</a></li>
 							</c:if>
 								<!--로그인 상태에 따라 다른 메뉴 보이기-->

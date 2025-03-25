@@ -10,6 +10,7 @@
 				R: 예약 중
 				C: 예약 완료
 				X: 예약 취소
+				A: 취소 대기 중
 		 -->
 		INSERT INTO reservation (reserve_id, content_id, room_id, offseason_minfee1, reserve_date, check_in_date, 
 								 check_out_date, people_count, arrival_type, pay_amount, status

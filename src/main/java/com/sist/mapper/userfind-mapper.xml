@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sist.mapper.user_find">
+ <select id="userIdFindData_Email" resultType="String" parameterType="UserVO">
+   SELECT RPAD(SUBSTR(user_id,1,2),LENGTH(user_id),'*') FROM user_info
+   WHERE name=#{name} AND email=#{email}
+  </select>
+  <select id="userIdFindCount_Email" resultType="int" parameterType="UserVO">
+   SELECT COUNT(*) FROM user_info
+   WHERE name=#{name} AND email=#{email}
+  </select>
+  <select id="userIdFindData_Phone" resultType="String" parameterType="UserVO">
+   SELECT RPAD(SUBSTR(user_id,1,2),LENGTH(user_id),'*') FROM user_info
+   WHERE name=#{name} AND phone=#{phone}
+  </select>
+  <select id="userIdFindCount_Phone" resultType="int" parameterType="UserVO">
+   SELECT COUNT(*) FROM user_info
+   WHERE name=#{name} AND phone=#{phone}
+  </select>
+</mapper> 

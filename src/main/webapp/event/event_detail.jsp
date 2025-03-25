@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <html>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.3/css/lightgallery.min.css">
@@ -97,14 +98,43 @@
                 </c:if>
                 <h4>오시는 길</h4>
                 <div id="map" style="width:100%; height:400px;"><a href="https://map.kakao.com/link/to/${vo.cvo.title},${vo.cvo.mapy},${vo.cvo.mapx}" target="_blank" class="findWay">길 찾기</a></div>
-
-            </div>
-            <div>
-
             </div>
         </div>
         <div class="detail_subWrap scrollTab_cont" id="sub3">
-            리뷰영역
+            <div>
+                <h4>리뷰 <b class="text-blue">231</b></h4>
+                <div class="d-flex align-content-center flex-column flex-wrap">
+                    <div class="score-avg align-self-center">
+                        <div class="bigstar">
+                            4.2
+                        </div>
+                    </div>
+                    <ul class="review-ul">
+                        <c:forEach begin="1" end="5" var="i">
+                            <li>
+                                <div class="review-header">
+                                    <div class="user-score" data-score="${i}">
+                                        <div class="star"></div>
+                                        <div class="star"></div>
+                                        <div class="star"></div>
+                                        <div class="star"></div>
+                                        <div class="star"></div>
+                                    </div>
+                                    <div class="user-name">
+                                        <span class="name">홍길동</span>
+                                        <span class="created-time">2025년 3월 12일</span>
+                                    </div>
+                                </div>
+                                <div class="review-cont">
+                                    내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용
+                                </div>
+                            </li>
+                        </c:forEach>
+
+                    </ul>
+                    <button class="morebtn btn-white">리뷰 전체보기</button>
+                </div>
+            </div>
         </div>
     </div>
     <div class="buy-wrap">
@@ -112,10 +142,25 @@
             <li class="d-flex justify-content-between align-items-center">
                 <div>
                     <p class="product">입장권</p>
-                    <p class="price">${vo.price eq 0?'무료':vo.price}</p>
+                    <p class="price">
+                        <c:choose>
+                            <c:when test="${vo.price eq 0}">
+                                무료
+                            </c:when>
+                            <c:otherwise>
+                                <fmt:formatNumber value="${vo.price }" pattern="#,###" />원
+                            </c:otherwise>
+                        </c:choose>
+                    </p>
                 </div>
                 <div class="countwrap">
                     <button type="button" class="count-down">-</button><input type="text" name="product_count" value="1" disabled><button type="button" class="count-up">+</button>
+                </div>
+            </li>
+            <li class="d-flex justify-content-end">
+                <div>
+                    <p class="product">합계</p>
+                    <p class="totalPrice"></p>
                 </div>
             </li>
             <li class="submitwrap">
@@ -130,6 +175,8 @@
             thumbnail: true,
             selector: '.item'
         });
+
+        //구매 팝업
         $(document).on("click","#buybtn",function(){
             $(".buy-wrap").addClass("active");
             $(".buy-wrap").removeClass("off");
@@ -151,6 +198,16 @@
                    $("input[name=product_count]").val(count+1);
                }
            }
+           let total=0;
+           $("p.price").map(function(index,el){
+               var str = $(el).text();
+               var regex = /[^0-9]/g;
+               var result = str.replace(regex, "");
+               console.log("result: " + result);
+               total+=total+result;
+           });
+           $(".totalPrice").text(total.toLocaleString('ko-KR')+'원');
+
         });
 
         //kakao map
