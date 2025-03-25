@@ -135,17 +135,16 @@
     });
 
     // 로그인 버튼 클릭 시 Shadowbox로 팝업 띄우기
-    document.getElementById("loginBtn").addEventListener("click", function(event){
-        event.preventDefault(); // a 태그의 기본 동작 방지
-
-        Shadowbox.open({
-            content: '../member/login.do',
-            player: 'iframe',
-            width: 320,
-            height: 300,
-            title: '로그인'
-        });
-    });
+	$(document).on("click","#loginBtn",function(event){
+		event.preventDefault(); // a 태그의 기본 동작 방지
+		Shadowbox.open({
+			content: '../member/login.do',
+			player: 'iframe',
+			width: 320,
+			height: 300,
+			title: '로그인'
+		});
+	});
 
 	//scroll-top btn
 	let preScrollTop = 0;
