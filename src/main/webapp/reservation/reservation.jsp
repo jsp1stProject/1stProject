@@ -31,8 +31,8 @@
     border-radius: 5px;
 }
 .weekend {
-        color: red !important;
-    }
+	color: red !important;
+}
 .mb-3 {
 	margin-bottom: 0 !important;
 }
@@ -41,10 +41,13 @@
 }
 @media (min-width: 992px) {
   .input-group {
-    max-width: 280px;
+    max-width: 430px;
   }
 }
 #dateInput {
+	margin-top: 20px;
+}
+#count {
 	margin-top: 20px;
 }
 #overlay {
@@ -56,9 +59,44 @@
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 9999;
 }
+.input-group {
+	gap: 5px;
+}
+.popup {
+	display: none;
+	position: absolute;
+	background-color: #f1f1f1;
+	border: 1px solid #ccc;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	padding: 10px;
+	z-index: 1000;
+	text-align: center;
+	width: 100%;
+	box-sizing: border-box;
+	z-index: 10000;
+}
+.popup-content {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.counter-text {
+	text-align: left;
+	font-size: 16px;
+}
+.counter-btn {
+	cursor: pointer;
+	padding: 5px 10px;
+	background-color: #ccc;
+	border: none;
+	font-size: 16px;
+}
+.counter-value {
+	font-size: 18px;
+	margin: 0 15px;
+}
 </style>
 <script type="text/javascript">
-
 	$(function() {
 		  var today = new Date();
 		  var mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -70,10 +108,90 @@
 
 		  $('#dateInput').attr('placeholder', currentDate);
 		});
+	
+	
+	$(document).ready(function(){
+    	var popupVisible = false;
+	      
+	    $('#counter').text(2);
+	    $('#count').val('인원 2'); 
+	    $('#hiddenCount').val('인원 2'); 
+
+  		$('#count').click(function() {
+    		var inputOffset = $(this).offset(); 
+    		var inputWidth = $(this).outerWidth(); 
+  			$('body').append('<div id="overlay"></div>');
+    		if (popupVisible) {
+      			$('#popup').fadeOut();
+      			popupVisible = false;
+    		} else {
+      			$('#popup').css({
+      	    	top: inputOffset.top + $(this).outerHeight(),
+      	    	left: inputOffset.left, 
+     	    	width: inputWidth 
+			}).fadeIn(); 
+      		popupVisible = true;
+			}
+		});
+
+		$(document).click(function(event) {
+	    	if (!$(event.target).closest('#count, #popup').length) {
+	      		$('#popup').fadeOut(); 
+	      		popupVisible = false; 
+	    	}
+	  	});
+
+		$('#increase').click(function() {
+	    	var currentValue = parseInt($('#counter').text(), 10);
+	    	var newValue = currentValue + 1;
+	    	$('#counter').text(newValue);
+	    	$('#count').val('인원 ' + newValue); 
+	    	$('#hiddenCount').val('인원 ' + newValue); 
+	  	});
+
+		$('#decrease').click(function() {
+	    	var currentValue = parseInt($('#counter').text(), 10);
+	    	if (currentValue > 1) { 
+	      	var newValue = currentValue - 1;
+	      	$('#counter').text(newValue);
+	      	$('#count').val('인원 ' + newValue); 
+	      	$('#hiddenCount').val('인원 ' + newValue); 
+			}
+	  	});
+	});
+
+	$(document).on('click', '#overlay', function(event) {
+        if (event.target !== this) {
+        	 return
+        }
+        $('#overlay').remove(); 
+    });
+	
+	function updateHiddenInput() {
+		var now = new Date();
+		var reserveDate = now.toISOString().slice(0, 19).replace('T', ' ');
+		var countValue = $('#count').val().replace(/\D/g, '');
+		var priceValue = $('#pay_amount').data('price');
+		var selectedOption = $("input[name='options']:checked").next("label").text();
 		
+		$('#h-reserve_date').val(reserveDate);
+		$('#h-count').val(countValue);
+		$('#h-price').val(priceValue);
+		$('#h-arrival_type').val(selectedOption);
+	}
 </script>
 </head>
 <body>
+	<div id="popup" class="popup">
+		<div class="popup-content">
+      <span class="counter-text">인원</span>
+      <div>
+        <button id="decrease" class="counter-btn">-</button>
+        <span id="counter" class="counter-value">1</span>
+        <button id="increase" class="counter-btn">+</button>
+      </div>
+    </div>
+	</div>
 	<div class="container">
 		<a href="#">&lt; 뒤로가기</a>
 	</div>
@@ -84,6 +202,7 @@
 				<h5>예약 날짜</h5>
 				<div class="input-group input-group-lg">
 				  <input type="text" class="form-control" id="dateInput" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" readonly>
+				  <input type="text" class="form-control" id="count" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" value="인원 2" readonly>
 				</div>
 				<p id="selectedDateTime"></p>
 				<hr class="text-muted">
@@ -130,6 +249,12 @@
 							<span class="text-secondary">일정</span>
 							<span class="fst-italic" id="selectedDate"></span>
 						</p>
+						<p class="card-text small">
+							<span class="text-secondary">체크인</span>
+							<span class="fst-italic" id="selectedDate">
+							입실&nbsp;&nbsp;${vo.check_in_time }&nbsp;&nbsp;퇴실&nbsp;&nbsp;${vo.check_out_time }
+							</span>
+						</p>
 					</div>
 				</div>
 				<div class="card" style="width: 18rem;">
@@ -139,9 +264,22 @@
 							<span><fmt:formatNumber value="${vo.hrvo.offseason_minfee1}" pattern="#,###" /> 원</span>
 						<hr class="text-muted">
 						<p class="card-subtitle mb-2 text-muted fs-6" style="display: inline">총 결제 금액&nbsp;&nbsp;</p>
-							<span><fmt:formatNumber value="${vo.hrvo.offseason_minfee1}" pattern="#,###" /> 원</span>
+							<span id="pay_amount" data-price="${vo.hrvo.offseason_minfee1}">
+						  		<fmt:formatNumber value="${vo.hrvo.offseason_minfee1}" pattern="#,###" /> 원
+							</span>
 						<hr class="text-muted">
-						<button type="button" class="btn btn-primary btn-lg"><fmt:formatNumber value="${vo.hrvo.offseason_minfee1}" pattern="#,###" /> 원 결제하기</button>
+						<form method="post" action="" onsubmit="updateHiddenInput()">
+							<input type="hidden" id="h-content_id" name="content_id" value="${vo.cvo.content_id }">
+							<input type="hidden" id="h-room_id" name="room_id" value="${vo.hrvo.room_id }">
+							<input type="hidden" id="h-reserve_date" name="reserve_date" value="">
+							<input type="hidden" id="h-check_in_date" name="check_in_date" value="">
+							<input type="hidden" id="h-check_out_date" name="check_out_date" value="">
+							<input type="hidden" id="h-count" name="people_count">
+							<input type="hidden" id="h-arrival_type" name="arrival_type" value="">
+							<input type="hidden" id="h-price" name="pay_amount">
+							<input type="hidden" id="h-status" name="status" value="R">
+							<button type="submit" class="btn btn-primary btn-lg"><fmt:formatNumber value="${vo.hrvo.offseason_minfee1}" pattern="#,###"/> 원 결제하기</button>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -181,6 +319,20 @@
 	            endDate.setHours(endDate.getHours() + 4);
 	            const endFormatted = formatDate(endDate);
 	            $('#selectedDate').text(startFormatted + ' ~ ' + endFormatted);
+	            
+	            
+	            const oracleDate = formatToOracleDate(startDate);
+	            
+	            let checkInDate = new Date(oracleDate);
+	            
+	            checkInDate.setHours(checkInDate.getHours() + 5);
+	            
+	            let checkOutDate = checkInDate.toISOString().slice(0, 19).replace('T', ' ');
+	            
+	            $('#h-check_in_date').val(checkOutDate); // input hidden
+	            $('#h-check_out_date').val(oracleDate);
+	            console.log('start' + checkOutDate);
+	            console.log('end' + oracleDate);
 	        }
 	    }
 	});
@@ -195,6 +347,7 @@
 
 	    return month + '.' + day + ' ' + hours + ':00' + ' (' + weekDay + ')';
 	}
+	
 	$(document).ready(function() {
 	    const selectedDates = datepickr.selectedDates;
 	    if (selectedDates.length === 2) {
@@ -207,6 +360,18 @@
 	        $('#selectedDate').text(startFormatted + ' ~ ' + endFormatted);
 	    }
 	});
+	
+	function formatToOracleDate(date) {
+	    const year = date.getFullYear();
+	    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+	    const day = date.getDate().toString().padStart(2, '0');
+	    const hours = date.getHours().toString().padStart(2, '0');
+	    const minutes = date.getMinutes().toString().padStart(2, '0');
+	    const seconds = date.getSeconds().toString().padStart(2, '0');
+	    
+	    return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+	}
+	
 </script>
 </body>
 </html>
