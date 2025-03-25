@@ -49,4 +49,20 @@ public class SightsModel {
 		  request.setAttribute("main_jsp", "../sights/sights_list.jsp");
 		  return "../main/main.jsp";
 	  }
+	
+	@RequestMapping("sights/sights_detail.do")
+	public String sights_detail(HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("sights_detail.do");
+		int content_id=Integer.parseInt(request.getParameter("content_id"));
+		System.out.println("content_id 값: " + content_id);
+	    //String content_id = request.getParameter("content_id");
+	    SightsVO vo = SightsDAO.sightsDetailData(content_id);
+
+
+	    request.setAttribute("vo", vo);
+	    request.setAttribute("main_jsp", "../sights/sights_detail.jsp");
+
+	    return "../main/main.jsp";
+	}
+
 }

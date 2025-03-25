@@ -69,9 +69,14 @@ function join () {
 </script>
 </head>
 <body>
-  <div class="container" style="margin-top: 50px">
+  <div class="container" style="margin-top: 30px">
    <div class="row" style="width:300px">
     <table class="table">
+    <tr>
+    <td>
+        <h1 class="m-0 home" style="color: black;">Festeller</h1>
+    </td>
+	</tr>
      <tr>
       <th width=20%>ID</th>
       <td width=80%>
@@ -97,9 +102,7 @@ function join () {
        <input type=button id="joinBtn" class="btn-sm btn-warning" value="회원가입" onclick="join()">
       </td>
      </tr>
-     <tr>
-     	<h1 class="m-0 home">Festeller</h1>
-     </tr>
+     
     </table>
    </div>
   </div>
