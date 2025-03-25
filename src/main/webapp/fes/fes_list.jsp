@@ -19,9 +19,31 @@
 
 let ac=[];
 let cat3=[];
-let max_price;
-let min_price;
 let sd="${search}";
+let valueSet=[0,100000];
+
+function price_change(valueSet)
+{
+	console.log("valueSet배열로"+valueSet)
+	data_ajax(cat3,ac,sd,valueSet);
+}
+
+$(function(){
+
+	$('#ss').click(function(){
+		sd=$('#search').val()
+		console.log(sd)
+		data_ajax(cat3,ac,sd,valueSet);
+	})
+	$('#search').keydown(function(e){
+		if(e.keyCode==13)//엔터
+		{
+			sd=$('#search').val()
+			console.log(sd)
+			data_ajax(cat3,ac,sd,valueSet);
+		}
+	})
+})
 
 function boxClick()
 {
@@ -35,7 +57,7 @@ function boxClick()
 		    
 	   	 
 	 });
-	data_ajax(cat3,ac,sd);
+	data_ajax(cat3,ac,sd,valueSet);
 	
 }
 
@@ -50,11 +72,10 @@ function acClick()
 		    
 	   	 
 	 });
-	data_ajax(cat3,ac,sd);
+	data_ajax(cat3,ac,sd,valueSet);
 } 
 
-/*
-
+/*t
 Ajax에서 Controller에 배열(array)를 보내는 방법 
 1. Ajax에 traditional: true, 기본값이 false로 되어있다
 traditional 옵션이란 직역해서 "전통적인 스타일의 파라미터 직렬화를 사용하냐 마느냐를 결정"하는 것이다.
@@ -62,9 +83,9 @@ traditional 옵션이란 직역해서 "전통적인 스타일의 파라미터 �
 
 
  */ 
-function data_ajax(cat3,ac,sd)
+function data_ajax(cat3,ac,sd,valueSet)
 {
-	console.log("ajaxcat3:"+cat3);
+	console.log("ajaxcat:"+cat3);
 	console.log("ajaxac:"+ac);
 	console.log("ajaxsd:"+sd);
 	
@@ -72,15 +93,21 @@ function data_ajax(cat3,ac,sd)
          type: "post",
          url: "../fes/fes_list_ajax.do",
          traditional: true,
-         data: {'cat3': cat3, 'ac': ac,"search":'${search}'},
+         data: {'cat3': cat3, 'ac': ac,"search":sd,"valueSet":valueSet},
          
          success: function(result){
-        	 //alert(result) //데이터는 가져오는 것 확인
+        	 let json=JSON.parse(result)
         	 
-        	 /* let json=JSON.parse(result); */
+        	 jsonView(json)
          }
       }); // ajax 종료
 
+}
+
+function jsonView(json)
+{
+	let html=''
+	json.map(function())
 }
 
 </script>
@@ -123,12 +150,9 @@ function data_ajax(cat3,ac,sd)
 								세종   8
 								경기   31
 								강원   32
-								충북   33		
-								충남   34
-								경북   35		
-								경남   36
-								전북   37		
-								전남   38
+								충북   33		충남   34
+								경북   35		경남   36
+								전북   37		전남   38
 								제주   39
 							
 							 -->
@@ -142,6 +166,32 @@ function data_ajax(cat3,ac,sd)
 								<label for="t5">대전</label>
 								<input type="checkbox" name="ac" id="t6" value=4 onclick="acClick()">
 								<label for="t6">대구</label>
+								<input type="checkbox" name="ac" id="t7" value=5 onclick="acClick()">
+								<label for="t6">광주</label>
+								<input type="checkbox" name="ac" id="t8" value=6 onclick="acClick()">
+								<label for="t6">부산</label>
+								<input type="checkbox" name="ac" id="t9" value=7 onclick="acClick()">
+								<label for="t6">울산</label>
+								<input type="checkbox" name="ac" id="t10" value=8 onclick="acClick()">
+								<label for="t6">세종</label>
+								<input type="checkbox" name="ac" id="t11" value=31 onclick="acClick()">
+								<label for="t6">경기</label>
+								<input type="checkbox" name="ac" id="t12" value=32 onclick="acClick()">
+								<label for="t6">강원</label>
+								<input type="checkbox" name="ac" id="t13" value=33 onclick="acClick()">
+								<label for="t6">충북</label>
+								<input type="checkbox" name="ac" id="t14" value=34 onclick="acClick()">
+								<label for="t6">충남</label>
+								<input type="checkbox" name="ac" id="t15" value=35 onclick="acClick()">
+								<label for="t6">경북</label>
+								<input type="checkbox" name="ac" id="t16" value=36 onclick="acClick()">
+								<label for="t6">경남</label>
+								<input type="checkbox" name="ac" id="t17" value=37 onclick="acClick()">
+								<label for="t6">전북</label>
+								<input type="checkbox" name="ac" id="t18" value=38 onclick="acClick()">
+								<label for="t6">전남</label>
+								<input type="checkbox" name="ac" id="t19" value=39 onclick="acClick()">
+								<label for="t6">제주</label>
 							</div>
 							<!-- 
 							<h6>정렬</h6>
@@ -171,12 +221,10 @@ function data_ajax(cat3,ac,sd)
 			<div class="col-lg-9 px-0">
 				<div class="container-xxl py-3 px-0">
 					<div class="container">
-						<form action="" method="post" name="page-search">
 							<div class="sch_wrap page">
-								<input type="text" name="searchWord" placeholder=${search }>
-								<input type="submit" value="검색">
+								<input type="text" id="search" placeholder=${search }>
+								<input type="button" value="검색" id="ss" >
 							</div>
-						</form>
 					</div>
 				</div> 
 				<div class="container-xxl py-3 px-0">
@@ -185,14 +233,14 @@ function data_ajax(cat3,ac,sd)
 						<ul class="content-ul event">
 							<%-- <c:forEach begin="0" end="3"> --%>
 							<c:forEach var="vo" items="${list }">
-								<li><!--호텔 li-->
-									<a href="../fes/fes_detail.do" class="d-flex">
+								<li><!--축제 -->
+									<a href="../fes/fes_detail_before.do?content_id=${vo.content_id }" class="d-flex">
 										<div class="thumb-wrap" style="background-image:url(${vo.first_image})">
 											<button type="button" class="bookmark-btn" name="bm-btn" data-id="${conid}"></button>
 										</div>
 										<div class="d-flex flex-column flex-md-row right">
 											<div class="title-wrap">
-												<p class="cat"><span class="hotel"></span><!--cat3으로 구분--></p>
+												<p class="cat"><span class="fes"></span><!--cat3으로 구분--></p>
 												<p class="content-name">${vo.title}</p>
 												<p class="location">${vo.addr1}</p>
 												<p class="score">4.3(23)</p>
@@ -279,46 +327,20 @@ function data_ajax(cat3,ac,sd)
 			onInput: function(valueSet) {
 				console.log(valueSet);
 				rangeset(valueSet[0],valueSet[1]);
-				$.ajax({
-			         type: "post",
-			         url: "../fes/fes_list_ajax.do",
-			         //traditional: true,
-			         data: {'min_price': valueSet[0], 'max_price': valueSet[1]},
-			         
-			         success: function(result){
-		
-			         }
-			      }); // ajax 종료
+				price_change(valueSet);
 			},
 			
 			
 		});
 		
+		
+		
 		function rangeset(min, max){
 			$('input.start').val(min.toLocaleString('ko-KR')+'원');
 			$('input.end').val(max.toLocaleString('ko-KR')+'원');
-			
-			
-				
-		}
-		function data_ajax(cat3, ac)
-		{
-			console.log("ajax"+cat3)
-			console.log("ajax"+ac)
-			 $.ajax({
-		         type: "post",
-		         url: "../fes/fes_list_ajax.do",
-		         traditional: true,
-		         data: {'cat3': cat3, 'ac': ac},
-		         
-		         success: function(result){
-		        	 //alert(result) //데이터는 가져오는 것 확인
-		        	 
-		        	 /* let json=JSON.parse(result); */
-		         }
-		      }); // ajax 종료
 
 		}
+		
 		rangeset(0,100000);
 		let floatPosition = parseInt($(".filter-container").css('top'));
 		$(window).scroll(function() {
