@@ -191,26 +191,13 @@ public class EventDAO {
 		return vo;
 	}
 
-	public static boolean memberUpdate(MemberVO vo, String pwd_before){
+	public static boolean memberUpdate(HashMap map, String pwd_before){
 		SqlSession session = ssf.openSession();
 		boolean result=false;
-		String pwd=session.selectOne("memberPwdCheck", vo.getUser_id());
-		System.out.println("pwd_before"+pwd_before);
-		System.out.println("pwd"+pwd);
+		String pwd=session.selectOne("memberPwdCheck", map.get("user_id"));
 		if(pwd.equals(pwd_before)){
-			HashMap map=new HashMap();
-			map.put("user_id", vo.getUser_id());
-			map.put("name", vo.getName());
-			map.put("pwd", vo.getPwd());
-			map.put("nickname", vo.getNickname());
-			map.put("email", vo.getEmail());
-			map.put("phone", vo.getPhone());
-			map.put("addr1", vo.getAddr1());
-			map.put("addr2", vo.getAddr2());
-			map.put("profile_img", vo.getProfile_img());
-			map.put("birthday", vo.getBirthday());
-			map.put("post", vo.getPost());
 			session.update("memberUpdate", map);
+			session.commit();
 			result=true;
 		}
 		return result;

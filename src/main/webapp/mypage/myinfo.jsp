@@ -19,9 +19,9 @@
         <h3 class="pt-3 pt-lg-0 pb-3">내 정보</h3>
         <div class="myinfo">
           <form action="" method="post" name="infoUpload">
-            <input type="file" id="profile" name="profile" accept="image/*" onchange="setThumbnail(e);"/>
+            <input type="file" id="profile" name="profile" accept="image/*" onchange="setThumbnail(event);"/>
             <div id="profilewrap" onclick="profileupload();">
-              <div ${empty vo.profile_img?'':'style="background-image:url('+vo.profile_img+')"'}></div>
+              <div></div>
             </div>
             <input type="hidden" id="user_id" name="user_id" value="${vo.user_id}">
             <label for="name">이름</label>
@@ -51,7 +51,7 @@
             <input type="text" id="post" name="post" placeholder="12345" value="${vo.post}" required>
             <label for="phone">전화번호</label>
             <input type="text" id="phone" name="phone" placeholder="010-0000-0000" value="${vo.phone}" required>
-            <button type="button" class="btn btn-black" id="submit">수정</button>
+            <button type="submit" class="btn btn-black" id="submit">수정</button>
           </form>
         </div>
       </div>
@@ -59,17 +59,18 @@
   </div>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script type="text/javascript">
-  //수정 ajax
-  $("#submit").on("click",function(e){
-    if($(this).valid()){
-      e.preventDefault();
-      return; // <-- here
+  //정보 수정 ajax
+  //1.form 유효성 체크
+  const form=$("form[name=infoUpload]")[0];
+  $(form).on("submit",function(e){
+    e.preventDefault();
+    if(!form.checkValidity()){
+      form.reportValidity();
+      return;
     }
-    $("form[name=infoUpload]").submit();
-  });
-  $("form[name=infoUpload]").on("submit",function(){
     update();
   });
+  //2.비밀번호 확인,업데이트
   async function update(){
     try{
       let formData=new FormData($("form[name=infoUpload]")[0]);
@@ -84,10 +85,17 @@
         },
         data:formData
       })
+      console.log(response);
       if(response.data.statement=="success"){
-        toast("성공")
+        location.reload();
+      }else if(response.data.statement=="expired"){
+        if(confirm("로그인 상태가 아닙니다.")) document.location = '../main/main.do';
+      }else if(response.data.statement=="not_verified"){
+        toast("이메일을 인증해주세요.")
+      }else if(response.data.statement=="failed"){
+        toast("기존 비밀번호가 일치하지 않습니다.")
       }else{
-        toast("실패")
+        toast(response.data.statement);
       }
     }catch(e){
       console.log(e);
@@ -111,7 +119,7 @@
       })
       if(response.data.statement=="success"){
         toast("인증코드가 발송되었습니다. 코드 유효기간은 5분입니다.")
-        $(".email-vf").addClass("active");
+        $(".email-vf").addClass("active"); //코드 입력창 보이기
         $("input[name=verifyCode], button.email-vfbtn").prop("disabled", false);
         $(".email-vfbtn").text("인증하기");
       }
@@ -121,11 +129,9 @@
       throw new Error(e);
     }
   }
-
   //2.코드인증
   async function verifyCode(){
     try{
-
       let response=await axios({
         method:'post',
         url:'../mail/verification.do',
@@ -133,11 +139,11 @@
           "Content-Type":"application/json"
         },
         params:{
-          "code":$("input[name=verifyCode]").val()
+          "code":$("input[name=verifyCode]").val(),
+          "email":$("input[name=email]").val()
         }
       })
       if(response.data.statement=="success"){
-        // location.href="mail2.do";
         toast("인증 성공!");
         $("input[name=verifyCode], button.email-vfbtn").prop("disabled", true);
         $(".email-vfbtn").text("인증성공!");
@@ -151,7 +157,7 @@
       throw new Error(e);
     }
   }
-  //event 추가
+  //3.event 추가
   $(".email-sendbtn").on("click",function(){
     mailSend();
   });
@@ -196,6 +202,24 @@
       $(this).val("");
     }
   });
+
+  //프로필사진 썸네일
+  function setThumbnail(event) {
+    var reader = new FileReader();
+    reader.onload = function(event) {
+      document.getElementById("profilewrap").innerHTML ="";
+      var img = document.createElement("div");
+      img.setAttribute("style", "background-image:url("+event.target.result+")");
+      img.setAttribute("ID", "profileimg");
+      document.querySelector("div#profilewrap").appendChild(img);
+    };
+    reader.readAsDataURL(event.target.files[0]);
+  }
+  function profileupload(){
+    var ele=document.getElementById('profile');
+    ele.click();
+    console.log('test');
+  }
 
   //주소찾기
   $(document).on("click keyup","#addr1, #post", function(){

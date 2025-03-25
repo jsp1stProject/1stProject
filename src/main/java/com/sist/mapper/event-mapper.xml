@@ -149,7 +149,7 @@
 	</select>
 
 	<update id="memberUpdate" parameterType="HashMap">
-		update USER_INFO set name=#{name}, pwd=#{pwd}, NICKNAME=#{nickname}, PROFILE_IMG=#{profile_img}, BIRTHDAY=#{birthday}, EMAIL=#{email}, post=#{post}, ADDR1=#{addr1}, ADDR2=#{addr2}, PHONE=#{phone}
+		update USER_INFO set name=#{name}, pwd=#{pwd}, NICKNAME=#{nickname}, BIRTHDAY=#{birthday}, EMAIL=#{email}, post=#{post}, ADDR1=#{addr1}, ADDR2=#{addr2}, PHONE=#{phone}
 		WHERE user_id=#{user_id}
 	</update>
 

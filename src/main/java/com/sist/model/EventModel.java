@@ -30,12 +30,16 @@ public class EventModel {
 	@RequestMapping("mypage/myinfo.do")
 	public String myinfo(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession();
-		if(session.getAttribute("user_id") == null) {
+		if(session.getAttribute("user_id") == null) { //세션 만료 시 main 이동
 			return "redirect:../main/main.do";
 		}else{
 			String id=session.getAttribute("user_id").toString();
 			MemberVO vo= memberDetail(id);
 			request.setAttribute("vo", vo);
+			session.removeAttribute("code");
+			session.setAttribute("email", vo.getEmail());
+			session.removeAttribute("expireTime");
+			session.setAttribute("verified", "true");
 		}
 		request.setAttribute("title", "내 정보");
 		request.setAttribute("main_jsp", "../mypage/myinfo.jsp");
@@ -44,28 +48,41 @@ public class EventModel {
 	@RequestMapping("mypage/myinfo_update.do")
 	public void myinfo_update(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json;charset=UTF-8");
+		//request 파싱
+		JSONObject json= jsonParse(request,response);
+
 		HttpSession session = request.getSession();
 		JSONObject obj=new JSONObject();
-		if(session.getAttribute("user_id") == null) {
+		if(session.getAttribute("user_id") == null) { //로그인 세션 만료 시
 			obj.put("statement", "expired");
+		}else if(session.getAttribute("verified") == null ||
+				!session.getAttribute("email").equals(json.get("email").toString())) { //인증하지 않거나, 인증한 이메일과 입력값이 다르면
+			obj.put("statement", "not_verified");
 		}else{
 			String id=session.getAttribute("user_id").toString();
-			System.out.println(id);
-			MemberVO vo=new MemberVO();
-			vo.setUser_id(id);
-			vo.setName(request.getParameter("name"));
-			vo.setPwd(request.getParameter("pwd_after"));
-			vo.setEmail(request.getParameter("email"));
-			vo.setPhone(request.getParameter("phone"));
-			vo.setBirthday(request.getParameter("birth"));
-			vo.setAddr1(request.getParameter("addr1"));
-			vo.setAddr2(request.getParameter("addr2"));
-			vo.setPost(request.getParameter("post"));
-			boolean state= memberUpdate(vo,request.getParameter("pwd_before"));
-			if(state) {
+			//기본 parameter 매핑
+			HashMap map=new HashMap();
+			map.put("user_id", json.get("user_id").toString());
+			map.put("name", json.get("name").toString());
+			if(json.get("pwd_after")==null||json.get("pwd_after").toString().equals("")){
+				map.put("pwd", json.get("pwd_before").toString());
+			}else{
+				map.put("pwd", json.get("pwd_after").toString());
+			}
+			map.put("nickname", json.get("nickname").toString());
+			map.put("email", json.get("email").toString());
+			map.put("phone", json.get("phone").toString());
+			map.put("addr1", json.get("addr1").toString());
+			map.put("addr2", json.get("addr2").toString());
+//			map.put("profile_img", json.get("profile").toString()); //프로필 이미지 기능 미구현
+			map.put("birthday", json.get("birth").toString());
+			map.put("post", json.get("post").toString());
+
+			boolean state= memberUpdate(map,json.get("pwd_before").toString());
+			if(state) {//비밀번호 일치하면
 				obj.put("statement", "success");
 			}else{
-				obj.put("statement", "fail");
+				obj.put("statement", "failed");
 			}
 			PrintWriter out=null;
 			try {
@@ -88,13 +105,15 @@ public class EventModel {
 	@RequestMapping("mail/codeSending.do")
 	public void codeSending(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json;charset=UTF-8");
-		String email=request.getParameter("email");
-		System.out.println(email);
-		
-		String code=MailDAO.sendMail(email);
+
+		String email=request.getParameter("email"); //인증 대상 이메일
+		String code=MailDAO.sendMail(email); //인증코드 생성
+
 		HttpSession session=request.getSession();
 		session.setAttribute("code", code);
-		session.setAttribute("expireTime", System.currentTimeMillis() + (300 * 1000)); //5분
+		session.setAttribute("expireTime", System.currentTimeMillis() + (300 * 1000)); //유효기간 5분
+		session.setAttribute("email", email);
+		session.removeAttribute("verified"); //검증 결과 삭제
 
 		JSONObject obj=new JSONObject();
 		obj.put("statement", "success");
@@ -110,18 +129,20 @@ public class EventModel {
     }
 	@RequestMapping("mail/verification.do")
 	public void verification(HttpServletRequest request, HttpServletResponse response){
-		HttpSession session=request.getSession();
 		response.setContentType("application/json;charset=UTF-8");
+		HttpSession session=request.getSession();
 		JSONObject obj=new JSONObject();
-		String authCode=request.getParameter("code");
+
+		String authCode=request.getParameter("code"); //입력받은 코드
+		String email=request.getParameter("email"); //현재 이메일
 		Long expireTime = (Long) session.getAttribute("expireTime");
-		if(authCode!=null && expireTime!=null){
+		if(authCode!=null && expireTime!=null){ //코드를 발급 받고 입력했으면
 			if(System.currentTimeMillis() <= expireTime){
 				System.out.println(session.getAttribute("code"));
 				String code=session.getAttribute("code").toString();
 				if(authCode.equals(code)){
 					obj.put("statement", "success");
-					session.setAttribute("mail", "success");
+					session.setAttribute("verified", "true");
 				}else{
 					obj.put("statement", "fail");
 				}
