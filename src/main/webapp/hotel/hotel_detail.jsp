@@ -265,7 +265,10 @@
   position: relative;
   overflow: visible;
 }
-
+button:disabled {
+    background-color: #d3d3d3; 
+    color: #a9a9a9; 
+}
 </style>
 <script type="text/javascript">
 $(function() {
@@ -293,6 +296,8 @@ $(function() {
         }
     });
 });
+
+
 </script>
 </head>
 <body>
@@ -360,7 +365,7 @@ $(function() {
             <div>
             	<h4>숙소 이름</h4>
 	            <p>${vo.cvo.title}</p>
-	            <h4>장소</h4>
+	            <h4>주소</h4>
 	            <p>${vo.cvo.addr1} ${not empty vo.cvo.addr2&&vo.cvo.addr2 ne 'N/A' ? vo.cvo.addr2 : ''}</p>
 	            <h4>숙소 소개</h4>
 	            <p class="text-container">${vo.cvo.overview}</p><span class="more-btn">더보기</span>
@@ -380,11 +385,23 @@ $(function() {
 			            <div class="_4">4시간 이용</div>
 			          </div>
 			          <div class="rsv-day">
-			            <div class="_50-000">50,000 원</div>
+			            <div class="_50-000">
+			            	<c:choose>
+			            		<c:when test="${hrvo.offseason_minfee1 == 0 or hrvo.offseason_minfee1 == '0'}">
+			            			해당 업소 문의
+			            		</c:when>
+			            		<c:otherwise>
+			            			<fmt:formatNumber value="${hrvo.offseason_minfee1}" pattern="#,###" /> 원
+			            		</c:otherwise>
+			            	</c:choose>
+			            </div>
 			            <form method="post" action="../reservation/reservation.do">
 			            	<input type="hidden" name="room_id" value="${hrvo.room_id }">
 			            	<input type="hidden" name="content_id" value="${vo.cvo.content_id }">
-			            	<button class="reservation-button" type="submit">
+			            	<button class="reservation-button" id="day-button" type="submit"
+                                        <c:if test="${hrvo.offseason_minfee1 == 0 or hrvo.offseason_minfee1 == '0'}">
+                                            disabled
+                                        </c:if>>
 			              	<div class="div3">대실</div>
 			            	</button>
 			            </form>
@@ -394,17 +411,29 @@ $(function() {
 			          <div class="rsv-time-stay">
 			            <div class="div4">숙박</div>
 			            <div class="_18-00-12-00">
-			              입실시간 18:00
+			              입실시간 ${vo.check_in_time }
 			              <br />
-			              퇴실시간 12:00
+			              퇴실시간 ${vo.check_out_time }
 			            </div>
 			          </div>
 			          <div class="rsv-stay">
-			            <div class="_50-000">50,000 원</div>
-			            <form method="post" action="../reservation/reservation.do">
+			            <div class="_50-000">
+			            	<c:choose>
+			            		<c:when test="${hrvo.peakseason_minfee1 == 0 or hrvo.peakseason_minfee1 == '0'}">
+			            			해당 업소 문의
+			            		</c:when>
+			            		<c:otherwise>
+			            			<fmt:formatNumber value="${hrvo.peakseason_minfee1}" pattern="#,###" /> 원
+			            		</c:otherwise>
+			            	</c:choose>
+			            </div>
+			            <form method="post" action="../reservation/reservation_stay.do">
 			            	<input type="hidden" name="room_id" value="${hrvo.room_id }">
 			            	<input type="hidden" name="content_id" value="${vo.cvo.content_id }">
-			            <button class="reservation-button" type="submit">
+			            <button class="reservation-button" id="day-button" type="submit"
+                                        <c:if test="${hrvo.peakseason_minfee1 == 0 or hrvo.peakseason_minfee1 == '0'}">
+                                            disabled
+                                        </c:if>>
 			              <div class="div3">숙박</div>
 			            </button>
 			            </form>

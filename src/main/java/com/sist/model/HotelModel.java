@@ -170,6 +170,7 @@ public class HotelModel {
 		System.out.println("map: " + vo.getCvo().getMapx());
 		
 		List<HotelVO> list = HotelDAO.hotelRoomData(content_id);
+		System.out.println("list: " + Arrays.asList(list));
 		List<HotelVO> imglist = HotelDAO.hotelDetailImg(content_id);
 		request.setAttribute("imglist", imglist);
 		request.setAttribute("list", list);

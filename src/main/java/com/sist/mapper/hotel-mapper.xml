@@ -155,4 +155,14 @@
     	ON c.content_id = hdi.content_id
     	WHERE c.content_id = #{content_id}
     </select>
+    <select id="rsvHotelData" resultMap="hotelMap" parameterType="int">
+    	SELECT room_id, title, roomtitle, offseason_minfee1, img1, bathfacility, aircondition, tv, pc, internet, refrigerator, hairdryer, peakseason_minfee1, 
+    		   check_in_time, check_out_time
+		FROM hotel_room hr
+		JOIN content c
+		ON hr.content_id = c.content_id
+		JOIN hotel h
+		ON hr.content_id = h.content_id 
+		WHERE room_id = #{room_id}
+    </select>
 </mapper>

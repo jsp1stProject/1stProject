@@ -58,7 +58,6 @@
 }
 </style>
 <script type="text/javascript">
-
 	$(function() {
 		  var today = new Date();
 		  var mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -70,7 +69,6 @@
 
 		  $('#dateInput').attr('placeholder', currentDate);
 		});
-		
 </script>
 </head>
 <body>
@@ -130,32 +128,50 @@
 							<span class="text-secondary">일정</span>
 							<span class="fst-italic" id="selectedDate"></span>
 						</p>
+						<p class="card-text small">
+							<span class="text-secondary">체크인</span>
+							<span class="fst-italic" id="selectedDate">
+							입실&nbsp;&nbsp;${vo.check_in_time }&nbsp;&nbsp;퇴실&nbsp;&nbsp;${vo.check_out_time }
+							</span>
+						</p>
 					</div>
 				</div>
 				<div class="card" style="width: 18rem;">
 					<div class="card-body">
 						<p class="card-title" style="font-weight: bold;">결제 정보</p>
 						<p class="card-subtitle mb-2 text-muted fs-6" style="display: inline">객실 가격&nbsp;&nbsp;</p>
-							<span><fmt:formatNumber value="${vo.hrvo.offseason_minfee1}" pattern="#,###" /> 원</span>
+							<span><fmt:formatNumber value="${vo.hrvo.peakseason_minfee1}" pattern="#,###" /> 원</span>
 						<hr class="text-muted">
 						<p class="card-subtitle mb-2 text-muted fs-6" style="display: inline">총 결제 금액&nbsp;&nbsp;</p>
-							<span><fmt:formatNumber value="${vo.hrvo.offseason_minfee1}" pattern="#,###" /> 원</span>
+							<span><fmt:formatNumber value="${vo.hrvo.peakseason_minfee1}" pattern="#,###" /> 원</span>
 						<hr class="text-muted">
-						<button type="button" class="btn btn-primary btn-lg"><fmt:formatNumber value="${vo.hrvo.offseason_minfee1}" pattern="#,###" /> 원 결제하기</button>
+						<button type="button" class="btn btn-primary btn-lg"><fmt:formatNumber value="${vo.hrvo.peakseason_minfee1}" pattern="#,###" /> 원 결제하기</button>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 <script type="text/javascript">
+/*
+	function getRandomDate() {
+	    const startDate = new Date(); 
+	    const endDate = new Date(startDate); 
+	    endDate.setDate(startDate.getDate() + 30); 
+	
+	    const randomDate = new Date(startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime()));
+	    
+	    return randomDate.toISOString().split('T')[0];
+	}
+	const fixedRandomDate = getRandomDate();
+*/
 	const datepickr = $('#dateInput').flatpickr({
 		locale: 'ko',
-		enableTime: true,
-		minTime: '12:00',
-		maxTime: '21:00',
+		mode: 'range',
+		showMonths: 2,
 		minDate: 'today',
-		dateFormat: 'm.d H:00 (D)',
-		defaultDate: new Date(),
+		//disable: [fixedRandomDate],
+		dateFormat: 'm.d (D)',
+		defaultDate: [new Date(), new Date()],
 	    onOpen: function() {
 	        $('body').append('<div id="overlay"></div>');
 	    },
@@ -174,26 +190,26 @@
 	        }
 	    },
 	    onChange: function(selectedDates, dateStr, instance) {
-	        if (selectedDates.length === 1) {
+	        if (selectedDates.length === 2) {
 	            const startDate = selectedDates[0];
+	            const endDate = selectedDates[1];
+	
 	            const startFormatted = formatDate(startDate);
-	            const endDate = new Date(startDate.getTime());
-	            endDate.setHours(endDate.getHours() + 4);
 	            const endFormatted = formatDate(endDate);
+	
 	            $('#selectedDate').text(startFormatted + ' ~ ' + endFormatted);
 	        }
 	    }
 	});
 
 	function formatDate(date) {
-	    const month = date.getMonth() + 1;
-	    const day = date.getDate();
-	    const hours = date.getHours();
-	    const minutes = date.getMinutes();
-	    const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
-	    const weekDay = weekDays[date.getDay()];
-
-	    return month + '.' + day + ' ' + hours + ':00' + ' (' + weekDay + ')';
+		const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+	    const year = date.getFullYear();
+	    const month = String(date.getMonth() + 1).padStart(2, '0');
+	    const day = String(date.getDate()).padStart(2, '0');
+	    const dayOfWeek = dayNames[date.getDay()];
+	
+	    return year + '.' + month + '.' + day + ' (' + dayOfWeek + ')';
 	}
 	$(document).ready(function() {
 	    const selectedDates = datepickr.selectedDates;
