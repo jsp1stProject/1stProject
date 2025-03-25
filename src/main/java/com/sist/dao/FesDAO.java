@@ -13,6 +13,51 @@ public class FesDAO {
 		ssf=CreateSqlSessionFactory.getSsf();
 	}
 	
+	
+	public static List<FesVO> fesHomeData()
+	{
+		List<FesVO> list=null;
+		SqlSession session=null;
+		try
+		{
+		  session=ssf.openSession();
+		  list=session.selectList("fesHomeData");
+		}
+		catch (Exception e) 
+		{
+			// TODO: handle exception
+		  e.printStackTrace();
+		}
+		finally
+		{
+		  if(session!=null)
+			  session.close();
+		}
+		return list;
+	}
+	
+	public static List<FesVO> fesHomeData_DATE()
+	{
+		List<FesVO> list=null;
+		SqlSession session=null;
+		try
+		{
+		  session=ssf.openSession();
+		  list=session.selectList("fesHomeData_DATE");
+		}
+		catch (Exception e) 
+		{
+			// TODO: handle exception
+		  e.printStackTrace();
+		}
+		finally
+		{
+		  if(session!=null)
+			  session.close();
+		}
+		return list;
+	}
+	
 	/*
 	<select id="fesHomeFindData" resultType="FesVO" parameterType="hashmap">
 	SELECT content_id, title, addr1, addr2,first_image, review_count, event_startdate, event_enddate, charge, agelimit, price, num
@@ -261,12 +306,58 @@ public class FesDAO {
 	}
 	
 	public static List<FesVO> fesFindData(Map map)
-	  {
+	{
 		  SqlSession session=ssf.openSession();
 		  List<FesVO> list = session.selectList("fesFindData", map);
 		  session.close();
 		  return list;
-	  }
+	 }
+	
+	public static void fesCartInsert(FesCartVO vo)
+	{
+		SqlSession session=null;
+		int count=0;
+		try {
+			session=ssf.openSession(true);
+			count=session.selectOne("fesCartCount",vo);
+			if(count==0)
+		    {
+				session.insert("fesCartInsert",vo);
+		    }
+		    else
+		    {
+		    	session.update("fesCartUpdate",vo);
+		    }
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		finally
+		{
+		  if(session!=null)
+			  session.close();
+		}
+	}
+	
+	public static List<FesCartVO> fesCartListData(String user_id)
+	{
+		SqlSession session=null;
+		List<FesCartVO> list = null;
+		try {
+			session=ssf.openSession();
+			System.out.println(user_id);
+			list = session.selectList("fesCartListData",user_id);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		finally
+		{
+		  if(session!=null)
+			  session.close();
+		}
+		return list;
+	}
 
 
 }

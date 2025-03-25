@@ -10,7 +10,7 @@
 </head>
 <body>
 	<div class="container-fluid p-0 pb-4 wow fadeIn" data-wow-delay="0.1s">
-		<div class="event_main_wrap justify-content-center" style=" background-image:url(../assets/img/fes_home.jpg)" >
+		<div class="event_main_wrap justify-content-center" style=" background-image:url(../assets/img/fes_home1.jpg)" >
 			<span style="color: white;">오늘은 어떤 축제를<br></span>
 			<span  style="color: white; margin-bottom: 10px">즐겨볼까요?</span>
 			<div class="event_main_schwrap">
@@ -25,112 +25,61 @@
 		</div>
 	</div>
     <!-- Carousel End -->
-	<!-- hotel list-->
-    <div class="container-xxl py-4">
+    <div class="container-xxl py-5">
     	<div class="container">
     		<h3 class="main-h3 wow fadeInUp" data-wow-delay="0.1s">입장료 없이 즐길 수 있는 축제</h3>
-    		<div class="tab-nav-wrap wow fadeInUp" data-wow-delay="0.1s">
-    			<div class="tab-nav-item active" data-tab="1">서울</div>
-    			<div class="tab-nav-item" data-tab="2">부산</div>
-    			<div class="tab-nav-item" data-tab="3">제주</div>
-    		</div>
     		<div class="tab-content-wrap wow fadeInUp" data-wow-delay="0.1s">
     			<div class="tab-cont-item active" data-tab="1">
 	    			<div class="swiper main-slide-list">
 		    			<div class="swiper-wrapper">
-							<c:forEach items="${arealist1}" var="vo">
+							<c:forEach items="${list}" var="vo">
+							 <c:if test="${vo.price==0 }">
 								<div class="li-item swiper-slide">
-									<a href="#">
+									<a href="../fes/fes_detail_before.do?content_id=${vo.content_id }">
 										<div class="item-inner">
-											<div class="item-img" style="background-image:url(${vo.cvo.first_image});">
+											<div class="item-img" style=" background-image:url(${vo.first_image});">
 											</div>
 											<div class="text-wrap">
-												<p class="title">${vo.cvo.title}</p>
-												<c:choose>
-													<c:when test="${vo.price==0}">
-														<p class="price">무료</p>
-													</c:when>
-													<c:otherwise>
-														<p class="price"><fmt:formatNumber value="${vo.price }" pattern="#,###" />원</p>
-													</c:otherwise>
-												</c:choose>
-												<p class="score">
-													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" class="size-16"><path fill="currentColor" d="M12.638 2.471a1.465 1.465 0 0 0-1.945.652L8.44 7.69v.002a.36.36 0 0 1-.255.191h-.002l-5.026.73c-.289.04-.61.175-.85.446a1.462 1.462 0 0 0 .033 2.037l3.647 3.557.004.003c.07.068.112.174.09.305v.001l-.86 5.007-.001.013c-.043.28.005.53.064.724l.01.035.015.033c.096.23.256.457.491.628.233.17.488.252.744.271l.028.003h.03c.203 0 .458-.031.715-.16l.007-.003 4.507-2.374.002-.001a.33.33 0 0 1 .316 0l.003.001 4.507 2.374.007.003c.259.13.586.203.926.136a1.466 1.466 0 0 0 1.18-1.663l-.862-5.02a.38.38 0 0 1 .106-.317l3.629-3.54.007-.006c.224-.224.358-.502.415-.783l.003-.017.002-.016a1.45 1.45 0 0 0-1.2-1.651l-.029-.007-5.031-.748-.008-.001a.32.32 0 0 1-.248-.185l-2.252-4.564-.002-.004a1.46 1.46 0 0 0-.655-.655z"></path></svg>
-													<span>4.2</span>
-												</p>
+												<p class="title">${vo.title}</p>
+												<p class="price">무료</p>
+												
 											</div>
 										</div>
 									</a>
 								</div>
+							  </c:if>	
 							</c:forEach>
 		    			</div>
 		    		</div>
 	    		</div>
-    			<div class="tab-cont-item" data-tab="2">
-    				<div class="swiper main-slide-list">
-		    			<div class="swiper-wrapper">
-							<c:forEach items="${arealist2}" var="vo">
-								<div class="li-item swiper-slide">
-									<a href="#">
-										<div class="item-inner">
-											<div class="item-img" style="background-image:url(${vo.cvo.first_image});">
-											</div>
-											<div class="text-wrap">
-												<p class="title">${vo.cvo.title}</p>
-												<c:choose>
-													<c:when test="${vo.price==0}">
-														<p class="price">무료</p>
-													</c:when>
-													<c:otherwise>
-														<p class="price"><fmt:formatNumber value="${vo.price }" pattern="#,###" />원</p>
-													</c:otherwise>
-												</c:choose>
-												<p class="score">
-													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" class="size-16"><path fill="currentColor" d="M12.638 2.471a1.465 1.465 0 0 0-1.945.652L8.44 7.69v.002a.36.36 0 0 1-.255.191h-.002l-5.026.73c-.289.04-.61.175-.85.446a1.462 1.462 0 0 0 .033 2.037l3.647 3.557.004.003c.07.068.112.174.09.305v.001l-.86 5.007-.001.013c-.043.28.005.53.064.724l.01.035.015.033c.096.23.256.457.491.628.233.17.488.252.744.271l.028.003h.03c.203 0 .458-.031.715-.16l.007-.003 4.507-2.374.002-.001a.33.33 0 0 1 .316 0l.003.001 4.507 2.374.007.003c.259.13.586.203.926.136a1.466 1.466 0 0 0 1.18-1.663l-.862-5.02a.38.38 0 0 1 .106-.317l3.629-3.54.007-.006c.224-.224.358-.502.415-.783l.003-.017.002-.016a1.45 1.45 0 0 0-1.2-1.651l-.029-.007-5.031-.748-.008-.001a.32.32 0 0 1-.248-.185l-2.252-4.564-.002-.004a1.46 1.46 0 0 0-.655-.655z"></path></svg>
-													<span>4.2</span>
-												</p>
-											</div>
-										</div>
-									</a>
-								</div>
-							</c:forEach>
-		    			</div>
-		    		</div>
-    			</div>
-    			<div class="tab-cont-item" data-tab="3">
-    				<div class="swiper main-slide-list">
-		    			<div class="swiper-wrapper">
-							<c:forEach items="${arealist3}" var="vo">
-								<div class="li-item swiper-slide">
-									<a href="#">
-										<div class="item-inner">
-											<div class="item-img" style="background-image:url(${vo.cvo.first_image});">
-											</div>
-											<div class="text-wrap">
-												<p class="title">${vo.cvo.title}</p>
-												<c:choose>
-													<c:when test="${vo.price==0}">
-														<p class="price">무료</p>
-													</c:when>
-													<c:otherwise>
-														<p class="price"><fmt:formatNumber value="${vo.price }" pattern="#,###" />원</p>
-													</c:otherwise>
-												</c:choose>
-												<p class="score">
-													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" class="size-16"><path fill="currentColor" d="M12.638 2.471a1.465 1.465 0 0 0-1.945.652L8.44 7.69v.002a.36.36 0 0 1-.255.191h-.002l-5.026.73c-.289.04-.61.175-.85.446a1.462 1.462 0 0 0 .033 2.037l3.647 3.557.004.003c.07.068.112.174.09.305v.001l-.86 5.007-.001.013c-.043.28.005.53.064.724l.01.035.015.033c.096.23.256.457.491.628.233.17.488.252.744.271l.028.003h.03c.203 0 .458-.031.715-.16l.007-.003 4.507-2.374.002-.001a.33.33 0 0 1 .316 0l.003.001 4.507 2.374.007.003c.259.13.586.203.926.136a1.466 1.466 0 0 0 1.18-1.663l-.862-5.02a.38.38 0 0 1 .106-.317l3.629-3.54.007-.006c.224-.224.358-.502.415-.783l.003-.017.002-.016a1.45 1.45 0 0 0-1.2-1.651l-.029-.007-5.031-.748-.008-.001a.32.32 0 0 1-.248-.185l-2.252-4.564-.002-.004a1.46 1.46 0 0 0-.655-.655z"></path></svg>
-													<span>4.2</span>
-												</p>
-											</div>
-										</div>
-									</a>
-								</div>
-							</c:forEach>
-		    			</div>
-		    		</div>
-    			</div>
     		</div>
     	</div>
     </div>
+    
+    
+    <div class="container-xxl py-6">
+        <div class="container">
+            <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <h1 class="display-6 mb-4">곧 종료되는 축제!!! 마감임박!! </h1>
+            </div>
+            <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
+                <c:forEach items="${dlist}" var="dvo">
+                <div class="testimonial-item bg-white rounded p-4">
+                    <div class="d-flex align-items-center mb-4" onclick='location.href = "../fes/fes_detail_before.do?content_id=${dvo.content_id }"'>
+                        <img class="flex-shrink-0 rounded-circle border p-1" src="${dvo.first_image}" alt="">
+                        <div class="ms-4">
+                            <h5 class="mb-1">${dvo.title }</h5>
+                            <span>${dvo.addr1 }<span>
+                        </div>
+                    </div>
+                    <p class="mb-0" style=" height: 110px " >${dvo.overview}</p>
+                </div>
+                </c:forEach>
+            </div>
+        </div>
+    </div>
+    
+    
 	<!-- fest list-->
 	<div class="container-xxl py-4">
 		<div class="container">
@@ -146,34 +95,8 @@
 		</div>
 	</div>
     <!-- concert list-->
-	<div class="container-xxl py-4">
-		<div class="container">
-			<h3 class="main-h3 wow fadeInUp" data-wow-delay="0.1s">지금 예매 가능한 행사/공연</h3>
-			<div class="tab-content-wrap wow fadeInUp" data-wow-delay="0.1s">
-				<div class="tab-cont-item active" data-tab="1">
-					<div class="swiper main-slide-list">
-						<div class="swiper-wrapper">
-							<c:forEach items="${musicalList }" var="vo">
-								<div class="li-item swiper-slide">
-									<a href="#">
-										<div class="item-inner">
-											<div class="item-img" style="background-image:url(${vo.cvo.first_image});">
-											</div>
-											<div class="text-wrap">
-												<p class="date">[${vo.dbcate}]</p>
-												<p class="title">${vo.cvo.title}</p>
-												<p class="date">${vo.dbstart} ~ ${vo.dbend}</p>
-											</div>
-										</div>
-									</a>
-								</div>
-							</c:forEach>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	
+
 	<div class="container-xxl py-4">
 		<div class="container">
 			<h3 class="main-h3 wow fadeInUp" data-wow-delay="0.1s">공지사항</h3>
