@@ -14,7 +14,10 @@ private static SqlSessionFactory ssf;
 		ssf = CreateSqlSessionFactory.getSsf();
 	}
 	public static void rsvInsert(ReservationVO vo) {
-		
+		SqlSession session = ssf.openSession();
+		session.insert("rsvInsert", vo);
+		session.commit();
+		session.close();
 	}
 	
 	/** 예약 페이지 데이터 출력 */

@@ -20,15 +20,27 @@
 								 <if test="isMember">
 								 	, user_id 
 								 </if>
+								 <if test="guest_name != null">
+								 	, guest_name
+								 </if>
+								 <if test="guest_phone != null">
+								 	, guest_phone
+								 </if>
 								 )
-		 			VALUES(#{reserve_id}, #{content_id}, #{room_id}, #{offseason_minfee1}, #{reserve_date}, 
-		 				   #{check_in_date, #{check_out_date}, #{people_count}, #{arrival_type}, #{pay_amount}, #{status}
+		 			VALUES(RESERVE_RI_SEQ.nextval, #{content_id}, #{room_id}, #{offseason_minfee1}, SYSDATE, 
+		 				   #{check_in_date}, #{check_out_date}, #{people_count}, #{arrival_type}, #{pay_amount}, #{status}
 		 				   <if test="isCouponApplied">
 		 				   		, #{user_coupon}
 		 				   </if>
 		 				   <if test="isMember">
 		 				   		, #{user_id}
 		 				   </if>
+		 				   <if test="guest_name != null">
+						 		, #{guest_name}
+						 	</if>
+						 	<if test="guest_phone != null">
+						 		, #{guest_phone}
+						 	</if>
 		 				   )
 	</insert>
 </mapper>

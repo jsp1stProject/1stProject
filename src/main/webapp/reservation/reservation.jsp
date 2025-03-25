@@ -107,6 +107,7 @@
 		  var currentDate = mm + '-' + dd + ' (' + dayOfWeek + ')';
 
 		  $('#dateInput').attr('placeholder', currentDate);
+		  
 		});
 	
 	
@@ -115,7 +116,7 @@
 	      
 	    $('#counter').text(2);
 	    $('#count').val('인원 2'); 
-	    $('#hiddenCount').val('인원 2'); 
+	    $('#h-count').val('2'); 
 
   		$('#count').click(function() {
     		var inputOffset = $(this).offset(); 
@@ -146,7 +147,7 @@
 	    	var newValue = currentValue + 1;
 	    	$('#counter').text(newValue);
 	    	$('#count').val('인원 ' + newValue); 
-	    	$('#hiddenCount').val('인원 ' + newValue); 
+	    	$('#h-count').val(newValue); 
 	  	});
 
 		$('#decrease').click(function() {
@@ -155,7 +156,7 @@
 	      	var newValue = currentValue - 1;
 	      	$('#counter').text(newValue);
 	      	$('#count').val('인원 ' + newValue); 
-	      	$('#hiddenCount').val('인원 ' + newValue); 
+	      	$('#h-count').val(newValue); 
 			}
 	  	});
 	});
@@ -167,18 +168,7 @@
         $('#overlay').remove(); 
     });
 	
-	function updateHiddenInput() {
-		var now = new Date();
-		var reserveDate = now.toISOString().slice(0, 19).replace('T', ' ');
-		var countValue = $('#count').val().replace(/\D/g, '');
-		var priceValue = $('#pay_amount').data('price');
-		var selectedOption = $("input[name='options']:checked").next("label").text();
-		
-		$('#h-reserve_date').val(reserveDate);
-		$('#h-count').val(countValue);
-		$('#h-price').val(priceValue);
-		$('#h-arrival_type').val(selectedOption);
-	}
+	
 </script>
 </head>
 <body>
@@ -210,11 +200,11 @@
 				<form>
 					<div class="mb-3">
 						<label for="name" class="form-label text-secondary small">예약자 이름</label>
-						<input type="text" class="form-control" id="name" placeholder="이름을 입력하세요" style="width: 300px;" >
+						<input type="text" class="form-control" id="name" name="guest_name" placeholder="이름을 입력하세요" style="width: 300px;" >
 					</div>
 					<div class="mb-3">
 						<label for="phone" class="form-label text-secondary small">전화번호</label>
-						<input type="tel" class="form-control" id="phone" placeholder="전화번호를 입력하세요" style="width: 300px;">
+						<input type="tel" class="form-control" id="phone" name="guest_phone" placeholder="전화번호를 입력하세요" style="width: 300px;">
 					</div>
 					<div class="mb-3">
 						<h5 style="margin-top: 10px;">방문 방법</h5>
@@ -264,20 +254,21 @@
 							<span><fmt:formatNumber value="${vo.hrvo.offseason_minfee1}" pattern="#,###" /> 원</span>
 						<hr class="text-muted">
 						<p class="card-subtitle mb-2 text-muted fs-6" style="display: inline">총 결제 금액&nbsp;&nbsp;</p>
-							<span id="pay_amount" data-price="${vo.hrvo.offseason_minfee1}">
+							<span id="pay_amount">
 						  		<fmt:formatNumber value="${vo.hrvo.offseason_minfee1}" pattern="#,###" /> 원
 							</span>
 						<hr class="text-muted">
-						<form method="post" action="" onsubmit="updateHiddenInput()">
+						<form method="post" action="../reservation/reservation_ok.do" onsubmit="updateHiddenInput()">
 							<input type="hidden" id="h-content_id" name="content_id" value="${vo.cvo.content_id }">
 							<input type="hidden" id="h-room_id" name="room_id" value="${vo.hrvo.room_id }">
-							<input type="hidden" id="h-reserve_date" name="reserve_date" value="">
-							<input type="hidden" id="h-check_in_date" name="check_in_date" value="">
-							<input type="hidden" id="h-check_out_date" name="check_out_date" value="">
+							<input type="hidden" id="h-check_in_date" name="check_in_date">
+							<input type="hidden" id="h-check_out_date" name="check_out_date">
 							<input type="hidden" id="h-count" name="people_count">
-							<input type="hidden" id="h-arrival_type" name="arrival_type" value="">
-							<input type="hidden" id="h-price" name="pay_amount">
+							<input type="hidden" id="h-arrival_type" name="arrival_type" value="도보">
+							<input type="hidden" id="h-price" name="pay_amount" value="${vo.hrvo.offseason_minfee1}">
 							<input type="hidden" id="h-status" name="status" value="R">
+							<input type="hidden" id="h-guest_name" name="guest_name">
+							<input type="hidden" id="h-guest_phone" name="guest_phone">
 							<button type="submit" class="btn btn-primary btn-lg"><fmt:formatNumber value="${vo.hrvo.offseason_minfee1}" pattern="#,###"/> 원 결제하기</button>
 						</form>
 					</div>
@@ -371,7 +362,20 @@
 	    
 	    return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
 	}
-	
+	function updateHiddenInput() {
+		var selectedValue = $('input[name="options"]:checked').val();
+		var countValue = $('#count').val().replace(/\D/g, '');
+		var priceValue = $('#pay_amount').data('price');
+		var selectedOption = $("input[name='options']:checked").next("label").text();
+		var guestName = $('#name').val();
+		var guestPhone = $('#phone').val();
+		$('#h-count').val(countValue);
+	    $('#h-arrival_type').val(selectedOption);
+	    $('#h-guest_name').val(guestName);
+	    $('#h-guest_phone').val(guestPhone);
+		//$('#h-price').val(priceValue);
+		//$('#h-arrival_type').val(selectedOption);
+	}
 </script>
 </body>
 </html>

@@ -9,6 +9,4 @@ public class ReservationVO {
 	private String guest_name, guest_phone, arrival_type, user_id, status, regdate, checkIn, checkOut;
 	private Date reserve_date, check_in_date, check_out_date;
 	private boolean isCouponApplied, isMember;
-	private ContentVO cvo = new ContentVO();
-	private HotelRoomVO hrvo = new HotelRoomVO();
 }

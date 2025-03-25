@@ -43,6 +43,8 @@
 		<result property="hrvo.img1" column="img1"/>
 		<result property="hrvo.img2" column="img2"/>
 		<result property="hrvo.img3" column="img3"/>
+		<result property="hrvo.room_id" column="room_id"/>
+		
 		<!-- hotel_detail_img -->
 		<result property="hdivo.origin_img" column="origin_img"/>
 		<result property="hdivo.thumb_img" column="thumb_img"/>
@@ -157,7 +159,7 @@
     </select>
     <select id="rsvHotelData" resultMap="hotelMap" parameterType="int">
     	SELECT room_id, title, roomtitle, offseason_minfee1, img1, bathfacility, aircondition, tv, pc, internet, refrigerator, hairdryer, peakseason_minfee1, 
-    		   check_in_time, check_out_time
+    		   check_in_time, check_out_time, c.content_id
 		FROM hotel_room hr
 		JOIN content c
 		ON hr.content_id = c.content_id
