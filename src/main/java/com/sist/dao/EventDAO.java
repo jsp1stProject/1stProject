@@ -3,10 +3,12 @@ package com.sist.dao;
 import com.sist.commons.CreateSqlSessionFactory;
 import com.sist.vo.ContentVO;
 import com.sist.vo.EventVO;
+import com.sist.vo.MemberVO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.eclipse.tags.shaded.org.apache.xpath.objects.XString;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -179,6 +181,39 @@ public class EventDAO {
 		List<ContentVO> list= session.selectList("eventDetailHotel", areacode);
 		session.close();
 		return list;
+	}
+
+//	mypage
+	public static MemberVO memberDetail(String id){
+		SqlSession session = ssf.openSession();
+		MemberVO vo= session.selectOne("memberDetail", id);
+		session.close();
+		return vo;
+	}
+
+	public static boolean memberUpdate(MemberVO vo, String pwd_before){
+		SqlSession session = ssf.openSession();
+		boolean result=false;
+		String pwd=session.selectOne("memberPwdCheck", vo.getUser_id());
+		System.out.println("pwd_before"+pwd_before);
+		System.out.println("pwd"+pwd);
+		if(pwd.equals(pwd_before)){
+			HashMap map=new HashMap();
+			map.put("user_id", vo.getUser_id());
+			map.put("name", vo.getName());
+			map.put("pwd", vo.getPwd());
+			map.put("nickname", vo.getNickname());
+			map.put("email", vo.getEmail());
+			map.put("phone", vo.getPhone());
+			map.put("addr1", vo.getAddr1());
+			map.put("addr2", vo.getAddr2());
+			map.put("profile_img", vo.getProfile_img());
+			map.put("birthday", vo.getBirthday());
+			map.put("post", vo.getPost());
+			session.update("memberUpdate", map);
+			result=true;
+		}
+		return result;
 	}
 
 	/*

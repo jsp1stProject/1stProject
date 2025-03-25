@@ -6,6 +6,7 @@ import com.sist.dao.EventDAO;
 import com.sist.dao.MailDAO;
 import com.sist.vo.ContentVO;
 import com.sist.vo.EventVO;
+import com.sist.vo.MemberVO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,16 +21,62 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.sist.dao.EventDAO.*;
+
 
 @Controller
 public class EventModel {
 //내정보
 	@RequestMapping("mypage/myinfo.do")
 	public String myinfo(HttpServletRequest request, HttpServletResponse response) {
-
+		HttpSession session = request.getSession();
+		if(session.getAttribute("user_id") == null) {
+			return "redirect:../main/main.do";
+		}else{
+			String id=session.getAttribute("user_id").toString();
+			MemberVO vo= memberDetail(id);
+			request.setAttribute("vo", vo);
+		}
 		request.setAttribute("title", "내 정보");
 		request.setAttribute("main_jsp", "../mypage/myinfo.jsp");
 		return "../main/main.jsp";
+	}
+	@RequestMapping("mypage/myinfo_update.do")
+	public void myinfo_update(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("application/json;charset=UTF-8");
+		HttpSession session = request.getSession();
+		JSONObject obj=new JSONObject();
+		if(session.getAttribute("user_id") == null) {
+			obj.put("statement", "expired");
+		}else{
+			String id=session.getAttribute("user_id").toString();
+			System.out.println(id);
+			MemberVO vo=new MemberVO();
+			vo.setUser_id(id);
+			vo.setName(request.getParameter("name"));
+			vo.setPwd(request.getParameter("pwd_after"));
+			vo.setEmail(request.getParameter("email"));
+			vo.setPhone(request.getParameter("phone"));
+			vo.setBirthday(request.getParameter("birth"));
+			vo.setAddr1(request.getParameter("addr1"));
+			vo.setAddr2(request.getParameter("addr2"));
+			vo.setPost(request.getParameter("post"));
+			boolean state= memberUpdate(vo,request.getParameter("pwd_before"));
+			if(state) {
+				obj.put("statement", "success");
+			}else{
+				obj.put("statement", "fail");
+			}
+			PrintWriter out=null;
+			try {
+				out=response.getWriter();
+				out.write(obj.toJSONString());
+				out.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.out.println("ioe오류");
+			}
+		}
 	}
 
 //메일
@@ -74,6 +121,7 @@ public class EventModel {
 				String code=session.getAttribute("code").toString();
 				if(authCode.equals(code)){
 					obj.put("statement", "success");
+					session.setAttribute("mail", "success");
 				}else{
 					obj.put("statement", "fail");
 				}
@@ -102,23 +150,23 @@ public class EventModel {
 		map.put("areacode", code);
 		map.put("start", "1");
 		map.put("end", "8");
-		List<EventVO> arealist1= EventDAO.eventSearchList(map);
+		List<EventVO> arealist1= eventSearchList(map);
 		request.setAttribute("arealist1", arealist1);
 
 		code[0]="6";
 		map.put("areacode", code);
-		List<EventVO> arealist2= EventDAO.eventSearchList(map);
+		List<EventVO> arealist2= eventSearchList(map);
 		request.setAttribute("arealist2", arealist2);
 
 		code[0]="39";
 		map.put("areacode", code);
-		List<EventVO> arealist3= EventDAO.eventSearchList(map);
+		List<EventVO> arealist3= eventSearchList(map);
 		request.setAttribute("arealist3", arealist3);
 
-		List<EventVO> list3= EventDAO.mainEventList();
+		List<EventVO> list3= mainEventList();
 		request.setAttribute("musicalList", list3);
 
-		List<EventVO> list2= EventDAO.mainFesList();
+		List<EventVO> list2= mainFesList();
 		request.setAttribute("fesList", list2);
 
 		request.setAttribute("wide", "y");
@@ -131,7 +179,7 @@ public class EventModel {
 	@RequestMapping("event/event_list.do")
 	public String event_list(HttpServletRequest request, HttpServletResponse response) {
 		//필터 카테고리 목록
-		request.setAttribute("catemap",EventDAO.catemap);
+		request.setAttribute("catemap", catemap);
 
 		//mode 없으면 행사 메인페이지로
 		String mode=request.getParameter("mode");
@@ -151,7 +199,7 @@ public class EventModel {
 		}
 
 		//최대값,최소값,결과개수
-		EventVO vo=EventDAO.eventSearchDefault(map);
+		EventVO vo= eventSearchDefault(map);
 		if(vo.getMaxprice()!=null){
 			request.setAttribute("maxprice", vo.getMaxprice());
 			request.setAttribute("minprice", vo.getMinprice());
@@ -172,7 +220,7 @@ public class EventModel {
 	public void event_list_data(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/x-json;charset=UTF-8");
 		//request 파싱
-        JSONObject json=EventDAO.jsonParse(request,response);
+        JSONObject json= jsonParse(request,response);
 
 		//기본 parameter 매핑
 		String page=json.get("curpage").toString();
@@ -224,9 +272,9 @@ public class EventModel {
 		System.out.println("filter:"+filter);
 
 		//검색결과 총개수
-		EventVO cvo=EventDAO.eventSearchDefault(map);
+		EventVO cvo= eventSearchDefault(map);
 		//검색결과 목록
-		List<EventVO> list= EventDAO.eventSearchList(map);
+		List<EventVO> list= eventSearchList(map);
 		JSONArray arr=new JSONArray();
 		int i=0;
 		for(EventVO vo:list){
@@ -268,12 +316,12 @@ public class EventModel {
 	public String event_detail(HttpServletRequest request, HttpServletResponse response) {
 		String contid=request.getParameter("id");
 		int id=Integer.parseInt(contid);
-		EventVO vo=EventDAO.eventDetailData(id);
-		List<EventVO> imglist=EventDAO.eventDetailImg(id);
-		List<EventVO> infolist=EventDAO.eventDetailInfo(id);
+		EventVO vo= eventDetailData(id);
+		List<EventVO> imglist= eventDetailImg(id);
+		List<EventVO> infolist= eventDetailInfo(id);
 
 		System.out.println("areacode: "+vo.getCvo().getAreacode());
-		List<ContentVO> nearlist=EventDAO.eventDetailHotel(vo.getCvo().getAreacode());
+		List<ContentVO> nearlist= eventDetailHotel(vo.getCvo().getAreacode());
 		System.out.println("nearlist:"+nearlist.size());
 		request.setAttribute("imglist", imglist);
 		request.setAttribute("infolist", infolist);
@@ -292,8 +340,8 @@ public class EventModel {
 			for(int i=cookies.length-1;i>=0;i--){
 				if(cookies[i].getName().startsWith("event_")){
 					String ckid =cookies[i].getValue();
-					EventVO ckvo=EventDAO.eventDetailData(Integer.parseInt(ckid));
-					EventDAO.categorySet(ckvo);
+					EventVO ckvo= eventDetailData(Integer.parseInt(ckid));
+					categorySet(ckvo);
 					clist.add(ckvo);
 				}
 				if(cookies.length-i==6) break;

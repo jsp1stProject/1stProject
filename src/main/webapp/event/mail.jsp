@@ -40,7 +40,6 @@
             throw new Error(e);
         }
     }
-
     async function verifyCode(){
         try{
             let response=await axios({
@@ -66,7 +65,6 @@
             console.log(e);
             throw new Error(e);
         }
-
     }
 
 </script>

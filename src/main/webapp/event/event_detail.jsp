@@ -176,7 +176,7 @@
                                         <div class="item-img" style="background-image:url(${vo.cvo.first_image});">
                                         </div>
                                         <div class="text-wrap">
-                                            <p class="date">${vo.cvo.cat3}</p>
+                                            <p class="date">${vo.dbcate}</p>
                                             <p class="title">${vo.cvo.title}</p>
                                         </div>
                                     </div>
