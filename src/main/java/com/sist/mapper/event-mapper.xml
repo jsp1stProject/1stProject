@@ -14,6 +14,7 @@
 		<result property="cvo.cat2" column="cat2"/>
 		<result property="cvo.cat3" column="cat3"/>
 		<result property="cvo.areacode" column="areacode"/>
+		<result property="cvo.sigungucode" column="sigungucode"/>
 		<result property="cvo.overview" column="overview"/>
 		<result property="cvo.review_count" column="review_count"/>
 		<result property="cvo.mapx" column="mapx"/>
@@ -24,6 +25,15 @@
 		<result property="divo.img_id" column="img_id"/>
 		<result property="divo.origin_img" column="origin_img"/>
 		<result property="divo.thumb_img" column="thumb_img"/>
+	</resultMap>
+	<resultMap type="HotelVO" id="hotelMap">
+		<!-- content TABLE(cvo) -->
+		<result property="cvo.title" column="title"/>
+		<result property="cvo.first_image" column="first_image"/>
+		<result property="cvo.cat3" column="cat3"/>
+		<result property="cvo.content_id" column="content_id"/>
+		<!-- hotel_room TABLE(hrvo) -->
+		<result property="hrvo.offseason_minfee1" column="offseason_minfee1"/>
 	</resultMap>
 
 	<select id="mainEventList" resultMap="eventMap">
@@ -106,7 +116,7 @@
 		where num between #{start} and #{end}
 	</select>
 	<select id="eventDetailData" resultMap="eventMap" parameterType="int">
-		SELECT e.content_id, TITLE, ADDR1, ADDR2, ZIPCODE, MAPX, MAPY, TEL, OVERVIEW, REVIEW_COUNT, TO_CHAR(EVENT_STARTDATE,'YYYY.MM.DD') as dbstart, TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, CAT3, FIRST_IMAGE, SPONSOR1, SPONSOR2, PLAYTIME, CHARGE, SPENDTIME, AGELIMIT, PRICE, PRICE_INFO
+		SELECT e.content_id, TITLE, ADDR1, ADDR2, ZIPCODE, AREACODE, SIGUNGUCODE, MAPX, MAPY, TEL, OVERVIEW, REVIEW_COUNT, TO_CHAR(EVENT_STARTDATE,'YYYY.MM.DD') as dbstart, TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, CAT3, FIRST_IMAGE, SPONSOR1, SPONSOR2, PLAYTIME, CHARGE, SPENDTIME, AGELIMIT, PRICE, PRICE_INFO
 		from EVENT e join CONTENT c on e.CONTENT_ID=c.CONTENT_ID
 		WHERE e.CONTENT_ID=#{contid}
 	</select>
@@ -119,6 +129,11 @@
 		WHERE e.CONTENT_ID=#{contid}
 	</select>
 
+	<select id="eventDetailHotel" resultMap="hotelMap" parameterType="int">
+		SELECT h.TITLE,h.OFFSEASON_MINFEE1,h.CAT3,h.FIRST_IMAGE,h.CONTENT_ID FROM hotel_list_view h join content c on h.CONTENT_ID=c.CONTENT_ID
+		where c.areacode=#{areacode}
+		and rownum&lt;6
+	</select>
 	<!--	<select id="replace_data" resultMap="eventMap">-->
 	<!--		SELECT CONTENT_ID,CHARGE from event-->
 	<!--	</select>-->

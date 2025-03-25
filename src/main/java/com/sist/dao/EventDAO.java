@@ -1,6 +1,7 @@
 package com.sist.dao;
 
 import com.sist.commons.CreateSqlSessionFactory;
+import com.sist.vo.ContentVO;
 import com.sist.vo.EventVO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -170,6 +171,12 @@ public class EventDAO {
 	public static List<EventVO> eventDetailImg(int contid){
 		SqlSession session = ssf.openSession();
 		List<EventVO> list= session.selectList("eventDetailImg", contid);
+		session.close();
+		return list;
+	}
+	public static List<ContentVO> eventDetailHotel(int areacode){
+		SqlSession session = ssf.openSession();
+		List<ContentVO> list= session.selectList("eventDetailHotel", areacode);
 		session.close();
 		return list;
 	}

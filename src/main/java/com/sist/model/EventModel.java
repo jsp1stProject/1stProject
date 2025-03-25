@@ -4,8 +4,10 @@ import com.sist.controller.Controller;
 import com.sist.controller.RequestMapping;
 import com.sist.dao.EventDAO;
 import com.sist.dao.MailDAO;
+import com.sist.vo.ContentVO;
 import com.sist.vo.EventVO;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -14,6 +16,7 @@ import org.json.simple.JSONObject;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -258,9 +261,35 @@ public class EventModel {
 		EventVO vo=EventDAO.eventDetailData(id);
 		List<EventVO> imglist=EventDAO.eventDetailImg(id);
 		List<EventVO> infolist=EventDAO.eventDetailInfo(id);
+
+		System.out.println("areacode: "+vo.getCvo().getAreacode());
+		List<ContentVO> nearlist=EventDAO.eventDetailHotel(vo.getCvo().getAreacode());
+		System.out.println("nearlist:"+nearlist.size());
 		request.setAttribute("imglist", imglist);
 		request.setAttribute("infolist", infolist);
 		request.setAttribute("vo", vo);
+		request.setAttribute("nearlist", nearlist);
+
+		Cookie cookie=new Cookie("event_"+contid,contid);
+		cookie.setPath("/");
+		cookie.setMaxAge(60*60*24);
+		// 전송
+		response.addCookie(cookie);
+
+		List<EventVO> clist=new ArrayList<EventVO>();
+		Cookie[] cookies=request.getCookies();
+		if(cookies!=null) {
+			for(int i=cookies.length-1;i>=0;i--){
+				if(cookies[i].getName().startsWith("event_")){
+					String ckid =cookies[i].getValue();
+					EventVO ckvo=EventDAO.eventDetailData(Integer.parseInt(ckid));
+					EventDAO.categorySet(ckvo);
+					clist.add(ckvo);
+				}
+				if(cookies.length-i==6) break;
+			}
+		}
+		request.setAttribute("clist", clist);
 
 		request.setAttribute("event", "y"); //event page
 		request.setAttribute("main_jsp", "../event/event_detail.jsp");

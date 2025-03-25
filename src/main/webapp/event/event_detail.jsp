@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.3/css/lightgallery.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.3/lightgallery.umd.min.js"></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f15eb727df3c1fb9de2ce170ebb6f7a0"></script>
+<script src="/assets/plugin/swiper/swiper-bundle.min.js"></script>
 <body>
     <div class="container mini px-0">
         <div class="thumb_list${fn:length(imglist)<2?' nosub':''}" id="my-gallery">
@@ -104,45 +105,95 @@
             <div>
                 <h4>리뷰 <b class="text-blue">231</b></h4>
                 <div class="d-flex align-content-center flex-column flex-wrap">
-                    <div class="score-avg align-self-center">
+                    <div class="score-avg align-self-center py-3">
                         <div class="bigstar">
                             4.2
                         </div>
                     </div>
+                    <div class="pt-3">
+                        <select class="form-select filter-sm" aria-label="Default select">
+                            <option value="0" selected>최신순</option>
+                            <option value="1">평가 높은순</option>
+                        </select>
+                    </div>
                     <ul class="review-ul">
-                        <c:forEach begin="1" end="5" var="i">
+                        <c:forEach begin="1" end="3" var="i">
                             <li>
                                 <div class="review-header">
-                                    <div class="user-score" data-score="${i}">
-                                        <div class="star"></div>
-                                        <div class="star"></div>
-                                        <div class="star"></div>
-                                        <div class="star"></div>
-                                        <div class="star"></div>
-                                    </div>
-                                    <div class="user-name">
-                                        <span class="name">홍길동</span>
-                                        <span class="created-time">2025년 3월 12일</span>
+                                    <div class="user-name d-flex align-items-center">
+                                        <div class="user-pf" style="background-image:${userprofile}"></div>
+                                        <div class="d-flex flex-column">
+                                            <div class="user-score" data-score="${i}">
+                                                <div class="star"></div>
+                                                <div class="star"></div>
+                                                <div class="star"></div>
+                                                <div class="star"></div>
+                                                <div class="star"></div>
+                                            </div>
+                                            <p class="name">홍길동<span class="created-time">2025년 3월 12일</span></p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="review-cont">
-                                    내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용
+                                    세 줄 이상일 때만 말줄임표 + 더보기 버튼 내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용
                                 </div>
                             </li>
                         </c:forEach>
-
                     </ul>
                     <button class="morebtn btn-white">리뷰 전체보기</button>
+                </div>
+            </div>
+        </div>
+        <div class="detail_subWrap">
+            <div>
+                <h4 class="pb-2">이 근처 숙소 찾기</h4>
+                <div class="swiper main-slide-list">
+                    <div class="swiper-wrapper">
+                        <c:forEach items="${nearlist }" var="vo">
+                            <div class="li-item swiper-slide">
+                                <a href="../hotel/hotel_detail.do?content_id=${vo.cvo.content_id}">
+                                    <div class="item-inner">
+                                        <div class="item-img" style="background-image:url(${vo.cvo.first_image});">
+                                        </div>
+                                        <div class="text-wrap">
+                                            <p class="date">${vo.cvo.cat3}</p>
+                                            <p class="title">${vo.cvo.title}</p>
+                                            <p class="price">${vo.hrvo.offseason_minfee1}원</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
+                <h4 class="pb-2 mt-3">최근 확인한 행사</h4>
+                <div class="swiper main-slide-list">
+                    <div class="swiper-wrapper">
+                        <c:forEach items="${clist }" var="vo">
+                            <div class="li-item swiper-slide">
+                                <a href="../hotel/hotel_detail.do?content_id=${vo.cvo.content_id}">
+                                    <div class="item-inner">
+                                        <div class="item-img" style="background-image:url(${vo.cvo.first_image});">
+                                        </div>
+                                        <div class="text-wrap">
+                                            <p class="date">${vo.cvo.cat3}</p>
+                                            <p class="title">${vo.cvo.title}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </c:forEach>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="buy-wrap">
         <ul class="buy-ul">
-            <li class="d-flex justify-content-between align-items-center">
+            <li class="d-flex justify-content-between align-items-center"> <%-- li = 구매 아이템 --%>
                 <div>
                     <p class="product">입장권</p>
-                    <p class="price">
+                    <p class="prod-price">
                         <c:choose>
                             <c:when test="${vo.price eq 0}">
                                 무료
@@ -154,13 +205,13 @@
                     </p>
                 </div>
                 <div class="countwrap">
-                    <button type="button" class="count-down">-</button><input type="text" name="product_count" value="1" disabled><button type="button" class="count-up">+</button>
+                    <button type="button" class="count-down">-</button><input type="text" name="product_count" value="0" disabled><button type="button" class="count-up">+</button>
                 </div>
             </li>
             <li class="d-flex justify-content-end">
                 <div>
                     <p class="product">합계</p>
-                    <p class="totalPrice"></p>
+                    <p class="totalPrice">0원</p>
                 </div>
             </li>
             <li class="submitwrap">
@@ -186,27 +237,27 @@
             $(".buy-wrap").removeClass("active");
             $(".buy-wrap").addClass("off");
         });
+        let total=0;
         $(document).on("click",".countwrap button",function(e){
-           if($(e.target).hasClass("count-down")){
-               let count=Number($("input[name=product_count]").val());
+            var el=$(e.target).closest("li").find(".prod-price");
+            var str = el.text().trim();
+            console.log(str);
+            if(str=="무료") str="0";
+            var regex = /[^0-9]/g;
+            var result = str.replace(regex, "");
+            let count=Number($(e.target).siblings("input[name=product_count]").val());
+            if($(e.target).hasClass("count-down")){
                if(count>0){
-                   $("input[name=product_count]").val(count-1);
+                   $(e.target).siblings("input[name=product_count]").val(count-1);
+                   total-=parseInt(result);
                }
-           }else if($(e.target).hasClass("count-up")){
-               let count=Number($("input[name=product_count]").val());
+            }else if($(e.target).hasClass("count-up")){
                if(count<10){
-                   $("input[name=product_count]").val(count+1);
+                   $(e.target).siblings("input[name=product_count]").val(count+1);
+                   total+=parseInt(result);
                }
-           }
-           let total=0;
-           $("p.price").map(function(index,el){
-               var str = $(el).text();
-               var regex = /[^0-9]/g;
-               var result = str.replace(regex, "");
-               console.log("result: " + result);
-               total+=total+result;
-           });
-           $(".totalPrice").text(total.toLocaleString('ko-KR')+'원');
+            }
+            $(".totalPrice").text(total.toLocaleString('ko-KR')+'원');
 
         });
 
@@ -249,11 +300,55 @@
                 }
             });
         });
+
+        //tab
         $(document).on("click",".scrollTab button",function(e){ //탭 클릭 시 해당 영역으로 이동
             let target=$(e.target).attr("data-target");
             let targetTop=$("#"+target).offset().top; //탭 컨텐츠 offset top
             let headerHeight = $("nav").outerHeight() + $(".tabWrap").outerHeight(); //sticky 탭 포함 헤더 높이
             $('html').scrollTop(targetTop-headerHeight+3);
+        });
+
+        //리뷰 더보기 버튼
+        $(document).on("click",".cont-morebtn",function(){
+           $(this).closest("li").addClass("show");
+           $(this).remove();
+        });
+
+        //리뷰 길이 세 줄 초과일 때만 더보기 버튼
+        let contents = document.querySelectorAll(".review-cont");
+        contents.forEach(function(el,index){
+            let morebtn=document.createElement("button");
+            morebtn.setAttribute("type","button");
+            morebtn.classList.add("cont-morebtn");
+            if(el.scrollHeight>el.clientHeight){
+                el.parentNode.appendChild(morebtn);
+            }
+        });
+
+        //슬라이드
+        const swiper = new Swiper('.main-slide-list', {
+            loop: false,
+            navigation: false,
+
+            breakpoints: {
+                0:{
+                    slidesPerView: 3,  //브라우저가 0보다 클 때
+                    spaceBetween: 10,
+                },
+                768: {
+                    slidesPerView: 4,  //브라우저가 768보다 클 때
+                    spaceBetween: 10,
+                },
+                991: {
+                    slidesPerView: 5,  //브라우저가 991보다 클 때
+                    spaceBetween: 10,
+                },
+                1200: {
+                    slidesPerView: 5,  //브라우저가 1200보다 클 때
+                    spaceBetween: 10,
+                },
+            },
         });
     </script>
 </body>

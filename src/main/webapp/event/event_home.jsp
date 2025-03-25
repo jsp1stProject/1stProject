@@ -4,10 +4,6 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title></title>
-</head>
 <body>
 	<div class="container-fluid p-0 pb-4 wow fadeIn" data-wow-delay="0.1s">
 		<div class="event_main_wrap" style="background-image:url(../assets/img/event_main.png)">
@@ -58,7 +54,7 @@
 		    			<div class="swiper-wrapper">
 							<c:forEach items="${arealist1}" var="vo">
 								<div class="li-item swiper-slide">
-									<a href="#">
+									<a href="../event/event_detail.do?id=${vo.content_id}">
 										<div class="item-inner">
 											<div class="item-img" style="background-image:url(${vo.cvo.first_image});">
 											</div>
@@ -89,7 +85,7 @@
 		    			<div class="swiper-wrapper">
 							<c:forEach items="${arealist2}" var="vo">
 								<div class="li-item swiper-slide">
-									<a href="#">
+									<a href="../event/event_detail.do?id=${vo.content_id}">
 										<div class="item-inner">
 											<div class="item-img" style="background-image:url(${vo.cvo.first_image});">
 											</div>
@@ -120,7 +116,7 @@
 		    			<div class="swiper-wrapper">
 							<c:forEach items="${arealist3}" var="vo">
 								<div class="li-item swiper-slide">
-									<a href="#">
+									<a href="../event/event_detail.do?id=${vo.content_id}">
 										<div class="item-inner">
 											<div class="item-img" style="background-image:url(${vo.cvo.first_image});">
 											</div>
@@ -159,7 +155,7 @@
 						<div class="swiper-wrapper">
 							<c:forEach items="${musicalList }" var="vo">
 								<div class="li-item swiper-slide">
-									<a href="#">
+									<a href="../event/event_detail.do?id=${vo.content_id}">
 										<div class="item-inner">
 											<div class="item-img" style="background-image:url(${vo.cvo.first_image});">
 											</div>

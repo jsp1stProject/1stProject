@@ -10,14 +10,9 @@
         }, 1);
     };
     spinner();
-    
-    
+
     // Initiate the wowjs
     new WOW().init();
-
-
-    
-    
     
     // Back to top button
     $(window).scroll(function () {
@@ -32,7 +27,6 @@
         return false;
     });
 
-
     // Header carousel
     $(".header-carousel").owlCarousel({
 		animateOut:'fadeOut',
@@ -44,7 +38,6 @@
 		mouseDrag:false,
 		touchDrag:false
     });
-
 
     // Facts counter
     $('[data-toggle="counter-up"]').counterUp({
@@ -76,8 +69,7 @@
             }
         }
     });
-	
-	
+
 	//custom-list
 	const swiper = new Swiper('.main-slide-list', {
 		loop: false,
