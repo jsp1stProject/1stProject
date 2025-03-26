@@ -260,6 +260,7 @@ body.on{
 }
 .navbar{
 	border-color:#ffffff; /*transition때문에 새로고침 시 body css 노출되는 것 방지*/
+    padding: 4px 0;
 }
 .navbar, .navbar-collapse{
 	align-items: flex-start;
@@ -275,12 +276,18 @@ body.on{
     align-content: center;
 }
 .navbar h1.home{
-	color:#ffffff;
-    font-family: 'impact';
+    width: 144px;
+    height: 44px;
+    color: #ffffff;
     font-weight: 100;
+    background: url(/assets/img/logo_white.png) no-repeat center right / cover;
+    text-indent: 120%;
+    overflow: hidden;
 }
 .navbar.bg-white h1.home{
 	color:var(--primary);
+
+    background-image: url(/assets/img/logo_blue.png);
 }
 .navbar-toggler{
 	border:none;
@@ -1136,6 +1143,15 @@ ul.main-notice-ul p{
 body.is .footer {
     display:none;
 }
+.footer-logo {
+    width: 184px;
+    height: 44px;
+    color: #ffffff;
+    font-weight: 100;
+    background: url(/assets/img/logo_white.png) no-repeat center right / cover;
+    text-indent: 120%;
+    overflow: hidden;
+}
 .footer .btn.btn-link {
     display: block;
     margin-bottom: 5px;
@@ -1177,7 +1193,7 @@ body.main{
 	padding-top:0!important;
 }
 body{
-	padding-top:72px;
+	padding-top:62px;
 }
 body.is{
     padding-bottom:12px!important;
@@ -2029,7 +2045,7 @@ li.submitwrap {
 }
 .tabWrap.sticky{
     position:fixed;
-    top:70px;
+    top:62px;
     z-index:3;
 }
 @media (min-width: 992px){
@@ -2190,6 +2206,20 @@ li.show .review-cont {
     color:#212529;
     background-color:#ffffff;
     border: 1px solid rgba(0, 0, 0, 0.15);
+}
+.mynav .mobilenav{
+    position: fixed;
+    top: 62px;
+    left: 0;
+    right: 0px;
+}
+.mynav .mobilenav #dropdownMenuButton{
+    border-radius: 0;
+    background-color: #ffffff;
+    border-bottom: 1px solid #dddddd;
+}
+.mynav .mobilenav #dropdownMenuButton:focus{
+    box-shadow: none;
 }
 .myinfo{
      padding: 50px 0!important;

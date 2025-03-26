@@ -62,6 +62,7 @@ public class EventModel {
 			HashMap map=new HashMap();
 			map.put("user_id", json.get("user_id").toString());
 			map.put("name", json.get("name").toString());
+			//비밀번호 변경 안 했으면 기존 비밀번호 적용
 			if(json.get("pwd_after")==null||json.get("pwd_after").toString().equals("")){
 				map.put("pwd", json.get("pwd_before").toString());
 			}else{
@@ -92,6 +93,13 @@ public class EventModel {
 				System.out.println("ioe오류");
 			}
 		}
+	}
+	@RequestMapping("mypage/withdrawBefore.do")
+	public String withdraw(HttpServletRequest request, HttpServletResponse response) {
+		request.setAttribute("mode", "1"); //1이면 비밀번호 입력, 2면 탈퇴 페이지
+		request.setAttribute("title", "내 정보");
+		request.setAttribute("main_jsp", "../mypage/withdraw.jsp");
+		return "../main/main.jsp";
 	}
 
 //메일
@@ -334,19 +342,19 @@ public class EventModel {
 	@RequestMapping("event/event_detail.do")
 	public String event_detail(HttpServletRequest request, HttpServletResponse response) {
 		String contid=request.getParameter("id");
-		int id=Integer.parseInt(contid);
+		int id=Integer.parseInt(contid); //content_id
+
 		EventVO vo= eventDetailData(id);
 		List<EventVO> imglist= eventDetailImg(id);
 		List<EventVO> infolist= eventDetailInfo(id);
-
-		System.out.println("areacode: "+vo.getCvo().getAreacode());
 		List<ContentVO> nearlist= eventDetailHotel(vo.getCvo().getAreacode());
-		System.out.println("nearlist:"+nearlist.size());
+
 		request.setAttribute("imglist", imglist);
 		request.setAttribute("infolist", infolist);
 		request.setAttribute("vo", vo);
 		request.setAttribute("nearlist", nearlist);
 
+		//쿠키
 		String cookies="";
 		Cookie[] cookiesArray = request.getCookies();
 		if(cookiesArray!=null){
@@ -356,10 +364,10 @@ public class EventModel {
 				}
 			}
 		}
-		System.out.println("cookies:"+cookies);
 		List<EventVO> clist=new ArrayList<EventVO>();
 		List<String> ids=new LinkedList<>(Arrays.asList(cookies.split("/")));
-		System.out.println("ids size:"+ids.size());
+
+		//현재 페이지 추가 전 방문기록 리스트 생성
 		if(ids.size()>0||ids.get(0)!=null||!ids.get(0).equals("")){
 			for(String s:ids){
 				if(!s.equals("")){
@@ -369,42 +377,19 @@ public class EventModel {
 				}
 			}
 		}
+		request.setAttribute("clist", clist);
 
+		//쿠키에 현재 페이지 추가
 		ids.remove(contid);
 		ids.add(0,contid);
-
-		if(ids.size()>10){
+		if(ids.size()>10){ //최대 10개까지 저장
 			ids=ids.subList(0,10);
 		}
-
 		String newCookies=String.join("/",ids);
 		Cookie cookie=new Cookie("eventCookies",newCookies);
 		cookie.setPath("/");
 		cookie.setMaxAge(60*60*24); //쿠키 유효기간 1일
 		response.addCookie(cookie);
-
-		//
-//		Cookie cookie=new Cookie("event_"+contid,contid);
-//		cookie.setPath("/");
-//		cookie.setMaxAge(60*60*24);
-//		// 전송
-//
-//		response.addCookie(cookie);
-
-//
-//		if(cookiesArray!=null) {
-//			for(int i=cookiesArray.length-1;i>=0;i--){
-//				if(cookiesArray[i].getName().startsWith("event_")){
-//					System.out.println(cookiesArray[i].getName());
-//					String ckid =cookiesArray[i].getValue();
-//					EventVO ckvo= eventDetailData(Integer.parseInt(ckid));
-//					categorySet(ckvo);
-//					clist.add(ckvo);
-//				}
-//				if(cookies.length-i==6) break;
-//			}
-//		}
-		request.setAttribute("clist", clist);
 
 		request.setAttribute("event", "y"); //event page
 		request.setAttribute("main_jsp", "../event/event_detail.jsp");

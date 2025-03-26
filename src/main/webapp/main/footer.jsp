@@ -7,7 +7,7 @@
     <div class="container">
         <div class="row">
             <div class="footer-wrap col-12">
-                <h4 class="text-light mb-4">Festeller</h4>
+                <h4 class="text-light mb-4 footer-logo">Festeller</h4>
                 <div class="d-flex flex-wrap links">
                     <p>회사소개</p>
                     <p>이용약관</p>

@@ -16,8 +16,8 @@
         <a class="list-group-item list-group-item-action" href="#" role="tab">쿠폰</a>
     </div>
     <%--메뉴 추가할 때 위아래 목록 2개에 모두 추가해주세요--%>
-    <div class="btn-group d-block d-lg-none">
-        <button class="btn btn-secondary dropdown-toggle col-12" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+    <div class="btn-group d-block d-lg-none mobilenav">
+        <button class="btn dropdown-toggle col-12" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
             ${title} <%--setattribute로 title 지정--%>
         </button>
         <ul class="dropdown-menu col-12" aria-labelledby="dropdownMenuButton">

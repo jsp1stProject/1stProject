@@ -7,7 +7,7 @@
 <body>
 	<%// wow는 main에서만 적용 %>
     <nav class="navbar navbar-expand-lg fixed-top py-lg-0 px-lg-4 ${title eq '메인'?'wow':'bg-white' }">
-        <a href="${pageContext.request.contextPath }/main/main.do" class="navbar-brand ms-4 ms-lg-0">
+        <a href="${pageContext.request.contextPath }/main/main.do" class="navbar-brand ms-3 ms-lg-0">
             <h1 class="m-0 home">Festeller</h1>
         </a>
         <div class="d-flex justify-content-end flex-fill">
@@ -65,7 +65,7 @@
 	                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/></svg>
 	                </div>
 	            </div>
-	            <button type="button" class="navbar-toggler me-4 ms-2" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+	            <button type="button" class="navbar-toggler me-2 ms-2" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
 		            <!-- <span class="navbar-toggler-icon"></span>-->
 		            <div class="menu-icon">
 			            <div class="i_menu"></div>
