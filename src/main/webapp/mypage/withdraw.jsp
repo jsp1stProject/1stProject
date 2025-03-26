@@ -66,9 +66,8 @@
           params:{"user_id":"${sessionScope.user_id}"}
         })
         console.log(response);
-        console.log(${sessionScope.user_id});
         if(response.data.statement=="success"){
-          if(confirm("${sessionScope.user_id} 계정이 탈퇴되었습니다. 3초 뒤 메인페이지로 이동합니다.")){
+          if(confirm("계정이 탈퇴되었습니다. 3초 뒤 메인페이지로 이동합니다.")){
             setTimeout('location.href="../main/main.do"', 3000);
           }
         }else{

@@ -4,6 +4,7 @@ import com.sist.controller.Controller;
 import com.sist.controller.RequestMapping;
 import com.sist.dao.EventDAO;
 import com.sist.dao.MailDAO;
+import com.sist.vo.CartVO;
 import com.sist.vo.ContentVO;
 import com.sist.vo.EventVO;
 import com.sist.vo.MemberVO;
@@ -128,7 +129,11 @@ public class EventModel {
 	public void withdraw_execute(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json;charset=UTF-8");
 		String user_id=request.getParameter("user_id");
-		memberDelete(user_id);
+		memberDelete(user_id); //탈퇴 실행
+
+		HttpSession session = request.getSession();
+		session.invalidate(); //세션 삭제
+
 		JSONObject obj=new JSONObject();
 
 		obj.put("statement", "success"); //response mapping
@@ -231,6 +236,12 @@ public class EventModel {
 
 		List<EventVO> list2= mainFesList();
 		request.setAttribute("fesList", list2);
+
+		HttpSession session=request.getSession();
+		if(session.getAttribute("user_id")!=null){
+			int eventcart=eventCartCount(session.getAttribute("user_id").toString());
+			session.setAttribute("eventcart", eventcart);
+		}
 
 		request.setAttribute("wide", "y");
 		request.setAttribute("main_jsp", "../event/event_home.jsp");
@@ -431,5 +442,97 @@ public class EventModel {
 		request.setAttribute("main_jsp", "../event/event_detail.jsp");
 		request.setAttribute("title", "상세보기");
 		return "../main/main.jsp";
+	}
+
+//	장바구니 cart
+	@RequestMapping("event/cart.do")
+	public String event_cart(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session=request.getSession();
+		if(session.getAttribute("user_id")==null){
+			return "redirect:../event/main.do";
+		}
+		String user_id=(String)session.getAttribute("user_id"); //세션에서 아이디 정보
+		HashMap map=new HashMap();
+		map.put("user_id", user_id);
+		List<CartVO> list=cartList(map); //장바구니 목록
+		request.setAttribute("list", list);
+
+		request.setAttribute("event", "y"); //event page
+		request.setAttribute("main_jsp", "../event/cart.jsp");
+		request.setAttribute("title", "장바구니");
+		return "../main/main.jsp";
+	}
+//	장바구니 추가/수정
+	@RequestMapping("event/cart_insert.do")
+	public void event_cart_insert(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("application/x-json;charset=UTF-8");
+		//request 파싱
+		JSONObject json = jsonParse(request, response); //content_id,account,price,total_price,(incr/decr)
+		//세션에서 아이디 정보
+		HttpSession session = request.getSession();
+		String user_id = (String) session.getAttribute("user_id");
+
+		if (json.size() == 0) return;
+		System.out.println("json size:"+json.size());
+		for (Object cart : json.values()) { //각 상품 목록
+			List<String> cartData = List.of(cart.toString().split("/")); //데이터 분리
+			int contid = Integer.parseInt(cartData.get(0)); //행사 content_id
+			int account_new = Integer.parseInt(cartData.get(1)); //추가하려는 상품 개수
+			int price = Integer.parseInt(cartData.get(2)); //상품 하나 가격
+			int total_price = Integer.parseInt(cartData.get(3)); //상품 전체개수 총가격
+			int account_after=0;
+
+			HashMap map = new HashMap();
+			map.put("user_id", user_id);
+			map.put("content_id", contid);
+			List<CartVO> list = cartList(map); //이미 존재하는 상품인지 조회
+
+			if (list.size() > 0) { //장바구니에 이미 해당 상품이 있다면
+				int account_before = list.get(0).getAccount(); //기존 상품 개수
+
+				if(cartData.size()==5){ //상품 개수 수정 요청일 때
+					String state = cartData.get(4); //incr / decr
+					account_after=account_new;
+				}else{ //신규 추가일 때
+					account_after = account_before + account_new;
+					if (account_after > 10){ //한 행사 당 티켓은 10개까지 구매 가능
+						account_after = 10;
+						total_price = price * 10;
+					}
+				}
+				map.put("account", account_after);
+				map.put("total_price", price * account_after);
+				map.put("cno", list.get(0).getCno());
+				cartUpdate(map);
+			} else { //장바구니에 없는 상품 새로 추가
+				map.put("account", account_new);
+				map.put("total_price", total_price);
+				map.put("price", price);
+				cartInsert(map);
+			}
+		}
+	}
+//	장바구니 삭제
+	@RequestMapping("event/cart_delete.do")
+	public void event_cart_delete(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("application/x-json;charset=UTF-8");
+		int cno=Integer.parseInt(request.getParameter("cno"));
+		boolean result=cartDelete(request.getParameter("cno")); //삭제 실행
+
+		JSONObject obj=new JSONObject();
+		if(result) {//삭제됐으면
+			obj.put("statement", "success");
+		}else{
+			obj.put("statement", "failed");
+		}
+		PrintWriter out=null;
+		try {
+			out=response.getWriter();
+			out.write(obj.toJSONString());
+			out.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("ioe오류");
+		}
 	}
 }

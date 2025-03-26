@@ -1,10 +1,7 @@
 package com.sist.dao;
 
 import com.sist.commons.CreateSqlSessionFactory;
-import com.sist.vo.ContentVO;
-import com.sist.vo.EventVO;
-import com.sist.vo.HotelVO;
-import com.sist.vo.MemberVO;
+import com.sist.vo.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.ibatis.session.SqlSession;
@@ -227,6 +224,37 @@ public class EventDAO {
 		SqlSession session = ssf.openSession(true);
 		session.delete("memberDelete", user_id);
 		session.close();
+	}
+
+//	장바구니 cart
+	public static List<CartVO> cartList(HashMap map){
+		SqlSession session = ssf.openSession();
+		List<CartVO> list= session.selectList("cartList", map);
+		session.close();
+		return list;
+	}
+	public static void cartInsert(HashMap map){
+		SqlSession session = ssf.openSession(true);
+		session.insert("cartInsert", map);
+		session.close();
+	}
+	public static void cartUpdate(HashMap map){
+		SqlSession session = ssf.openSession(true);
+		session.update("cartUpdate", map);
+		session.close();
+	}
+	public static boolean cartDelete(String cno){
+		boolean result=true;
+		SqlSession session = ssf.openSession(true);
+		session.delete("cartDelete", cno);
+		session.close();
+		return result;
+	}
+	public static int eventCartCount(String user_info){
+		SqlSession session = ssf.openSession();
+		int count=session.selectOne("eventCartCount", user_info);
+		session.close();
+		return count;
 	}
 
 	/*

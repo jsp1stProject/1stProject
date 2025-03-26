@@ -26,6 +26,7 @@
 		<result property="divo.origin_img" column="origin_img"/>
 		<result property="divo.thumb_img" column="thumb_img"/>
 	</resultMap>
+
 	<resultMap type="HotelVO" id="hotelMap">
 		<!-- content TABLE(cvo) -->
 		<result property="cvo.title" column="title"/>
@@ -34,6 +35,12 @@
 		<result property="cvo.content_id" column="content_id"/>
 		<!-- hotel_room TABLE(hrvo) -->
 		<result property="hrvo.offseason_minfee1" column="offseason_minfee1"/>
+	</resultMap>
+
+	<resultMap id="cartMap" type="CartVO">
+		<result property="cvo.content_id" column="content_id"></result>
+		<result property="cvo.title" column="title"></result>
+		<result property="cvo.first_image2" column="first_image2"></result>
 	</resultMap>
 
 	<select id="mainEventList" resultMap="eventMap">
@@ -165,6 +172,34 @@
 		delete from USER_INFO where USER_ID=#{user_id}
 	</delete>
 
+<!--  cart -->
+<!--	장바구니 목록 출력, 항목 하나 출력-->
+	<select id="cartList" resultMap="cartMap" parameterType="HashMap">
+		SELECT cno, account, cart.price, total_price, content.content_id, user_id, title, first_image2
+		from cart join content on cart.content_id=content.content_id
+		WHERE user_id=#{user_id}
+		<if test="content_id != null">
+			AND cart.content_id=#{content_id}
+		</if>
+	</select>
+<!--	장바구니 추가-->
+	<insert id="cartInsert" parameterType="HashMap">
+		insert into cart (cno, account, price, total_price, content_id, user_id)
+		values (cart_cno_seq.nextval, #{account}, #{price}, #{total_price}, #{content_id}, #{user_id})
+	</insert>
+<!--	장바구니 수량 수정-->
+	<update id="cartUpdate" parameterType="HashMap">
+		update cart set account=#{account}, total_price=#{total_price}
+		where cno=#{cno}
+	</update>
+<!--	장바구니 삭제-->
+	<delete id="cartDelete" parameterType="String">
+		delete from cart where cno=#{cno}
+	</delete>
+
+	<select id="eventCartCount" resultType="int">
+		select eventcart_count from user_info where user_id=#{user_id}
+	</select>
 
 	<!--	<select id="replace_data" resultMap="eventMap">-->
 	<!--		SELECT CONTENT_ID,CHARGE from event-->
