@@ -6,6 +6,7 @@ import com.sist.controller.RequestMapping;
 import com.sist.dao.EventDAO;
 import com.sist.dao.NoticeDAO;
 import com.sist.vo.EventVO;
+import com.sist.vo.HotelVO;
 import com.sist.vo.NoticeVO;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +21,13 @@ import org.json.simple.JSONObject;
 public class MainModel {
 	@RequestMapping("main/main.do")
 	public String main_main(HttpServletRequest request, HttpServletResponse response) {
+		List<HotelVO> hlist1= EventDAO.mainHotelList(1);
+		request.setAttribute("hotelList1", hlist1);
+		List<HotelVO> hlist2= EventDAO.mainHotelList(6);
+		request.setAttribute("hotelList2", hlist2);
+		List<HotelVO> hlist3= EventDAO.mainHotelList(31);
+		request.setAttribute("hotelList3", hlist3);
+
 
 		List<EventVO> list3= EventDAO.mainEventList();
 		request.setAttribute("musicalList", list3);

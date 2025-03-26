@@ -55,6 +55,14 @@
 		and EVENT_STARTDATE&lt;=sysdate
 		and rownum&lt;5
 	</select>
+	<select id="mainHotelList" resultMap="hotelMap" parameterType="int">
+		select TITLE,OFFSEASON_MINFEE1,CAT3,FIRST_IMAGE,CONTENT_ID
+		from (SELECT h.TITLE,h.OFFSEASON_MINFEE1,h.CAT3,h.FIRST_IMAGE,h.CONTENT_ID
+		FROM hotel_list_view h join content c on h.CONTENT_ID=c.CONTENT_ID
+		where c.areacode=#{areacode} and OFFSEASON_MINFEE1!=0
+		order by OFFSEASON_MINFEE1)
+		where rownum&lt;6
+	</select>
 
 	<!--검색 최대최소가격, 개수-->
 	<select id="eventSearchPrice" resultType="EventVO" parameterType="hashmap">

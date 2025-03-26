@@ -3,6 +3,7 @@ package com.sist.dao;
 import com.sist.commons.CreateSqlSessionFactory;
 import com.sist.vo.ContentVO;
 import com.sist.vo.EventVO;
+import com.sist.vo.HotelVO;
 import com.sist.vo.MemberVO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -84,7 +85,6 @@ public class EventDAO {
 			}
 		}
 	}
-
 	public static JSONObject jsonParse(HttpServletRequest request, HttpServletResponse response) {
 		BufferedReader reader= null;
 		StringBuilder sb=new StringBuilder();
@@ -103,6 +103,7 @@ public class EventDAO {
 		return json;
 	}
 
+	//sql start
 	public static List<EventVO> mainEventList() {
 		SqlSession session = null;
 		List<EventVO> list = null;
@@ -136,6 +137,15 @@ public class EventDAO {
 		}
 		return list;
 	}
+
+	public static List<HotelVO> mainHotelList(int areacode) {
+		SqlSession session = ssf.openSession();
+		List<HotelVO> list = session.selectList("mainHotelList", areacode);
+		session.close();
+		return list;
+
+	}
+
 	public static List<EventVO> eventAreaList(HashMap map){
 		SqlSession session = ssf.openSession();
 		List<EventVO> list= session.selectList("eventAreaList", map);

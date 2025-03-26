@@ -171,7 +171,7 @@
                     <div class="swiper-wrapper">
                         <c:forEach items="${clist }" var="vo">
                             <div class="li-item swiper-slide">
-                                <a href="../hotel/hotel_detail.do?content_id=${vo.cvo.content_id}">
+                                <a href="../event/event_detail.do?id=${vo.content_id}">
                                     <div class="item-inner">
                                         <div class="item-img" style="background-image:url(${vo.cvo.first_image});">
                                         </div>

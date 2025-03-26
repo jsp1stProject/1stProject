@@ -17,9 +17,7 @@ import org.json.simple.JSONObject;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static com.sist.dao.EventDAO.*;
 
@@ -349,25 +347,63 @@ public class EventModel {
 		request.setAttribute("vo", vo);
 		request.setAttribute("nearlist", nearlist);
 
-		Cookie cookie=new Cookie("event_"+contid,contid);
-		cookie.setPath("/");
-		cookie.setMaxAge(60*60*24);
-		// 전송
-		response.addCookie(cookie);
-
+		String cookies="";
+		Cookie[] cookiesArray = request.getCookies();
+		if(cookiesArray!=null){
+			for(Cookie cookie:cookiesArray){
+				if(cookie.getName().equals("eventCookies")){
+					cookies=cookie.getValue();
+				}
+			}
+		}
+		System.out.println("cookies:"+cookies);
 		List<EventVO> clist=new ArrayList<EventVO>();
-		Cookie[] cookies=request.getCookies();
-		if(cookies!=null) {
-			for(int i=cookies.length-1;i>=0;i--){
-				if(cookies[i].getName().startsWith("event_")){
-					String ckid =cookies[i].getValue();
-					EventVO ckvo= eventDetailData(Integer.parseInt(ckid));
+		List<String> ids=new LinkedList<>(Arrays.asList(cookies.split("/")));
+		System.out.println("ids size:"+ids.size());
+		if(ids.size()>0||ids.get(0)!=null||!ids.get(0).equals("")){
+			for(String s:ids){
+				if(!s.equals("")){
+					EventVO ckvo= eventDetailData(Integer.parseInt(s));
 					categorySet(ckvo);
 					clist.add(ckvo);
 				}
-				if(cookies.length-i==6) break;
 			}
 		}
+
+		ids.remove(contid);
+		ids.add(0,contid);
+
+		if(ids.size()>10){
+			ids=ids.subList(0,10);
+		}
+
+		String newCookies=String.join("/",ids);
+		Cookie cookie=new Cookie("eventCookies",newCookies);
+		cookie.setPath("/");
+		cookie.setMaxAge(60*60*24); //쿠키 유효기간 1일
+		response.addCookie(cookie);
+
+		//
+//		Cookie cookie=new Cookie("event_"+contid,contid);
+//		cookie.setPath("/");
+//		cookie.setMaxAge(60*60*24);
+//		// 전송
+//
+//		response.addCookie(cookie);
+
+//
+//		if(cookiesArray!=null) {
+//			for(int i=cookiesArray.length-1;i>=0;i--){
+//				if(cookiesArray[i].getName().startsWith("event_")){
+//					System.out.println(cookiesArray[i].getName());
+//					String ckid =cookiesArray[i].getValue();
+//					EventVO ckvo= eventDetailData(Integer.parseInt(ckid));
+//					categorySet(ckvo);
+//					clist.add(ckvo);
+//				}
+//				if(cookies.length-i==6) break;
+//			}
+//		}
 		request.setAttribute("clist", clist);
 
 		request.setAttribute("event", "y"); //event page
