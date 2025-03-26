@@ -2,13 +2,19 @@ package com.sist.model;
 
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.json.simple.JSONObject;
 
+import com.google.gson.Gson;
 import com.sist.controller.Controller;
 import com.sist.controller.RequestMapping;
 import com.sist.dao.MemberDAO;
@@ -42,7 +48,7 @@ public class ReservationModel {
 		    );
 
 	    List<String> facilities = new ArrayList<>();
-
+	    
 	    if ("Y".equals(vo.getHrvo().getBathfacility())) facilities.add(facilityMap.get("bathfacility"));
 	    if ("Y".equals(vo.getHrvo().getAircondition())) facilities.add(facilityMap.get("aircondition"));
 	    if ("Y".equals(vo.getHrvo().getTv())) facilities.add(facilityMap.get("tv"));
@@ -53,6 +59,29 @@ public class ReservationModel {
 	    
 	    String facilityStr = String.join(", ", facilities);
 	    
+	    List<Map<String, Object>> rsvCheckList = ReservationDAO.rsvCheckDate(Integer.parseInt(room_id));
+	    List<String> disabledDates = new ArrayList<>();
+	    System.out.println("check: " + Arrays.asList(rsvCheckList));
+	    
+	    for (Map<String, Object> res : rsvCheckList) {
+	        Date checkInDate = (Date) res.get("CHECK_IN_DATE");
+	        Date checkOutDate = (Date) res.get("CHECK_OUT_DATE");
+
+	        if (checkInDate == null || checkOutDate == null) {
+	            continue;
+	        }
+
+	        LocalDateTime startDateTime = checkInDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+	        LocalDateTime endDateTime = checkOutDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+	        // 숙박 예약 시 체크인 - 체크아웃 사이 기간 모두 disable 
+	        while (!startDateTime.toLocalDate().isAfter(endDateTime.toLocalDate())) {
+	            disabledDates.add(startDateTime.toLocalDate().toString());
+	            startDateTime = startDateTime.plusDays(1);
+	        }
+	    }
+	    String jsonArray = new Gson().toJson(disabledDates);
+	    
+	    request.setAttribute("disabledDatesJson", jsonArray);
 	    request.setAttribute("facility", facilityStr);
 		request.setAttribute("vo", vo);
 		request.setAttribute("wide", "y");
@@ -160,20 +189,22 @@ public class ReservationModel {
 		HttpSession session = request.getSession();
 		String user_id = (String)session.getAttribute("user_id");
 		
-		MemberVO vo = MemberDAO.memberInfoData(user_id);
-		
-		JSONObject obj = new JSONObject();
-		obj.put("name", vo.getName());
-		obj.put("email", vo.getEmail());
-		obj.put("phone", vo.getPhone());
-		obj.put("address", vo.getAddr1() + " " + vo.getAddr2());
-		obj.put("post", vo.getPost());
-		try {
-			response.setContentType("text/plain;charset=UTF-8");
-			PrintWriter out = response.getWriter();
-			out.write(obj.toJSONString());
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		if (user_id != null) {
+			MemberVO vo = MemberDAO.memberInfoData(user_id);
+			JSONObject obj = new JSONObject();
+			obj.put("name", vo.getName());
+			obj.put("email", vo.getEmail());
+			obj.put("phone", vo.getPhone());
+			obj.put("address", vo.getAddr1() + " " + vo.getAddr2());
+			obj.put("post", vo.getPost());
+			try {
+				response.setContentType("text/plain;charset=UTF-8");
+				PrintWriter out = response.getWriter();
+				out.write(obj.toJSONString());
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
+		
 	}
 }

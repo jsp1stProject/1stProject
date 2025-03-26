@@ -1,5 +1,8 @@
 package com.sist.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
@@ -26,5 +29,13 @@ private static SqlSessionFactory ssf;
 		HotelVO vo = session.selectOne("rsvHotelData", room_id);
 		session.close();
 		return vo;
+	}
+	
+	/** 예약한 날짜 또는 예약 취소한 날짜 달력 반영*/
+	public static List<Map<String, Object>> rsvCheckDate(int room_id) {
+		SqlSession session = ssf.openSession();
+		List<Map<String, Object>> list = session.selectList("rsvCheckDate", room_id);
+		session.close();
+		return list;
 	}
 }
