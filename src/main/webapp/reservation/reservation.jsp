@@ -203,7 +203,7 @@
 	    }
 
 	    let merchantUid = "ORD" + new Date().getTime(); 
-
+		// TO-DO: 비회원일 시 buyer 처리
 	    try {
 	        IMP.request_pay({
 	            pg: "danal",
@@ -339,12 +339,14 @@
 		</div>
 	</div>
 <script type="text/javascript">
+	const disabledDates = ${disabledDatesJson};
 	const datepickr = $('#dateInput').flatpickr({
 		locale: 'ko',
 		enableTime: true,
 		minTime: '12:00',
 		maxTime: '21:00',
 		minDate: 'today',
+		disable: disabledDates,
 		dateFormat: 'm.d H:00 (D)',
 		defaultDate: new Date(),
 	    onOpen: function() {

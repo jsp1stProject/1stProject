@@ -43,4 +43,7 @@
 						 	</if>
 		 				   )
 	</insert>
+	<select id="rsvCheckDate" resultType="map" parameterType="int">
+		SELECT check_in_date, check_out_date FROM reservation WHERE room_id = #{room_id} AND status = 'R'
+	</select>
 </mapper>
