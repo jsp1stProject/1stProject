@@ -39,4 +39,12 @@ private static SqlSessionFactory ssf;
 		session.close();
 		return list;
 	}
+	
+	/** 비회원 예약 조회 */
+	public static ReservationVO rsvGuestSearch(Map<String, Object> map) {
+		try(SqlSession session = ssf.openSession()) {
+			ReservationVO vo = session.selectOne("rsvGuestSearch", map);
+			return vo;
+		}
+	}
 }

@@ -52,7 +52,7 @@
 								<li><a href="#" id="loginBtn">로그인</a></li>
 								<li><a href="../member/join.do">회원가입</a></li>
 								<li><a href="../member/idfind.do">아이디찾기</a></li>
-								<li><a href="#">비회원 예약</a></li>
+								<li><a href="../reservation/guest_search.do">비회원 예약</a></li>
 							</c:if>
 								<!--로그인 상태에 따라 다른 메뉴 보이기-->
 							<c:if test="${sessionScope.user_id!=null }">

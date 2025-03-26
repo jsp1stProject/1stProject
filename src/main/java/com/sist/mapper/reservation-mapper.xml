@@ -46,4 +46,11 @@
 	<select id="rsvCheckDate" resultType="map" parameterType="int">
 		SELECT check_in_date, check_out_date FROM reservation WHERE room_id = #{room_id} AND status = 'R'
 	</select>
+	<select id="rsvGuestSearch" resultType="ReservationVO" parameterType="hashmap">
+		SELECT reserve_id, guest_name, guest_phone, offseason_minfee1, reserve_date, check_in_date, check_out_date, people_count, pay_amount, status, room_id 
+		FROM reservation 
+		WHERE reserve_id = #{reserve_id}
+		AND guest_phone = #{guest_phone} 
+		AND guest_name = #{guest_name}
+	</select>
 </mapper>

@@ -9,16 +9,20 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.json.simple.JSONObject;
 
 import com.google.gson.Gson;
 import com.sist.controller.Controller;
 import com.sist.controller.RequestMapping;
+import com.sist.dao.HotelDAO;
 import com.sist.dao.MemberDAO;
 import com.sist.dao.ReservationDAO;
+import com.sist.vo.HotelRoomVO;
 import com.sist.vo.HotelVO;
 import com.sist.vo.MemberVO;
 import com.sist.vo.ReservationVO;
@@ -206,7 +210,59 @@ public class ReservationModel {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
+		} else {
+			System.out.println("잉잉");
+			JSONObject obj = new JSONObject();
+			obj.put("name", " ");
+			obj.put("email", " ");
+			obj.put("phone", " ");
+			obj.put("address", " ");
+			obj.put("post", " ");
+			try {
+				response.setContentType("text/plain;charset=UTF-8");
+				PrintWriter out = response.getWriter();
+				out.write(obj.toJSONString());
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 		
+	}
+	@RequestMapping("reservation/guest_search.do")
+	public String guest_search(HttpServletRequest request, HttpServletResponse response) {
+		request.setAttribute("main_jsp", "../reservation/guest_search.jsp");
+		return "../main/main.jsp";
+	}
+	@RequestMapping("reservation/guest_search_result.do")
+	public String guest_search_result(HttpServletRequest request, HttpServletResponse response){
+		String name = request.getParameter("name");
+		String phone = request.getParameter("phone");
+		String rsvId = request.getParameter("rsv-id");
+		
+		/*
+	 	WHERE reserve_id = #{reserve_id}
+		AND guest_phone = #{guest_phone} 
+		AND guest_name = #{guest_name}
+		 */
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("reserve_id", Integer.parseInt(rsvId));
+		map.put("guest_phone", phone);
+		map.put("guest_name", name);
+		try {
+			ReservationVO vo = ReservationDAO.rsvGuestSearch(map);
+			
+			HotelVO hvo = ReservationDAO.rsvHotelData(vo.getRoom_id());
+			String roomTitle = hvo.getHrvo().getRoomtitle();
+			request.setAttribute("roomtitle", roomTitle);
+			request.setAttribute("vo", vo);
+		} catch (Exception ex) {
+			Logger logger = Logger.getLogger(getClass().getName());
+		    logger.severe("존재하지 않는 예약: " + ex.getMessage());
+		}
+		
+		
+		request.setAttribute("main_jsp", "../reservation/guest_search_result.jsp");
+		return "../main/main.jsp";
 	}
 }
