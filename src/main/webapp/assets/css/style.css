@@ -260,7 +260,12 @@ body.on{
 }
 .navbar{
 	border-color:#ffffff; /*transition때문에 새로고침 시 body css 노출되는 것 방지*/
-    padding: 4px 0;
+    z-index: 1040!important;
+}
+@media(max-width:991px){ /*adminlte css 충돌 방지*/
+    .navbar{
+        padding: 4px 0 !important;
+    }
 }
 .navbar, .navbar-collapse{
 	align-items: flex-start;
@@ -1196,7 +1201,7 @@ body{
 	padding-top:62px;
 }
 body.is{
-    padding-bottom:12px!important;
+    padding-bottom:0!important;
 }
 @media (min-width: 992px) { /*wide*/
 	body{
@@ -1205,7 +1210,7 @@ body.is{
         position:relative;
 	}
 	body.wide{
-        padding: 96px 0 300px;
+        padding: 80px 0 300px;
 	}
     .footer{
         position:absolute;

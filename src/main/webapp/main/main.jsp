@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c"  %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,10 +27,10 @@
 	<link href="${pageContext.request.contextPath }/assets/css/style.css" rel="stylesheet">
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 </head>
-<body class="${wide eq 'y'?'wide':''} ${title eq '메인'?'main':''} ${is eq 'y'?'is':''}">
+<body class="${wide eq 'y'?'wide':''}${title eq '메인'?' main':''}${is eq 'y' ||fn:contains(pageContext.request.requestURI,'admin')?' is':''}">
 	<jsp:include page="header.jsp"></jsp:include>
 	<jsp:include page="${main_jsp }"></jsp:include>
-	<c:if test="${empty is}"> <%//infinite scroll true일 때만 푸터 표시%>
+	<c:if test="${empty is && !fn:contains(pageContext.request.requestURI, 'admin')}"> <%//infinite scroll true일 때만 푸터 표시%>
 		<jsp:include page="footer.jsp"></jsp:include>
 	</c:if>
 	<!-- JavaScript Libraries -->
