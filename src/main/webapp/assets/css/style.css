@@ -280,14 +280,14 @@ body.on{
     height: 44px;
     color: #ffffff;
     font-weight: 100;
-    background: url(/assets/img/logo_white.png) no-repeat center right / cover;
+    background: url(../img/logo_white.png) no-repeat center right / cover;
     text-indent: 120%;
     overflow: hidden;
 }
 .navbar.bg-white h1.home{
 	color:var(--primary);
 
-    background-image: url(/assets/img/logo_blue.png);
+    background-image: url(../img/logo_blue.png);
 }
 .navbar-toggler{
 	border:none;
@@ -1148,7 +1148,7 @@ body.is .footer {
     height: 44px;
     color: #ffffff;
     font-weight: 100;
-    background: url(/assets/img/logo_white.png) no-repeat center right / cover;
+    background: url(../img/logo_white.png) no-repeat center right / cover;
     text-indent: 120%;
     overflow: hidden;
 }
