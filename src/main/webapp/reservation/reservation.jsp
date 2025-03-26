@@ -206,7 +206,7 @@
 		// TO-DO: 비회원일 시 buyer 처리
 	    try {
 	        IMP.request_pay({
-	            pg: "danal",
+	            pg: "html5_inicis",
 	            pay_method: "card",
 	            merchant_uid: merchantUid,   
 	            name: hotelTitle,
