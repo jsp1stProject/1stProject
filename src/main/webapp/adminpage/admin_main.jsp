@@ -71,6 +71,9 @@
 <!-- ./wrapper -->
 
 <!-- REQUIRED SCRIPTS -->
+
+<!-- jQuery -->
+<script src="../resource/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="../resource/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
