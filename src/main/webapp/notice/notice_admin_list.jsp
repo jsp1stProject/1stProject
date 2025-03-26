@@ -7,17 +7,6 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script type="text/javascript">
-function changeButtonText(element) {
-  var selectedText = element.textContent;
-  document.getElementById("dropdownButton").textContent = selectedText;
-}
-
-window.onpageshow = function(event){   // onpageshow는 page 호출되면 캐시든 아니든 무조건 호출된다.
-    if (event.persisted || (window.performance && window.performance.navigation.type == 2)){
-        // 그외 브라우저(크롬 등)에서는 || 뒤에 있는 조건으로 뒤로가기인지 체크가 가능하다
-        window.location.reload();
-    }
-};
 	$(function() {
 		$('#search').keydown(function(event) {
 			if (event.key === "Enter") {
@@ -32,6 +21,9 @@ window.onpageshow = function(event){   // onpageshow는 page 호출되면 캐시
 .select-type {
 	width: 81px;
 	flex-grow: 0;
+}
+.d-flex {
+    justify-content: center;
 }
 </style>
 </head>
@@ -84,7 +76,7 @@ window.onpageshow = function(event){   // onpageshow는 page 호출되면 캐시
                     <tr>
                         <td width="9%" class="text-center">${vo.no}</td>
                         <td width="11%" class="text-center">${vo.type}</td>
-                        <td width="45%"><a href="../notice/notice_detail.do?no=${vo.no}">${vo.subject}</a></td>
+                        <td width="45%"><a href="../notice/notice_admin_detail.do?no=${vo.no}">${vo.subject}</a></td>
                         <td width="10%" class="text-center">${vo.name}</td>
                         <td width="15%" class="text-center">${vo.dbday}</td>
                         <td width="10%" class="text-center">${vo.hit}</td>
@@ -95,7 +87,7 @@ window.onpageshow = function(event){   // onpageshow는 page 호출되면 캐시
 			</tbody>
 		</table>
 		<div class="container d-flex">
-    <ul class="pagination">
+   		<ul class="pagination">
         <!-- 이전 버튼 -->
         <c:if test="${startPage > 1}">
             <a class="bfarr" href="../notice/notice_admin_list.do?page=1">
