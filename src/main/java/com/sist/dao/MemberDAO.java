@@ -78,4 +78,11 @@ public class MemberDAO {
 		session.close();
 		return vo;
 	}
+	/** 예약 결제 시 조회하는 user info */
+	public static MemberVO memberInfoData(String user_id) {
+		SqlSession session = ssf.openSession();
+		MemberVO vo = session.selectOne("memberInfoData", user_id);
+		session.close();
+		return vo;
+	}
 }

@@ -12,6 +12,7 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/l10n/ko.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
 <style type="text/css">
 .btn-primary {
     color: #fff;
@@ -112,6 +113,7 @@
 	
 	
 	$(document).ready(function(){
+		
     	var popupVisible = false;
 	      
 	    $('#counter').text(2);
@@ -167,8 +169,68 @@
         }
         $('#overlay').remove(); 
     });
+	$(document).on('click', '#purchase', function() {
+		updateHiddenInput();
+		let hotelTitle = $('#hotel-title').text();
+		let payAmount = $('#h-price').val();
+
+		console.log("hotelTitle:", hotelTitle);
+		console.log("payAmount:", payAmount);
+
+		$.ajax({
+			type: 'post',
+			url: '../reservation/rsv_purchase.do',
+			data: {
+				'hotel_title': hotelTitle
+			},
+			success:function(result) {
+				console.log(result);
+				let json = JSON.parse(result);
+				requestPay(json, hotelTitle, payAmount);
+			}
+		});
+	});
 	
-	
+	var IMP = window.IMP; 
+	IMP.init("imp27087325"); 
+	function requestPay(json, hotelTitle, payAmount) {
+	    console.log("결제 API 호출"); 
+	    console.log("결제 정보:", json, hotelTitle, payAmount);
+
+	    if (!json || !hotelTitle || !payAmount) {
+	        console.error("결제 정보가 올바르지 않습니다!");
+	        return;
+	    }
+
+	    let merchantUid = "ORD" + new Date().getTime(); 
+
+	    try {
+	        IMP.request_pay({
+	            pg: "danal",
+	            pay_method: "card",
+	            merchant_uid: merchantUid,   
+	            name: hotelTitle,
+	            amount: payAmount,         
+	            buyer_email: json.email,
+	            buyer_name: json.name,
+	            buyer_tel: json.phone,
+	            buyer_addr: json.address,
+	            buyer_postcode: json.post
+	        }, function (rsp) {
+	            console.log("결제 응답:", rsp);
+               	$('#rsv').submit();
+	            if (rsp.success) {
+	                console.log("결제 성공");
+	                location.href = 'http://localhost:8080/1stProject/hotel/hotel_list.do';
+	            } else {
+	                console.error("결제 실패:", rsp.error_msg);
+	                alert("결제 실패: " + rsp.error_msg);
+	            }
+	        });
+	    } catch (e) {
+	        console.error("결제 API 호출 중 오류 발생:", e);
+	    }
+	}
 </script>
 </head>
 <body>
@@ -230,10 +292,10 @@
 				<div class="card" style="width: 18rem; margin-bottom: 30px;">
 					<img src="${vo.hrvo.img1 }" class="card-img-top">
 					<div class="card-body">
-						<h5 class="card-title">${vo.cvo.title }</h5>
+						<h5 class="card-title" id="hotel-title">${vo.cvo.title }</h5>
 						<p class="card-text small">
 							<span class="text-secondary">객실</span>
-							<span class="fst-italic">${vo.hrvo.roomtitle }(${facility })</span>
+							<span class="fst-italic">${vo.hrvo.roomtitle }</span><span class="fst-italic">(${facility })</span>
 						</p>
 						<p class="card-text small">
 							<span class="text-secondary">일정</span>
@@ -258,7 +320,7 @@
 						  		<fmt:formatNumber value="${vo.hrvo.offseason_minfee1}" pattern="#,###" /> 원
 							</span>
 						<hr class="text-muted">
-						<form method="post" action="../reservation/reservation_ok.do" onsubmit="updateHiddenInput()">
+						<form method="post" action="../reservation/reservation_ok.do" onsubmit="updateHiddenInput()" id="rsv">
 							<input type="hidden" id="h-content_id" name="content_id" value="${vo.cvo.content_id }">
 							<input type="hidden" id="h-room_id" name="room_id" value="${vo.hrvo.room_id }">
 							<input type="hidden" id="h-check_in_date" name="check_in_date">
@@ -269,8 +331,8 @@
 							<input type="hidden" id="h-status" name="status" value="R">
 							<input type="hidden" id="h-guest_name" name="guest_name">
 							<input type="hidden" id="h-guest_phone" name="guest_phone">
-							<button type="submit" class="btn btn-primary btn-lg"><fmt:formatNumber value="${vo.hrvo.offseason_minfee1}" pattern="#,###"/> 원 결제하기</button>
 						</form>
+							<button type="button" class="btn btn-primary btn-lg" id="purchase"><fmt:formatNumber value="${vo.hrvo.offseason_minfee1}" pattern="#,###"/> 원 결제하기</button>
 					</div>
 				</div>
 			</div>
@@ -363,19 +425,42 @@
 	    return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
 	}
 	function updateHiddenInput() {
-		var selectedValue = $('input[name="options"]:checked').val();
 		var countValue = $('#count').val().replace(/\D/g, '');
-		var priceValue = $('#pay_amount').data('price');
-		var selectedOption = $("input[name='options']:checked").next("label").text();
+		var arrivalType = $("input[name='options']:checked").next("label").text();
 		var guestName = $('#name').val();
 		var guestPhone = $('#phone').val();
 		$('#h-count').val(countValue);
-	    $('#h-arrival_type').val(selectedOption);
+	    $('#h-arrival_type').val(arrivalType);
 	    $('#h-guest_name').val(guestName);
 	    $('#h-guest_phone').val(guestPhone);
-		//$('#h-price').val(priceValue);
-		//$('#h-arrival_type').val(selectedOption);
 	}
+	
+	
+	
+	
+	/*
+	$('#purchase').on('click', function() {
+		updateHiddenInput();
+		let roomTitle = $('#room-title').val();
+		let payAmount = $('#h-price').val();
+
+		console.log("roomTitle:", roomTitle);
+		console.log("payAmount:", payAmount);
+
+		$.ajax({
+			type: 'post',
+			url: '../reservation/rsv_purchase.do',
+			data: {
+				'room_title': roomTitle
+			},
+			success:function(result) {
+				let json = JSON.parse(result);
+				requestPay(json, roomTitle, payAmount);
+			}
+		});
+	});
+	*/
+		
 </script>
 </body>
 </html>

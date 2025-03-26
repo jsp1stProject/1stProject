@@ -37,4 +37,9 @@ ADMIN             CHAR(1)
     FROM user_info
     WHERE user_id=#{user_id}
   </select>
+  
+  <select id="memberInfoData" resultType="MemberVO" parameterType="string">
+  	SELECT * FROM user_info 
+  	WHERE user_id = #{user_id}
+  </select>
 </mapper>

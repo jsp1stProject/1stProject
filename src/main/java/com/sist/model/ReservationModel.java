@@ -1,15 +1,20 @@
 package com.sist.model;
 
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONObject;
+
 import com.sist.controller.Controller;
 import com.sist.controller.RequestMapping;
+import com.sist.dao.MemberDAO;
 import com.sist.dao.ReservationDAO;
 import com.sist.vo.HotelVO;
+import com.sist.vo.MemberVO;
 import com.sist.vo.ReservationVO;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -115,10 +120,13 @@ public class ReservationModel {
 		}
 		
 		
+		ReservationVO vo = new ReservationVO();
 		HttpSession session = request.getSession();
 		String user_id = (String)session.getAttribute("user_id");
-		
-		ReservationVO vo = new ReservationVO();
+		if (user_id != null) {
+			vo.setMember(true);
+			vo.setUser_id(user_id);
+		}
 		vo.setContent_id(Integer.parseInt(content_id));
 		vo.setRoom_id(Integer.parseInt(room_id));
 		vo.setCheck_in_date(checkInDate);
@@ -145,5 +153,27 @@ public class ReservationModel {
 		
 		//return "../hotel/hotel_list.do";
 		return "redirect:../hotel/hotel_list.do";
+	}
+	
+	@RequestMapping("reservation/rsv_purchase.do")
+	public void rsv_purchase(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		String user_id = (String)session.getAttribute("user_id");
+		
+		MemberVO vo = MemberDAO.memberInfoData(user_id);
+		
+		JSONObject obj = new JSONObject();
+		obj.put("name", vo.getName());
+		obj.put("email", vo.getEmail());
+		obj.put("phone", vo.getPhone());
+		obj.put("address", vo.getAddr1() + " " + vo.getAddr2());
+		obj.put("post", vo.getPost());
+		try {
+			response.setContentType("text/plain;charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.write(obj.toJSONString());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 }
