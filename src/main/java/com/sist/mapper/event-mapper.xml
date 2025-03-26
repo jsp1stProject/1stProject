@@ -161,6 +161,10 @@
 		WHERE user_id=#{user_id}
 	</update>
 
+	<delete id="memberDelete" parameterType="String">
+		delete from USER_INFO where USER_ID=#{user_id}
+	</delete>
+
 
 	<!--	<select id="replace_data" resultMap="eventMap">-->
 	<!--		SELECT CONTENT_ID,CHARGE from event-->

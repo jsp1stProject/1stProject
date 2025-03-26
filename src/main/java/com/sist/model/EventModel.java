@@ -95,19 +95,55 @@ public class EventModel {
 		}
 	}
 	@RequestMapping("mypage/withdrawBefore.do")
-	public String withdraw(HttpServletRequest request, HttpServletResponse response) {
+	public String withdrawBefore(HttpServletRequest request, HttpServletResponse response) {
 		request.setAttribute("mode", "1"); //1이면 비밀번호 입력, 2면 탈퇴 페이지
+
 		request.setAttribute("title", "내 정보");
 		request.setAttribute("main_jsp", "../mypage/withdraw.jsp");
 		return "../main/main.jsp";
 	}
 
-//메일
-	@RequestMapping("mail/mail.do")
-	public String mail(HttpServletRequest request, HttpServletResponse response)  {
-		request.setAttribute("main_jsp", "../event/mail.jsp");
+	@RequestMapping("mypage/withdraw.do")
+	public String withdraw(HttpServletRequest request, HttpServletResponse response) {
+		String pwd=request.getParameter("pwd");
+		String user_id=request.getParameter("user_id");
+		HashMap map=new HashMap();
+		map.put("user_id", user_id);
+		map.put("pwd", pwd);
+		boolean state= memberPwdCheck(map);
+
+		if(state) { //비밀번호가 일치하면
+			request.setAttribute("mode", "2"); //1이면 비밀번호 입력, 2면 탈퇴 페이지
+			request.setAttribute("title", "내 정보");
+		}else{
+			HttpSession session = request.getSession();
+			session.invalidate();
+			request.setAttribute("mode", "3"); //3이면 강제 로그아웃
+		}
+		request.setAttribute("main_jsp", "../mypage/withdraw.jsp");
 		return "../main/main.jsp";
 	}
+
+	@RequestMapping("mypage/withdrawExecute.do")
+	public void withdraw_execute(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("application/json;charset=UTF-8");
+		String user_id=request.getParameter("user_id");
+		memberDelete(user_id);
+		JSONObject obj=new JSONObject();
+
+		obj.put("statement", "success"); //response mapping
+		PrintWriter out=null;
+		try {
+			out=response.getWriter();
+			out.write(obj.toJSONString());
+			out.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("ioe오류");
+		}
+	}
+
+//메일
 	@RequestMapping("mail/codeSending.do")
 	public void codeSending(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("application/json;charset=UTF-8");

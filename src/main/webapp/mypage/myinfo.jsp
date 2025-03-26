@@ -52,7 +52,7 @@
             <label for="phone">전화번호</label>
             <input type="text" id="phone" name="phone" placeholder="010-0000-0000" value="${vo.phone}" required>
             <button type="submit" class="btn btn-black" id="submit">수정</button>
-            <button type="submit" class="btn btn-white mt-2" onclick="location.href='withdraw.do'">회원 탈퇴하기</button>
+            <button type="submit" class="btn btn-white mt-2" onclick="location.href='withdrawBefore.do'">회원 탈퇴하기</button>
           </form>
         </div>
       </div>

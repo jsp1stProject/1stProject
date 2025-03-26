@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.eclipse.tags.shaded.org.apache.xpath.objects.XString;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -202,7 +201,7 @@ public class EventDAO {
 	}
 
 	public static boolean memberUpdate(HashMap map, String pwd_before){
-		SqlSession session = ssf.openSession();
+		SqlSession session = ssf.openSession(true);
 		boolean result=false;
 		String pwd=session.selectOne("memberPwdCheck", map.get("user_id"));
 		if(pwd.equals(pwd_before)){
@@ -210,7 +209,24 @@ public class EventDAO {
 			session.commit();
 			result=true;
 		}
+		session.close();
 		return result;
+	}
+
+	public static boolean memberPwdCheck(HashMap map){
+		SqlSession session = ssf.openSession();
+		boolean result=false;
+		String pwd=session.selectOne("memberPwdCheck", map.get("user_id"));
+		if(pwd.equals(map.get("pwd"))){
+			result=true;
+		}
+		session.close();
+		return result;
+	}
+	public static void memberDelete(String user_id){
+		SqlSession session = ssf.openSession(true);
+		session.delete("memberDelete", user_id);
+		session.close();
 	}
 
 	/*
