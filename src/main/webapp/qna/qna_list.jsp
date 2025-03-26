@@ -10,39 +10,13 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
 </head>
 <body>
-<!-- ****** Breadcumb Area Start ****** -->
-    <div class="breadcumb-area" style="background-image: url(../img/bg-img/breadcumb.jpg);">
-        <div class="container h-100">
-            <div class="row h-100 align-items-center">
-                <div class="col-12">
-                    <div class="bradcumb-title text-center">
-                        <h2>문의사항</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="breadcumb-nav">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="#"><i class="fa fa-home" aria-hidden="true"></i> Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Qng-list Page</li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- ****** Breadcumb Area End ****** -->
-
-    <!-- ****** Archive Area Start ****** -->
-    <section class="archive-area section_padding_80">
-        <div class="container">
-            <div class="row" style="width:800px; ">
-            <%-- <c:if test="${sessionScope.user_id!=null and sessionScope.admin=='n' }"> --%>
+  <div class="container pt-5 pt-lg-3" style="margin: 0 auto;">
+     <div class="row justify-content-center">
+      <div class="col-lg-9 col-12" >
+        <h3 class="pt-3 pt-lg-0 pb-3">QnA</h3>
+	 <div class="container">
+            <div class="row" style="width:800px; margin: 0 auto; ">
+            <c:if test="${sessionScope.user_id!=null and sessionScope.admin=='N' }">
              <table class="table">
               <tr>
                <td>
@@ -50,7 +24,7 @@
                </td>
               </tr>
              </table>
-             <%-- </c:if> --%>
+             </c:if>
              <table class="table">
               <tr>
                <th width=10% class="text-center">번호</th>
@@ -65,12 +39,12 @@
                <td width=10% class="text-center">${vo.no }</td>
                <td width=45%>
                  <c:if test="${vo.group_tab==1 }">
-                    &nbsp;&nbsp;<img src="../img/images/re_icon.png">
+                    &nbsp;&nbsp;<img src="../assets/img/re_icon.png">
                   </c:if>
                  <c:if test="${vo.group_tab==1 }">
-                  &nbsp;&nbsp;<img src="../img/images/re_icon.png">
+                  &nbsp;&nbsp;<img src="../assets/img/re_icon.png">
                  </c:if>
-                 <a href="../qna/qna_detail.do?no=${vo.no }">${vo.subject }
+                 <a href="../qna/qna_detail.do?no=${vo.no }">[${vo.type }][${vo.type_detail }] ${vo.subject }
                  </a>
                 <c:if test="${vo.dbday==today }">
                  <sup><img src="../assets/img/new.gif"></sup>
@@ -95,7 +69,9 @@
              </table>
             </div>
         </div>
-    </section>
+	</div>
+	</div>
+	</div>
     
 </body>
 </html>

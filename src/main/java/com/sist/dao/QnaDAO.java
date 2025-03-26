@@ -54,21 +54,6 @@ public class QnaDAO {
 		session.close();
 	}
 	
-	public static List<QnaVO> qnaAdminListData(Map map)
-	{
-		SqlSession session = ssf.openSession();
-		List<QnaVO> list = session.selectList("qnaAdminListData",map);
-		session.close();
-		return list;
-	}
-	
-	public static int qnaAdminRowCount()
-	{
-		SqlSession session = ssf.openSession();
-		int count = session.selectOne("qnaAdminRowCount");
-		session.close();
-		return count;
-	}
 	/*
 	<select id="qnaDetailData" resultType="QnABoardVO" parameterType="int">
     SELECT no,name,user_id,subject,email,phone,type,type_detail,reserve_no,filename,filesize,content,hit,TO_CHAR(regdate,'YYYY-MM-DD') as dbday,group_id
@@ -85,6 +70,49 @@ public class QnaDAO {
 		session.close();
 		return vo;
 	}
+	
+	
+	 public static void qnaUpdate(QnaVO vo)
+	 {
+		   // insert/update/delete => 가독성 
+		   SqlSession session=ssf.openSession(true);
+		   session.update("qnaUpdate",vo);
+		   session.close();
+	 }
+	 
+	 public static QnaVO qnaUpdateData(int no)
+	 {
+		 SqlSession session=ssf.openSession();
+		 QnaVO vo=session.selectOne("qnaDetailData",no);
+		 session.close();
+		 return vo;
+	 }
+	 
+	 public static void qnaDelete(int group_id)
+	 {
+		   SqlSession session=ssf.openSession(true);
+		   session.insert("qnaDelete",group_id);
+		   session.close();
+	 }
+	
+	public static List<QnaVO> qnaAdminListData(Map map)
+	{
+		SqlSession session = ssf.openSession();
+		List<QnaVO> list = session.selectList("qnaAdminListData",map);
+		session.close();
+		return list;
+	}
+	
+	
+	
+	public static int qnaAdminRowCount()
+	{
+		SqlSession session = ssf.openSession();
+		int count = session.selectOne("qnaAdminRowCount");
+		session.close();
+		return count;
+	}
+
 	
 	public static QnaVO qnaAdminDetailData(int group_id)
 	{

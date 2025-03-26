@@ -48,11 +48,11 @@
                       <td>${vo.name }</td>
                       <td>${vo.dbday }</td>
                       <td>
-                       <c:if test="${vo.anok=='Y' }">
-	                    <a href="#" class="btn btn-warning btn-sm">수정</a>
+                       <c:if test="${vo.anok=='Y'|| vo.anok=='y'}">
+	                    <a href="../qna/qna_admin_update.do?gi=${vo.group_id }" class="btn btn-warning btn-sm">수정</a>
 	                    <a href="../qna/qna_admin_delete.do?gi=${vo.group_id }" class="btn btn-danger btn-sm">삭제</a>
 	                   </c:if>
-	                   <c:if test="${vo.anok=='n' }">
+	                   <c:if test="${vo.anok=='N'||vo.anok=='n' }">
 	                    <a href="../qna/qna_admin_insert.do?gi=${vo.group_id }" class="btn btn-primary btn-sm">답변대기</a>
 	                   </c:if>
 	                  </td>

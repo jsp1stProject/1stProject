@@ -1,19 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sist.mapper.Fes-mapper">
-<select id="fesMainHouseData" resultType="FesVO">
-SELECT * FROM (SELECT * FROM content
-      ORDER BY DBMS_RANDOM.RANDOM
-    )
-    WHERE rownum&lt;=1
+<!-- 축제 홈 -->
+<select id="fesHomeData" resultType="FesVO">
+SELECT content_id, title, contenttype_id,first_image, addr1, tel, event_startdate, event_enddate,agelimit,price,overview, num
+	FROM (SELECT content_id, title, contenttype_id,first_image, addr1, tel, event_startdate, event_enddate,agelimit,price,overview, rownum as num
+	FROM (SELECT content.content_id, title, contenttype_id,first_image, addr1, tel, event_startdate, event_enddate,agelimit,price,overview 
+	FROM content, event
+	WHERE content.content_id=event.content_id AND content.cat2='A0207' ORDER BY dbms_random.value))
+	WHERE num between 1 and 5
 </select>
 
-<select id="fesMainHouseData8" resultType="FesVO">
-    SELECT * FROM (SELECT * FROM content 
-      ORDER BY DBMS_RANDOM.RANDOM
-    )
-    WHERE rownum&lt;=8
-  </select>
+<select id="fesHomeData_DATE" resultType="FesVO">
+SELECT content_id, title, contenttype_id,first_image, addr1, tel, event_startdate, event_enddate,agelimit, num
+	FROM (SELECT content_id, title, contenttype_id,first_image, addr1, tel, event_startdate, event_enddate,agelimit, rownum as num
+	FROM (SELECT content.content_id, title, contenttype_id,first_image, addr1, tel, event_startdate, event_enddate,agelimit 
+	FROM content, event
+	WHERE content.content_id=event.content_id AND content.cat2='A0207'
+    AND SYSDATE&lt;event_enddate ORDER BY event_enddate ASC ))
+    WHERE num between 1 and 4
+</select>
+
+<select id="fesHomeNotice" resultType="NoticeVO">
+ SELECT no, subject, content, TO_CHAR(regdate,'YYYY/MM/DD') as dbday,rownum
+ FROM notice_board
+ WHERE rownum between 1 and 5
+ ORDER BY regdate DESC
+</select>
   
 <!--  축제 목록 -->
 <select id="fesListData" resultType="FesVO" parameterType="hashmap">
@@ -97,7 +110,8 @@ FROM (SELECT content_id, title, addr1, addr2, zipcode, sigungucode, areacode, fi
 FROM (SELECT content.content_id, title, addr1, addr2, zipcode, sigungucode, areacode, first_image, review_count, event_startdate, event_enddate, charge, agelimit, price, price_info
 FROM content, event
 WHERE content.content_id=event.content_id AND content.cat2='A0207'
-
+AND title||addr1||addr2 LIKE '%'||#{search}||'%'
+AND price BETWEEN ${min} AND ${max}
  <trim prefix="AND" suffixOverrides="AND" >
 
 	<if test="cat3List!=null" >
@@ -118,5 +132,63 @@ WHERE content.content_id=event.content_id AND content.cat2='A0207'
 
 ))
 </select>
-  
+<select id="fesFindTotalPage" resultType="int" parameterType="hashmap">
+ SELECT CEIL(COUNT(*)/12.0)
+ FROM content,event
+ WHERE content.content_id=event.content_id AND content.cat2='A0207'
+ AND title||addr1||addr2 LIKE '%'||#{search}||'%'
+ AND price BETWEEN ${min} AND ${max}
+ <trim prefix="AND" suffixOverrides="AND" >
+
+	<if test="cat3List!=null" >
+	  cat3 IN<foreach collection="cat3List" item="cat3" open="(" close=")" separator="," >
+	    	#{cat3}      
+	    </foreach>
+	    AND
+	</if>
+	<if test="acList!=null">
+	  areacode IN   <foreach collection="acList" item="ac" open="(" close=")" separator=",">
+	    	${ac}      
+	    </foreach>
+	    AND
+	 </if>
+	 
+</trim>
+	 
+</select>
+ 
+<!--               장바구나 관련 mapper           -->
+
+<insert id="fesCartInsert" parameterType="FesCartVO">
+  INSERT INTO fescart VALUES(fescart_cno_seq.nextval,#{fno},#{user_id},#{account},#{cart_price},'N',SYSDATE)
+</insert>
+
+<resultMap type="FesCartVO" id="fesCartMap">
+    <result property="fvo.title" column="title"/>
+    <result property="fvo.first_image" column="first_image"/>
+    <result property="fvo.price" column="price"/>
+ </resultMap>
+  <select id="fesCartListData" resultMap="fesCartMap" 
+     parameterType="string">
+    SELECT cno,title,first_image,price,
+           account,cart_price
+    FROM fescart c,content ct, event e
+    WHERE c.fno=ct.content_id AND c.fno=e.content_id
+    AND user_id=#{user_id} AND isbuy='N'
+    ORDER BY cno DESC
+  </select>
+  <update id="fesCartUpdate" parameterType="FesCartVO">
+    UPDATE fescart SET
+    account=account+#{account}
+    WHERE fno=#{fno} AND user_id=#{user_id}
+  </update>
+  <select id="fesCartCount" resultType="int" parameterType="FesCartVO">
+    SELECT COUNT(*) FROM fescart
+    WHERE fno=#{fno} AND user_id=#{user_id}
+  </select>
+  <delete id="fesCartCancel" parameterType="int">
+    DELETE FROM fescart
+    WHERE fno=#{fno}
+  </delete>
+
 </mapper> 

@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
+import jakarta.websocket.Session;
 
 import com.sist.controller.Controller;
 import com.sist.controller.RequestMapping;
@@ -59,7 +60,7 @@ public class QnaModel {
 	{
 		System.out.println("인서트 진입");
 		QnaVO vo =new QnaVO();
-		
+		String name=request.getParameter("name");
 		String email=request.getParameter("email");
 		String phone=request.getParameter("phone");
 		String type=request.getParameter("type");
@@ -73,9 +74,7 @@ public class QnaModel {
 		HttpSession session=request.getSession();
 		String user_id=(String)session.getAttribute("user_id");
 		System.out.println();
-		String name=(String)session.getAttribute("name");
-		user_id="dahye_23";
-		name="방다혜";
+		//String name=(String)session.getAttribute("name");
 		
 		System.out.println("try진입전");
 		try {
@@ -135,25 +134,52 @@ public class QnaModel {
 	public String qna_detail(HttpServletRequest request, HttpServletResponse response)
 	{
 		String no=request.getParameter("no");
+		System.out.println(no);
 		QnaVO vo=QnaDAO.qnaDetailData(Integer.parseInt(no));
 		request.setAttribute("vo", vo);
+		HttpSession session=request.getSession();
+		String user_id=(String)session.getAttribute("user_id");
+		System.out.println(user_id);
+		System.out.println(vo.getUser_id());
 		request.setAttribute("main_jsp", "../qna/qna_detail.jsp");
 		return "../main/main.jsp";
-	}
-	
-	@RequestMapping("qna/qna_delete.do")
-	public String qna_delete(HttpServletRequest request, HttpServletResponse response)
-	{
-		String gi=request.getParameter("group_id");
-		return "";
 	}
 	
 	@RequestMapping("qna/qna_update.do")
 	public String qna_update(HttpServletRequest request, HttpServletResponse response)
 	{
-		return "";
+		String no=request.getParameter("no");
+		QnaVO vo=QnaDAO.qnaUpdateData(Integer.parseInt(no));
+		request.setAttribute("vo", vo);
+		request.setAttribute("main_jsp", "../qna/qna_update.jsp");
+	    return "../main/main.jsp";
 	}
 	
+	 @RequestMapping("qna/qna_update_ok.do")
+	  public void qna_update_ok(HttpServletRequest request, HttpServletResponse res)
+	  {
+		  String subject=request.getParameter("subject");
+		  String content=request.getParameter("content");
+		  String no=request.getParameter("no");
+		  
+		  System.out.println("no="+no);
+		  System.out.println("subject="+subject);
+		  
+		  QnaVO vo=new QnaVO();
+		  vo.setSubject(subject);
+		  vo.setContent(content);
+		  vo.setNo(Integer.parseInt(no));
+		  
+		  QnaDAO.qnaUpdate(vo);
+	  }
+	
+	 @RequestMapping("qna/qna_delete.do")
+	 public String qna_delete(HttpServletRequest request, HttpServletResponse res)
+	 {
+		  String group_id=request.getParameter("group_id");
+		  QnaDAO.qnaDelete(Integer.parseInt(group_id));
+		  return "redirect:../qna/qna_list.do";
+	  }
 	/* 관리자모드 */
 	@RequestMapping("qna/qna_admin_list.do")
 	public String qna_admin_list(HttpServletRequest request, HttpServletResponse response)
@@ -178,39 +204,43 @@ public class QnaModel {
 		request.setAttribute("today", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 		
 		request.setAttribute("admin_jsp", "../qna/qna_admin_list.jsp");
-		request.setAttribute("main_jsp", "../adminpage/admin_main.jsp");
-		return "../main/main.jsp";
+
+		return "../adminpage/admin_main.jsp";
 	}
 	
 	@RequestMapping("qna/qna_admin_insert.do")
 	public String qna_admin_insert(HttpServletRequest request,HttpServletResponse response)
 	  {
+		   System.out.println("inser.do진입");
 		   String gi=request.getParameter("gi"); //groud_id
 		   QnaVO vo=QnaDAO.qnaAdminDetailData(Integer.parseInt(gi));
 		   request.setAttribute("vo", vo);
-		   request.setAttribute("admin_jsp", "../qna/qna_admin_insert.jsp");
-		   request.setAttribute("main_jsp", "../adminpage/admin_main.jsp");
-		   return "../main/main.jsp";
+		   request.setAttribute("admin_jsp", "../qna/qna_admin_list.jsp");
+
+			return "../adminpage/admin_main.jsp";
 	  }  
 	
 	@RequestMapping("qna/qna_admin_insert_ok.do")
 	  public String qna_admin_insert_ok(HttpServletRequest request,HttpServletResponse response)
 	  {
-		  System.out.println("insert_ok");
+		  System.out.println("insert_ok진입해서");
 		  String subject=request.getParameter("subject");
 		  String content=request.getParameter("content");
 		  String group_id=request.getParameter("group_id");
 		  
 		  HttpSession session=request.getSession();
 		  String user_id=(String)session.getAttribute("user_id");
-		  user_id="test";
 		  // 데이터 유지 => 서버 자체 저장
 		  System.out.println("user_id : "+user_id);
+		  System.out.println("group_id : "+group_id);
+		  System.out.println("subject : "+subject);
+		  System.out.println("content : "+content);
 		  QnaVO vo=new QnaVO();
 		  vo.setUser_id(user_id);
 		  vo.setGroup_id(Integer.parseInt(group_id));
 		  vo.setSubject(subject);
 		  vo.setContent(content);
+		  System.out.println("vo저장");
 		  System.out.println();
 		  System.out.println("dao 진입");
 		  QnaDAO.qnaAdminInsert(vo);
