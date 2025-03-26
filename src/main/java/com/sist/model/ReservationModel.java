@@ -155,6 +155,8 @@ public class ReservationModel {
 		if (user_id != null) {
 			vo.setMember(true);
 			vo.setUser_id(user_id);
+		} else {
+			vo.setMember(false);
 		}
 		vo.setContent_id(Integer.parseInt(content_id));
 		vo.setRoom_id(Integer.parseInt(room_id));

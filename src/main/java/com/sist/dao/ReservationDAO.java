@@ -16,6 +16,7 @@ private static SqlSessionFactory ssf;
 	static {
 		ssf = CreateSqlSessionFactory.getSsf();
 	}
+	/** 예약 결제 시 테이블 데이터 삽입 */
 	public static void rsvInsert(ReservationVO vo) {
 		SqlSession session = ssf.openSession();
 		session.insert("rsvInsert", vo);
