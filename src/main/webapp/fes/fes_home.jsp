@@ -56,66 +56,48 @@
     	</div>
     </div>
     
-    
     <div class="container-xxl py-6">
         <div class="container">
             <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                <h1 class="display-6 mb-4">곧 종료되는 축제!!! 마감임박!! </h1>
+                <p class="text-primary text-uppercase mb-2">// 마감 임박</p>
+                <h1 class="display-6 mb-4">곧 종료됩니다!</h1>
             </div>
-            <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
+            <div class="row g-4">
                 <c:forEach items="${dlist}" var="dvo">
-                <div class="testimonial-item bg-white rounded p-4">
-                    <div class="d-flex align-items-center mb-4" onclick='location.href = "../fes/fes_detail_before.do?content_id=${dvo.content_id }"'>
-                        <img class="flex-shrink-0 rounded-circle border p-1" src="${dvo.first_image}" alt="">
-                        <div class="ms-4">
-                            <h5 class="mb-1">${dvo.title }</h5>
-                            <span>${dvo.addr1 }<span>
+                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="team-item text-center rounded overflow-hidden">
+                        <img class="img-fluid"  src="${dvo.first_image}" alt="">
+                        <div class="team-text">
+                            <div class="team-title">
+                                <h5>${dvo.title }</h5>
+                                <span>${dvo.event_enddate }까지</span>
+                            </div>
+                            <div class="team-social">
+                                <%-- <p class="mb-0" style=" height: 50px;" >${dvo.overview}</p> --%>
+                                <a class="btn btn-light " href="../fes/fes_detail_before.do?content_id=${dvo.content_id }"> <p class="mb-0" >${dvo.addr1}</p></a>         
+                            </div>
                         </div>
                     </div>
-                    <p class="mb-0" style=" height: 110px " >${dvo.overview}</p>
                 </div>
                 </c:forEach>
+                
             </div>
         </div>
-    </div>
-    
-    
-	<!-- fest list-->
-	<div class="container-xxl py-4">
-		<div class="container">
-			<h3 class="main-h3 wow fadeInUp" data-wow-delay="0.1s">지금 볼 수 있는 지역별 축제</h3>
-			<div class="main-fes-wrap d-flex wow fadeInUp" data-wow-delay="0.1s">
-				<c:forEach items="${fesList }" var="vo" varStatus="i">
-					<div class="main-fes-item" style="background-image:url(${vo.cvo.first_image});">
-						<p class="main-fes-area fs-3">${vo.dbarea}</p>
-						<a href="#" class="main-fes-title fs-2">${vo.cvo.title}</a>
-					</div>
-				</c:forEach>
-			</div>
-		</div>
-	</div>
-    <!-- concert list-->
-	
+    </div>	
 
 	<div class="container-xxl py-4">
 		<div class="container">
 			<h3 class="main-h3 wow fadeInUp" data-wow-delay="0.1s">공지사항</h3>
 			<div class="main-notice-wrap wow fadeInUp" data-wow-delay="0.1s">
 				<ul class="main-notice-ul">
-					<c:forEach begin="1" end="5">
+					<c:forEach items="${nlist}" var="nvo" >
 						<li>
 							<div class="notice-title">
-								<p>봄맞이 국내여행 최대 3만원 쿠폰 대한민국 숙박세일 페스타</p>
-								<p class="date">2025.03.10</p>
+								<p>${nvo.subject }</p>
+								<p class="date">${nvo.dbday }</p>
 							</div>
 							<div class="notice-content">
-								<p>안녕하세요,
-									인터파크항공입니다.
-									보다 안정적인 서비스를 위하여 아래 기간 동안 서비스가 제한될 예정이오니, 이용에 참고 부탁 드리겠습니다.
-									※ 정기점검 일시 : 2025년 3월 12일[수] 02:00 ~ 07:00
-									(해당 작업은 작업상태에 따라 단축되거나 연장될 수 있습니다.)
-									항상 고객님께 최선의 서비스를 제공하기 위해 노력하는 인터파크항공이 되겠습니다.
-									감사합니다. </p>
+								<p>${nvo.content }</p>
 								<button type="button" class="notice-more-btn w-100" onclick="location.href='#'">자세히 보기</button>
 							</div>
 						</li>

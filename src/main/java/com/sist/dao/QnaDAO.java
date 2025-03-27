@@ -88,6 +88,8 @@ public class QnaDAO {
 		 return vo;
 	 }
 	 
+	
+	 
 	 public static void qnaDelete(int group_id)
 	 {
 		   SqlSession session=ssf.openSession(true);
@@ -128,7 +130,9 @@ public class QnaDAO {
 		try
 		{
 			session=ssf.openSession();
+			System.out.println("그룹아이디 : "+vo.getGroup_id());
 			session.update("qnaAdminAnOKChange",vo.getGroup_id());
+			System.out.println("어드민오케이?");
 			session.insert("qnaAdminInsert",vo);
 			session.commit();// 동시에 저장 
 		}catch(Exception ex){
@@ -141,6 +145,22 @@ public class QnaDAO {
 		   
 	 }
 	
+	 public static void qnaAdminUpdate(QnaVO vo)
+	 {
+		   // insert/update/delete => 가독성 
+		   SqlSession session=ssf.openSession(true);
+		   session.update("qnaUpdate",vo);
+		   session.close();
+	 }
+	 
+	 public static QnaVO qnaAdminUpdateData(int no)
+	 {
+		 SqlSession session=ssf.openSession();
+		 QnaVO vo=session.selectOne("qnaAdminDetailData",no);
+		 session.close();
+		 return vo;
+	 }
+	 
 	public static void qnaAdminDelete(int group_id)
 	{
 		SqlSession session=null;
