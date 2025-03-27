@@ -33,7 +33,7 @@ ADMIN             CHAR(1)
   </select>
   
   <select id="memberGetPassword" resultType="MemberVO" parameterType="string">
-    SELECT user_id,pwd,name,sex,admin
+    SELECT user_id,pwd,name,sex,admin,EVENTCART_COUNT,phone,EMAIL
     FROM user_info
     WHERE user_id=#{user_id}
   </select>

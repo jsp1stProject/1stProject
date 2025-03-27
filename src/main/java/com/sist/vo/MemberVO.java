@@ -22,4 +22,5 @@ ADMIN             CHAR(1)
 @Data
 public class MemberVO {
 	private String user_id,pwd,name,nickname,profile_img,sex,birthday,email,post,addr1,addr2,phone,admin,msg;
+	private int eventcart_count; //행사 장바구니 수량
 }

@@ -91,8 +91,10 @@ public class MemberModel {
 			session.setAttribute("user_id", vo.getUser_id());
 			session.setAttribute("name", vo.getName());
 			session.setAttribute("nickname", vo.getNickname());
-			session.setAttribute("sex", vo.getSex());
+			session.setAttribute("email", vo.getEmail());
+			session.setAttribute("phone", vo.getPhone());
 			session.setAttribute("admin", vo.getAdmin());
+			session.setAttribute("eventcart", vo.getEventcart_count());
 			// post / addr1 / addr2 / email / phone
 		}
 		try {
