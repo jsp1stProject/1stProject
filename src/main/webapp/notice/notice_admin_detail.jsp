@@ -60,4 +60,13 @@
 	</div>
 </div>
 </body>
+<script type="text/javascript">
+	$(document).ready(function() {
+	    history.pushState(null, null, location.href);
+	
+	    $(window).on('popstate', function() {
+	        location.reload();  // 페이지 새로고침
+	    });
+	});
+</script>
 </html>

@@ -6,6 +6,80 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style type="text/css">
+.pagination{
+    margin: 0 auto;
+    font-size:0;
+}
+
+.pagination a{
+    display: inline-block;
+    position: relative;
+    width: 36px;
+    height: 36px;
+    transition:.1s;
+    line-height: 36px;
+    text-align: center;
+    vertical-align: bottom;
+    font-size:16px;
+    border: 1px solid #dddddd;
+}
+.pagination a:not(:last-child){
+    border-right:none;
+}
+.pagination a:hover{
+    background: #f1f1f1;
+}
+.pagination a.active{
+    background: var(--primary);
+    border-color: var(--primary);
+    color:#ffffff;
+    font-weight:600;
+}
+.pagination a.disabled{
+    background:#dddddd!important;
+    cursor:default;
+}
+.arr {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    top: 12px;
+    left: 12px;
+}
+.arr:before {
+    content:'';
+    display:block;
+    width:2px;
+    height: 100%;
+    background:#828282;
+    position:absolute;
+    top: 2px;
+    left: 2px;
+}
+.arr:after{
+    content:'';
+    display:block;
+    width: 100%;
+    height:2px;
+    background:#828282;
+    position:absolute;
+    top: 2px;
+    left: 2px;
+}
+.arr.left{
+    transform: rotate(-45deg);
+}
+.arr.right{
+    transform: rotate(135deg);
+}
+.pagination span{
+    display: inline-block;
+    line-height: 32px;
+    vertical-align: top;
+    padding: 0 12px;
+}
+</style>
 <script type="text/javascript">
 	$(function() {
 		$('#search').keydown(function(event) {

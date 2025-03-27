@@ -170,12 +170,18 @@
         $('#overlay').remove(); 
     });
 	$(document).on('click', '#purchase', function() {
+		let name = $('#name').val().trim();
+	    let phone = $('#phone').val().trim();
+		$('#name, #phone').each(function() {
+		    let value = $(this).val().trim();
+		    $(this).css('border', value ? '1px solid #ced4da' : '1px solid red');
+		});
+
+		if (!name || !phone) return;
+		console.log('11');
 		updateHiddenInput();
 		let hotelTitle = $('#hotel-title').text();
 		let payAmount = $('#h-price').val();
-
-		console.log("hotelTitle:", hotelTitle);
-		console.log("payAmount:", payAmount);
 
 		$.ajax({
 			type: 'post',
@@ -190,7 +196,27 @@
 			}
 		});
 	});
-	
+	function validateField(selector) {
+	    let value = $(selector).val().trim();
+	    $(selector).css('border', value ? '1px solid #ced4da' : '1px solid red');
+	}
+
+	$(document).on('blur', '#name, #phone', function() {
+	    validateField(this);
+	});
+	$(document).on('input', '#phone', function() {
+		let phoneNumber = $(this).val().replace(/[^0-9]/g, '');
+		if (phoneNumber.length > 11) {
+            phoneNumber = phoneNumber.slice(0, 11); 
+        }
+		if (phoneNumber.length <= 3) {
+            $(this).val(phoneNumber); 
+        } else if (phoneNumber.length <= 6) {
+            $(this).val(phoneNumber.replace(/(\d{3})(\d{0,4})/, '$1-$2'));
+        } else {
+            $(this).val(phoneNumber.replace(/(\d{3})(\d{4})(\d{0,4})/, '$1-$2-$3'));
+        }
+	});
 	var IMP = window.IMP; 
 	IMP.init("imp27087325"); 
 	function requestPay(json, hotelTitle, payAmount) {
@@ -203,7 +229,6 @@
 	    }
 
 	    let merchantUid = "ORD" + new Date().getTime(); 
-		// TO-DO: 비회원일 시 buyer 처리
 	    try {
 	        IMP.request_pay({
 	            pg: "html5_inicis",
@@ -218,7 +243,8 @@
 	            buyer_postcode: json.post
 	        }, function (rsp) {
 	            console.log("결제 응답:", rsp);
-               	$('#rsv').submit();
+                alert('비회원 예약 조회시 필수입니다. 예약번호: ' + (json.rsvid + 1));
+           		$('#rsv').submit();
 	            if (rsp.success) {
 	                console.log("결제 성공");
 	                location.href = 'http://localhost:8080/1stProject/hotel/hotel_list.do';
@@ -262,7 +288,7 @@
 				<form>
 					<div class="mb-3">
 						<label for="name" class="form-label text-secondary small">예약자 이름</label>
-						<input type="text" class="form-control" id="name" name="guest_name" placeholder="이름을 입력하세요" style="width: 300px;" >
+						<input type="text" class="form-control" id="name" name="guest_name" placeholder="이름을 입력하세요" style="width: 300px;">
 					</div>
 					<div class="mb-3">
 						<label for="phone" class="form-label text-secondary small">전화번호</label>
@@ -327,6 +353,7 @@
 							<input type="hidden" id="h-check_out_date" name="check_out_date">
 							<input type="hidden" id="h-count" name="people_count">
 							<input type="hidden" id="h-arrival_type" name="arrival_type" value="도보">
+							<input type="hidden" id="h-offseason" name="offseason_minfee1" value="${vo.hrvo.offseason_minfee1 }">
 							<input type="hidden" id="h-price" name="pay_amount" value="${vo.hrvo.offseason_minfee1}">
 							<input type="hidden" id="h-status" name="status" value="R">
 							<input type="hidden" id="h-guest_name" name="guest_name">
@@ -386,8 +413,6 @@
 	            
 	            $('#h-check_in_date').val(checkOutDate); // input hidden
 	            $('#h-check_out_date').val(oracleDate);
-	            console.log('start' + checkOutDate);
-	            console.log('end' + oracleDate);
 	        }
 	    }
 	});
@@ -405,15 +430,13 @@
 	
 	$(document).ready(function() {
 	    const selectedDates = datepickr.selectedDates;
-	    if (selectedDates.length === 2) {
-	        const startDate = selectedDates[0];
-	        const endDate = selectedDates[1];
-
-	        const startFormatted = formatDate(startDate);
-	        const endFormatted = formatDate(endDate);
-
-	        $('#selectedDate').text(startFormatted + ' ~ ' + endFormatted);
-	    }
+	    
+	    const startDate = selectedDates[0];
+        const startFormatted = formatDate(startDate);
+        const endDate = new Date(startDate.getTime());
+        endDate.setHours(endDate.getHours() + 4);
+        const endFormatted = formatDate(endDate);
+        $('#selectedDate').text(startFormatted + ' ~ ' + endFormatted);
 	});
 	
 	function formatToOracleDate(date) {
@@ -436,33 +459,6 @@
 	    $('#h-guest_name').val(guestName);
 	    $('#h-guest_phone').val(guestPhone);
 	}
-	
-	
-	
-	
-	/*
-	$('#purchase').on('click', function() {
-		updateHiddenInput();
-		let roomTitle = $('#room-title').val();
-		let payAmount = $('#h-price').val();
-
-		console.log("roomTitle:", roomTitle);
-		console.log("payAmount:", payAmount);
-
-		$.ajax({
-			type: 'post',
-			url: '../reservation/rsv_purchase.do',
-			data: {
-				'room_title': roomTitle
-			},
-			success:function(result) {
-				let json = JSON.parse(result);
-				requestPay(json, roomTitle, payAmount);
-			}
-		});
-	});
-	*/
-		
 </script>
 </body>
 </html>

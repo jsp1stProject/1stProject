@@ -1,6 +1,7 @@
 package com.sist.model;
 
 import java.io.PrintWriter;
+import java.rmi.server.RMIClassLoader;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -137,6 +138,7 @@ public class ReservationModel {
 		String check_out_date = request.getParameter("check_out_date");
 		int count = Integer.parseInt(request.getParameter("people_count"));
 		String arrival_type = request.getParameter("arrival_type");
+		int offseason_minfee1 = Integer.parseInt(request.getParameter("offseason_minfee1"));
 		int pay_amount = Integer.parseInt(request.getParameter("pay_amount"));
 		String status = request.getParameter("status");
 		String guest_name = request.getParameter("guest_name");
@@ -170,6 +172,7 @@ public class ReservationModel {
 		vo.setPeople_count(count);
 		vo.setArrival_type(arrival_type);
 		vo.setStatus(status);
+		vo.setOffseason_minfee1(offseason_minfee1);
 		vo.setGuest_name(guest_name);
 		vo.setGuest_phone(guest_phone);
 		ReservationDAO.rsvInsert(vo);
@@ -194,6 +197,7 @@ public class ReservationModel {
 	public void rsv_purchase(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession();
 		String user_id = (String)session.getAttribute("user_id");
+		int rsvId = ReservationDAO.rsvGuestRsvId();
 		
 		if (user_id != null) {
 			MemberVO vo = MemberDAO.memberInfoData(user_id);
@@ -211,13 +215,13 @@ public class ReservationModel {
 				ex.printStackTrace();
 			}
 		} else {
-			System.out.println("잉잉");
 			JSONObject obj = new JSONObject();
 			obj.put("name", " ");
 			obj.put("email", " ");
 			obj.put("phone", " ");
 			obj.put("address", " ");
 			obj.put("post", " ");
+			obj.put("rsvid", rsvId);
 			try {
 				response.setContentType("text/plain;charset=UTF-8");
 				PrintWriter out = response.getWriter();
@@ -264,5 +268,36 @@ public class ReservationModel {
 		
 		request.setAttribute("main_jsp", "../reservation/guest_search_result.jsp");
 		return "../main/main.jsp";
+	}
+	@RequestMapping("reservation/reservation_admin.do")
+	public String reservation_admin(HttpServletRequest request, HttpServletResponse response) {
+		List<ReservationVO> list = ReservationDAO.rsvAdminData();
+		request.setAttribute("list", list);
+		request.setAttribute("admin_jsp", "../reservation/reservation_admin.jsp");
+		return "../adminpage/admin_main.jsp";
+	}
+	@RequestMapping("reseravtion/reservation_approve.do")
+	public String reseravtion_approve(HttpServletRequest request, HttpServletResponse respose) {
+		int reservId = Integer.parseInt(request.getParameter("rsv-id"));
+		ReservationDAO.rsvUpdateApprove(reservId);
+		return "redirect:../reservation/reservation_admin.do";
+	}
+	@RequestMapping("reservation/reseravtion_reject.do")
+	public String reseravtion_reject(HttpServletRequest request, HttpServletResponse response) {
+		int reservId = Integer.parseInt(request.getParameter("rsv-id"));
+		ReservationDAO.rsvUpdateReject(reservId);
+		return "redirect:../reservation/reservation_admin.do";
+	}
+	@RequestMapping("reservation/reservation_cancel.do")
+	public String reservation_cancel(HttpServletRequest request, HttpServletResponse response) {
+		int reservId = Integer.parseInt(request.getParameter("rsv-id"));
+		ReservationDAO.rsvCancel(reservId);
+		return "redirect:../reservation/guest_search.do";
+	}
+	@RequestMapping("reservation/reservation_approve_cancel.do")
+	public String reservation_approve_cancel(HttpServletRequest request, HttpServletResponse response) {
+		int reservId = Integer.parseInt(request.getParameter("rsv-id"));
+		ReservationDAO.rsvCancelApprove(reservId);
+		return "redirect:../reservation/reservation_admin.do";
 	}
 }

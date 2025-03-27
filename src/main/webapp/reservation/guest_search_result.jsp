@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %> 
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,14 +26,22 @@
 			<tr>
 				<td>${vo.reserve_id }</td>
 				<td>${vo.guest_name }</td>
-				<td>${roomtitle }</td>
+				<td>${roomtitle }${fn:trim(vo.status) }</td>
 				<td><fmt:formatNumber value="${vo.pay_amount }" pattern="#,###"/> 원</td>
 				<td><fmt:formatDate value="${vo.reserve_date}" pattern="yyyy.MM.dd (E)" /></td>
 				<td>
 					<fmt:formatDate value="${vo.check_in_date}" pattern="yyyy.MM.dd (E)" /> ~ 
 					<fmt:formatDate value="${vo.check_out_date}" pattern="yyyy.MM.dd (E)" />
 				</td>
-				<td id="status"></td>
+				<td id="status">
+					<c:if test="${fn:trim(vo.status) eq 'R'}">
+						예약 대기중
+						<form action="../reservation/reservation_cancel.do" method="post">
+							<input type="hidden" name="rsv-id" value="${vo.reserve_id}"/>
+							<button type="submit" class="btn btn-danger">예약 취소</button>
+						</form>
+					</c:if>
+				</td>
 			</tr>
 		</table>
 		</c:when>
@@ -46,33 +55,35 @@
 	/*
 		TO-DO 
 		예약 취소 기능
-		예약 페이지 유효성 검사
-		비회원 조회 유효성 검사
 		숙박 예약도 동일하게
+		관리자용 숙박 관리 페이지
+		숙박 상세보기 덧글
+		쿠폰
+		공지사항 페이지네이션
+		이메일 인증
 	*/ 
 	var status = '${vo.status}';
 	console.log('status: ' + status);
 	var statusText = '';
 	switch(status.trim()) {
 	    case 'O':
-	        statusText = '예약가능';
-	        break;
-	    case 'R':
-	        statusText = '예약 중';
+	        statusText = '예약 승인 거절';
+	        $('#status').text(statusText);
 	        break;
 	    case 'C':
 	        statusText = '예약 완료';
+	        $('#status').text(statusText);
 	        break;
 	    case 'X':
-	        statusText = '예약 취소';
+	        statusText = '예약 취소 대기중';
+	        $('#status').text(statusText);
 	        break;
 	    case 'A':
-	        statusText = '취소 대기 중';
+	        statusText = '취소 완료';
+	        $('#status').text(statusText);
 	        break;
-	    default:
-	        statusText = "관리자 문의";
 	}
 	
-	$('#status').text(statusText);
+	
 </script>
 </html>

@@ -6,11 +6,11 @@
 			쿠폰 적용 여부
 			회원 여부
 			status
-				O: 예약가능
-				R: 예약 중
+				O: 예약 가능
+				R: 예약 대기 중
 				C: 예약 완료
-				X: 예약 취소
-				A: 취소 대기 중
+				X: 예약 취소 대기 중
+				A: 취소 완료
 		 -->
 		INSERT INTO reservation (reserve_id, content_id, room_id, offseason_minfee1, reserve_date, check_in_date, 
 								 check_out_date, people_count, arrival_type, pay_amount, status
@@ -44,7 +44,7 @@
 		 				   )
 	</insert>
 	<select id="rsvCheckDate" resultType="map" parameterType="int">
-		SELECT check_in_date, check_out_date FROM reservation WHERE room_id = #{room_id} AND status = 'R'
+		SELECT check_in_date, check_out_date FROM reservation WHERE room_id = #{room_id} AND status IN ('R', 'C')
 	</select>
 	<select id="rsvGuestSearch" resultType="ReservationVO" parameterType="hashmap">
 		SELECT reserve_id, guest_name, guest_phone, offseason_minfee1, reserve_date, check_in_date, check_out_date, people_count, pay_amount, status, room_id 
@@ -53,4 +53,35 @@
 		AND guest_phone = #{guest_phone} 
 		AND guest_name = #{guest_name}
 	</select>
+	<select id="rsvGuestRsvId" resultType="int">
+		SELECT reserve_id 
+		FROM (SELECT reserve_id 
+		      FROM reservation 
+		      ORDER BY reserve_id DESC)
+		WHERE ROWNUM = 1
+	</select>
+	<select id="rsvAdminData" resultType="ReservationVO">
+		SELECT * FROM reservation 
+		WHERE status != 'O'
+	</select>
+	<update id="rsvUpdateApprove" parameterType="int">
+		UPDATE reservation 
+		SET status = 'C'
+		WHERE reserve_id = #{reserve_id}
+	</update>
+	<update id="rsvUpdateReject" parameterType="int">
+		UPDATE reservation 
+		SET status = 'O'
+		WHERE reserve_id = #{reserve_id}
+	</update>
+	<update id="rsvCancel" parameterType="int">
+		UPDATE reservation 
+		SET status = 'X' 
+		WHERE reserve_id = #{reserve_id}
+	</update>
+	<update id="rsvCancelApprove" parameterType="int">
+		UPDATE reservation 
+		SET status = 'A' 
+		WHERE reserve_id = #{reserve_id}	
+	</update>
 </mapper>

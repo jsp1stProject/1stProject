@@ -12,7 +12,7 @@
                with font-awesome or any other icon font library -->
           <li class="nav-item">
             <a href="../notice/notice_admin_list.do" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-table"></i>
               <p>
                 공지사항관리
                 <i class="right fas fa-angle-left"></i>
@@ -54,28 +54,14 @@
             </ul>
           </li>
           
-          <li class="nav-item menu">
-            <a href="#" class="nav-link active">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+          <li class="nav-item">
+            <a href="../reservation/reservation_admin.do" class="nav-link">
+              <i class="nav-icon fas fa-table"></i>
               <p>
-                예약/구매관리
+                예약 관리
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="#" class="nav-link active">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Active Page</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Inactive Page</p>
-                </a>
-              </li>
-            </ul>
           </li>
                     
           
