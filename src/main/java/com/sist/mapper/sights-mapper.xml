@@ -28,4 +28,22 @@
    SELECT * FROM content 
    WHERE content_id=#{content_id} 
   </select>
+  <select id="sightsReviewList" resultType="SightsVO" parameterType="int">
+     SELECT * FROM review
+     WHERE content_id = #{content_id}
+     AND type = 5 
+  </select>
+  <insert id="sightsReviewInsert" parameterType="ReviewVO">
+    INSERT INTO review (no, content_id, type, user_id, message, regdate) 
+    VALUES(rv_no_seq.nextval, #{content_id}, #{type}, #{user_id}, #{message}, SYSDATE) 
+  </insert>
+  <update id="sightsReviewUpdate" parameterType="hashMap">
+    UPDATE review
+    SET message = #{message}
+    WHERE no = #{no}
+  </update>
+  <delete id="sightsReviewDelete">
+    DELETE FROM review
+    WHERE no = #{no}
+  </delete>
 </mapper>

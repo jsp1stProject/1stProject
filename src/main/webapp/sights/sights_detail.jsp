@@ -95,7 +95,7 @@
                         </select>
                     </div>
                     <ul class="review-ul">
-                        <c:forEach begin="1" end="3" var="i">
+                        <c:forEach begin="1" end="3" var="i" items="${rList }">
                             <li>
                                 <div class="review-header">
                                     <div class="user-name d-flex align-items-center">
@@ -108,12 +108,12 @@
                                                 <div class="star"></div>
                                                 <div class="star"></div>
                                             </div>
-                                            <p class="name">홍길동<span class="created-time">2025년 3월 12일</span></p>
+                                             <p class="name">홍길동<span class="created-time">2025년 3월 12일</span></p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="review-cont">
-                                    세 줄 이상일 때만 말줄임표 + 더보기 버튼 내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용
+                                  ${i.message }
                                 </div>
                             </li>
                         </c:forEach>
@@ -122,16 +122,16 @@
                     
                     <tr>
                     <div class="user_text_review">
-                       <c:if test="${sessionScope.user_id==null }">
+                       <c:if test="${sessionScope.user_id!=null }">
                          <div class="leave-comment-area section_padding_50 clearfix">
                                 <div class="comment-form">
                                   
-                                    <form action="#" method="post">
+                                    <form action="sights_review_insert.do" method="post">
                                         
                                         <div class="form-group mt-3" >
                                             <textarea name="msg" id="msg" cols="70" rows="4" placeholder="리뷰내용" style="float: left" required></textarea>
-                                            <input type=hidden name="type" value="1">
-                                            <input type=hidden name="rno" value="${vo.content_id }">
+                                            <input type=hidden name="type" value="5">
+                                            <input type=hidden name="content_id" value="${vo.content_id }">
                                             <button type="submit" class="btn btn-primary" style="width:60px;height: 100px; float: left">리뷰쓰기</button>
                                         </div>
                                         
@@ -166,12 +166,12 @@
                         </c:forEach>
                     </div>
                 </div>
-                <h4 class="pb-2 mt-3">최근 확인한 행사</h4>
+                <h4 class="pb-2 mt-3">최근 확인한 관광지</h4>
                 <div class="swiper main-slide-list">
                     <div class="swiper-wrapper">
                         <c:forEach items="${clist }" var="vo">
                             <div class="li-item swiper-slide">
-                                <a href="../hotel/hotel_detail.do?content_id=${vo.cvo.content_id}">
+                                <a href="../sights/sights_detail.do?content_id=${vo.cvo.content_id}">
                                     <div class="item-inner">
                                         <div class="item-img" style="background-image:url(${vo.cvo.first_image});">
                                         </div>

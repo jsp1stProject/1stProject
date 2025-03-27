@@ -162,21 +162,6 @@
 		});
 
 		<%-- 필터 input range 라이브러리 --%>
-		rangeSlider(document.querySelector('#range-slider'), {
-			min: 0,
-			max: 100000,
-			step: 1000, //step size
-			value: [0,100000], //initial values
-			onInput: function(valueSet) {
-				console.log(valueSet);
-				rangeset(valueSet[0],valueSet[1]);
-			},
-		});
-		function rangeset(min, max){
-			$('input.start').val(min.toLocaleString('ko-KR')+'원');
-			$('input.end').val(max.toLocaleString('ko-KR')+'원');
-		}
-		rangeset(0,100000);
 
 		<%--필터 absolute 애니메이트--%>
 		let floatPosition = parseInt($(".filter-container").css('top'));

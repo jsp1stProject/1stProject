@@ -29,4 +29,5 @@ public class SightsVO {
 	private String title,addr1,addr2,zipcode, first_image,first_image2,cat1,cat2,cat3;
 	private ContentVO cvo = new ContentVO();
 	private MemberVO mvo = new MemberVO();
+	private ReviewVO rvo = new ReviewVO();
 }

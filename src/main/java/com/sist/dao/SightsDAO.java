@@ -66,4 +66,16 @@ public class SightsDAO {
 			session.close();
 			return vo;*/
 		}
+		public static void sightsReviewInsert(ReviewVO vo) {
+			SqlSession session=ssf.openSession();
+			session.insert("sightsReviewInsert", vo);
+			session.commit();
+			session.close();
+		}
+		public static List<ReviewVO> sightsReviewList(int content_id) {
+			try(SqlSession session = ssf.openSession(true)) {
+				List<ReviewVO> list = session.selectList("sightsReviewList", content_id);
+				return list;
+			}
+		}
 }

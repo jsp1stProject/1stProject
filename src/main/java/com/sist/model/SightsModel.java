@@ -57,12 +57,33 @@ public class SightsModel {
 		System.out.println("content_id 값: " + content_id);
 	    //String content_id = request.getParameter("content_id");
 	    SightsVO vo = SightsDAO.sightsDetailData(content_id);
+	    List<ReviewVO> rList = SightsDAO.sightsReviewList(content_id);
 
-
+	    request.setAttribute("rList", rList);
 	    request.setAttribute("vo", vo);
 	    request.setAttribute("main_jsp", "../sights/sights_detail.jsp");
 
 	    return "../main/main.jsp";
+	}
+	
+	@RequestMapping("sights/sights_review_insert.do")
+	public String sights_review_insert(HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("sightsReview:");
+		String type = request.getParameter("type");
+		String message = request.getParameter("msg");
+		String content_id = request.getParameter("content_id");
+		HttpSession session = request.getSession();
+		String id = (String)session.getAttribute("user_id");
+		ReviewVO vo = new ReviewVO();
+		vo.setContent_id(Integer.parseInt(content_id));
+		System.out.println("contentID:"+content_id);
+		vo.setType(Integer.parseInt(type));
+		System.out.println("type:"+type);
+		vo.setUser_id(id);
+		vo.setMessage(message); 
+		SightsDAO.sightsReviewInsert(vo);
+		
+		return "redirect:../sights/sights_detail.do?content_id=" +content_id;
 	}
 
 }
