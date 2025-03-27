@@ -392,11 +392,17 @@ public class EventModel {
 		List<EventVO> imglist= eventDetailImg(id);
 		List<EventVO> infolist= eventDetailInfo(id);
 		List<ContentVO> nearlist= eventDetailHotel(vo.getCvo().getAreacode());
+		HashMap map=new HashMap();
+		map.put("content_id", contid);
+		map.put("start", 1);
+		map.put("end", 5);
+		List<ReviewVO> rvlist=eventReviewList(map);
 
 		request.setAttribute("imglist", imglist);
 		request.setAttribute("infolist", infolist);
 		request.setAttribute("vo", vo);
 		request.setAttribute("nearlist", nearlist);
+		request.setAttribute("rvlist", rvlist);
 
 		//쿠키
 		String cookies="";

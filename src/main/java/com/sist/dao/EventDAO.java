@@ -281,6 +281,18 @@ public class EventDAO {
 		session.close();
 		return vo;
 	}
+	public static List<ReviewVO> eventReviewList(HashMap map){
+		SqlSession session = ssf.openSession();
+		List<ReviewVO> list=session.selectList("eventReviewList", map);
+		session.close();
+		return list;
+	}
+	public static int eventReviewTotal(String content_id){
+		SqlSession session = ssf.openSession();
+		int count=session.selectOne("eventReviewTotal", content_id);
+		session.close();
+		return count;
+	}
 	/*
 	가격 정규화
 	public static void test(){
