@@ -5,6 +5,7 @@
 <!DOCTYPE html>
 <html>
   <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
   <link rel="stylesheet" type="text/css" href="../assets/css/cart.css">
 <body>
 <div id="wrap">
@@ -123,15 +124,13 @@
               <div id="orderFixItem"
                    class="xans-element- xans-order xans-order-totalorder ">
                 <div class="ec-base-button">
-                  <a href="#none" onclick="Basket.orderAll(this)" class="btnSubmit gFull sizeL">전체상품주문</a>
-                  <a href="#none" onclick="Basket.orderSelectBasket(this)" class="btnNormal gFull sizeL">선택상품주문</a>
+                  <a href="#none" class="btnSubmit gFull sizeL">전체상품주문</a>
+                  <a href="#none" class="btnNormal gFull sizeL">선택상품주문</a>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
-
       </div>
       <!--#ez="1/1"-->
     </div>
@@ -140,6 +139,61 @@
 </div>
 <!-- //wrap -->
 <script type="text/javascript">
+  IMP.init("imp65865212");
+  //결제 portone
+  async function pay(){
+    const response = IMP.request_pay(
+      {
+        channelKey: "channel-key-25b060d8-f0ea-4057-bb0d-ba89c6945247",
+        pay_method: "EASY_PAY",
+        merchant_uid: `payment-`+crypto.randomUUID(), // 주문 고유 번호
+        name: productsList(),
+        amount: $("#total_price2").text().replace(/[^0-9]/g, ''),
+        buyer_email: "gildong@gmail.com",
+        buyer_name: "${sessionScope.name}",
+        buyer_tel: "010-4242-4242",
+        buyer_addr: "서울특별시 강남구 신사동",
+        buyer_postcode: "01181",
+      },
+      async (response) => {
+        if (response.error_code != null) {
+          return alert(`결제에 실패하였습니다. 에러 내용: `+response.error_msg);
+        }
+        console.log(response.imp_uid);
+        console.log(response.merchant_uid);
+        const order = await fetch("order_ok.do", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          // imp_uid와 merchant_uid, 주문 정보를 서버에 전달합니다
+          body: JSON.stringify({
+            imp_uid: response.imp_uid, //실결제 검증 생략
+            order_id: response.merchant_uid, //uuid
+            user_id: "${user_id}"
+          }),
+        }).then((order) => {return order.json()})
+                .then((data) => console.log(data.statement))
+        if(confirm("주문이 완료되었습니다.")) document.location = '../event/main.do';
+      },
+    );
+  }
+
+  //결제상품 이름 가져오기
+  function productsList() {
+    let products = "";
+    $(".ec-product-name").each(function () {
+      products += $(this).text() + ", ";
+    });
+    products = products.substring(0, products.length - 2);
+    console.log(products);
+    return products;
+  }
+
+  //전체 주문하기
+  $(".btnSubmit").on("click",function(e){
+    e.preventDefault();
+    pay();
+  });
+
   //변경버튼 클릭 시
   $(".sizeQty").on("click",function(e){
     e.preventDefault();
@@ -150,14 +204,12 @@
 
   //업데이트 ajax
   async function cartUpdate(t){
-    let index=$(t).attr("data-index");
+    let index=$(t).attr("data-index"); //카트의 상품 인덱스
     let content_id=$(t).closest(".thisContent").attr("data-id");
-    console.log(content_id)
     let account=$("input[name=account"+index+"]").val();
     let price=$(t).closest(".thisContent").find(".price strong").text().replace(/[^0-9]/g, '');
     let total_price=$(t).closest(".thisContent").find(".sumPrice strong").text().replace(/[^0-9]/g, '');
     let content=content_id+"/"+account+"/"+price+"/"+total_price+"/update";
-    console.log(content);
     try{
       let response=await axios({
         method:'post',
@@ -178,17 +230,14 @@
   //삭제 버튼 클릭 시
   $(".btnDelete").on("click",function(e){
     e.preventDefault();
-    cartDelete(this);
-    $(this).closest(".thisContent").remove();
-    total();
+    cartDelete(this); //삭제 수행
+    $(this).closest(".thisContent").remove(); //페이지에서 요소 삭제
+    total(); //총 금액 변경
   });
 
   //삭제 ajax
   async function cartDelete(t){
     let cno=$(t).closest(".thisContent").attr("data-cno");
-    console.log($(t));
-    console.log($(t).closest(".thisContent"));
-    console.log(cno);
     try{
       let response=await axios({
         method:'post',
@@ -199,11 +248,16 @@
         params:{"cno":cno}
       })
       console.log(response);
-      if(response.data.statement=="success"){
+      if(response.data.statement=="success"){ //삭제 성공
         console.log("삭제");
       }else{
         console.log(response.data.statement);
         console.log("삭제실패");
+      }
+      if(response.data.eventcart!=null){ //장바구니 수량 업데이트
+        $("nav .cart_num").text(response.data.eventcart);
+      }else{
+        console.log(response.data);
       }
     }catch(e){
       console.log(e);
@@ -216,11 +270,11 @@
     e.preventDefault();
     let count = Number($(e.target).siblings("input").val());
     if ($(e.target).hasClass("down")) {
-      if (count > 1) {
+      if (count > 1) { //1개 미만 불가능(삭제버튼으로만 삭제 가능)
         $(e.target).siblings("input").val(count - 1);
       }
     } else if ($(e.target).hasClass("up")) {
-      if (count < 10) {
+      if (count < 10) { //같은 상품 10개 초과 불가능
         $(e.target).siblings("input").val(count + 1);
       }
     }
@@ -247,7 +301,7 @@
     $("#total_price, #total_price2").text(total.toLocaleString('ko-KR'));
   }
 
-  //새로고침 시 총 상품 금액 초기화
+  //페이지 진입 시 총 상품 금액 초기화
   total();
 
 </script>

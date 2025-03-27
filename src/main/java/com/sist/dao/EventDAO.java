@@ -250,13 +250,37 @@ public class EventDAO {
 		session.close();
 		return result;
 	}
-	public static int eventCartCount(String user_info){
+	public static boolean cartDeleteAll(String user_id){
+		SqlSession session = ssf.openSession(true);
+		session.delete("cartDeleteAll", user_id);
+		session.close();
+		return true;
+	}
+	public static int eventCartCount(String user_id){
 		SqlSession session = ssf.openSession();
-		int count=session.selectOne("eventCartCount", user_info);
+		int count=session.selectOne("eventCartCount", user_id);
 		session.close();
 		return count;
 	}
-
+	//주문 생성
+	public static void eventOrderInsert(HashMap map){
+		SqlSession session = ssf.openSession(true);
+		session.insert("eventOrderInsert", map);
+		session.close();
+	}
+	//주문 리스트
+	public static List<EventOrderVO> eventOrderList(String user_id){
+		SqlSession session = ssf.openSession();
+		List<EventOrderVO> list=session.selectList("eventOrderList", user_id);
+		session.close();
+		return list;
+	}
+	public static EventOrderVO eventOrderDetail(HashMap map){
+		SqlSession session = ssf.openSession();
+		EventOrderVO vo=session.selectOne("eventOrderDetail", map);
+		session.close();
+		return vo;
+	}
 	/*
 	가격 정규화
 	public static void test(){

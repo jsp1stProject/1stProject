@@ -8,6 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.3/lightgallery.umd.min.js"></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f15eb727df3c1fb9de2ce170ebb6f7a0"></script>
 <script src="/assets/plugin/swiper/swiper-bundle.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <body>
     <div class="container mini px-0">
         <div class="thumb_list${fn:length(imglist)<2?' nosub':''}" id="my-gallery">
@@ -216,7 +217,7 @@
             </li>
             <li class="submitwrap">
                 <button type="button" class="buynow">바로구매</button>
-                <button type="button" class="cart">장바구니</button>
+                <button type="button" class="cart" id="cart">장바구니</button>
             </li>
         </ul>
     </div>
@@ -227,7 +228,7 @@
             selector: '.item'
         });
 
-        //구매 팝업
+        //구매 팝업 띄우기
         $(document).on("click","#buybtn",function(){
             $(".buy-wrap").addClass("active");
             $(".buy-wrap").removeClass("off");
@@ -237,6 +238,8 @@
             $(".buy-wrap").removeClass("active");
             $(".buy-wrap").addClass("off");
         });
+
+        //수량 변경
         let total=0;
         $(document).on("click",".countwrap button",function(e){
             var el=$(e.target).closest("li").find(".prod-price");
@@ -258,8 +261,45 @@
                }
             }
             $(".totalPrice").text(total.toLocaleString('ko-KR')+'원');
-
         });
+
+        //장바구니 버튼 클릭 시
+        $("#cart").on("click",function(e){
+            e.preventDefault();
+            cartUpdate(this); //cart 테이블 업데이트, eventcount session
+        });
+
+        //업데이트 ajax
+        async function cartUpdate(t){
+            let content_id=${vo.content_id};
+            console.log(content_id);
+            let account=$("input[name=product_count]").val();
+            let price=${vo.price};
+            let total_price=$(".totalPrice").text().replace(/[^0-9]/g, '');
+            let content=content_id+"/"+account+"/"+price+"/"+total_price;
+            console.log(content);
+            try{
+                let response=await axios({
+                    method:'post',
+                    url:'cart_insert.do',
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    data:{
+                        "content":content
+                    }
+                });
+                if(response.data.eventcart!=null){
+                    $("nav .cart_num").text(response.data.eventcart);
+                }else{
+                    console.log(response.data);
+                }
+            }catch(e){
+                console.log(e);
+                throw new Error(e);
+            }
+        }
+
 
         //kakao map
         var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스

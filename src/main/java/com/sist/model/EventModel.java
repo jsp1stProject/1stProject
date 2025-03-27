@@ -4,10 +4,7 @@ import com.sist.controller.Controller;
 import com.sist.controller.RequestMapping;
 import com.sist.dao.EventDAO;
 import com.sist.dao.MailDAO;
-import com.sist.vo.CartVO;
-import com.sist.vo.ContentVO;
-import com.sist.vo.EventVO;
-import com.sist.vo.MemberVO;
+import com.sist.vo.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -472,8 +469,8 @@ public class EventModel {
 		HttpSession session = request.getSession();
 		String user_id = (String) session.getAttribute("user_id");
 
-		if (json.size() == 0) return;
-		System.out.println("json size:"+json.size());
+		if (json.size() == 0) return; //값이 없으면 종료
+
 		for (Object cart : json.values()) { //각 상품 목록
 			List<String> cartData = List.of(cart.toString().split("/")); //데이터 분리
 			int contid = Integer.parseInt(cartData.get(0)); //행사 content_id
@@ -491,7 +488,7 @@ public class EventModel {
 				int account_before = list.get(0).getAccount(); //기존 상품 개수
 
 				if(cartData.size()==5){ //상품 개수 수정 요청일 때
-					String state = cartData.get(4); //incr / decr
+					String state = cartData.get(4); //state:update
 					account_after=account_new;
 				}else{ //신규 추가일 때
 					account_after = account_before + account_new;
@@ -511,6 +508,20 @@ public class EventModel {
 				cartInsert(map);
 			}
 		}
+
+		//cart count 세션에 갱신+json으로 보내기
+		session.setAttribute("eventcart", eventCartCount(user_id));
+		JSONObject obj=new JSONObject();
+		obj.put("eventcart", eventCartCount(user_id));
+
+		PrintWriter out;
+		try {
+			out = response.getWriter();
+			out.write(obj.toJSONString());
+			out.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 //	장바구니 삭제
 	@RequestMapping("event/cart_delete.do")
@@ -525,6 +536,14 @@ public class EventModel {
 		}else{
 			obj.put("statement", "failed");
 		}
+
+		//세션에서 아이디 정보
+		HttpSession session = request.getSession();
+		String user_id = (String) session.getAttribute("user_id");
+
+		//cart count 세션에 갱신+json으로 보내기
+		session.setAttribute("eventcart", eventCartCount(user_id));
+		obj.put("eventcart", eventCartCount(user_id));
 		PrintWriter out=null;
 		try {
 			out=response.getWriter();
@@ -534,5 +553,77 @@ public class EventModel {
 			e.printStackTrace();
 			System.out.println("ioe오류");
 		}
+	}
+// 주문저장
+	@RequestMapping("event/order_ok.do")
+	public void event_order_ok(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("application/x-json;charset=UTF-8");
+		//request 파싱
+		JSONObject json = jsonParse(request, response); //order_id, user_id
+		String user_id = (String) json.get("user_id");
+		String order_id = (String) json.get("order_id");
+		System.out.println("order_id:"+order_id);
+		System.out.println("user_id:"+user_id);
+
+		HashMap map = new HashMap();
+		map.put("user_id", user_id);
+		List<CartVO> list=cartList(map); //해당 유저의 장바구니 목록 (장바구니 전체 주문만 가능하도록 기능 제한함)
+		for(CartVO vo:list){ //장바구니 목록 전체 주문 실행
+			HashMap map2=new HashMap();
+			map2.put("order_id", order_id);
+			map2.put("account", vo.getAccount());
+			map2.put("total_price", vo.getTotal_price());
+			map2.put("content_id", vo.getCvo().getContent_id());
+			map2.put("user_id", user_id);
+			eventOrderInsert(map2);
+		}
+		cartDeleteAll(user_id); //주문 완료 후 장바구니 초기화
+
+		JSONObject obj=new JSONObject();
+		obj.put("statement", "success");
+		PrintWriter out=null;
+		try {
+			out=response.getWriter();
+			out.write(obj.toJSONString());
+			out.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("ioe오류");
+		}
+	}
+//	행사 구매 목록
+	@RequestMapping("mypage/event_list.do")
+	public String event_order_list(HttpServletRequest request, HttpServletResponse response) {
+		//세션에서 아이디 정보
+		HttpSession session = request.getSession();
+		String user_id = (String) session.getAttribute("user_id");
+		List<EventOrderVO> list=eventOrderList(user_id);
+		request.setAttribute("list", list);
+
+		request.setAttribute("event", "y"); //event page
+		request.setAttribute("main_jsp", "../mypage/event_list.jsp");
+		request.setAttribute("title", "행사");
+		return "../main/main.jsp";
+	}
+
+//	행사 상세
+	@RequestMapping("mypage/event_list.do")
+	public String event_order_detail(HttpServletRequest request, HttpServletResponse response) {
+		//세션에서 아이디 정보
+		String order_id=request.getParameter("order_id");
+		String content_id=request.getParameter("content_id");
+		if(order_id==null || content_id==null){
+			return "redirect:../main/main.do";
+		}
+		HashMap map = new HashMap();
+		map.put("order_id", order_id);
+		map.put("content_id", content_id);
+		EventOrderVO vo=eventOrderDetail(map);
+		request.setAttribute("vo", vo);
+
+		request.setAttribute("event", "y"); //event page
+		request.setAttribute("main_jsp", "../mypage/event_detail.jsp");
+		request.setAttribute("title", "행사");
+		return "../main/main.jsp";
 	}
 }

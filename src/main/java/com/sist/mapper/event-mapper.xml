@@ -43,6 +43,14 @@
 		<result property="cvo.first_image2" column="first_image2"></result>
 	</resultMap>
 
+	<resultMap id="orderMap" type="EventOrderVO">
+		<result property="cvo.content_id" column="content_id"></result>
+		<result property="cvo.title" column="title"></result>
+		<result property="cvo.first_image" column="first_image"></result>
+		<result property="evo.dbstart" column="dbstart"></result>
+		<result property="evo.dbend" column="dbend"></result>
+	</resultMap>
+
 	<select id="mainEventList" resultMap="eventMap">
 		<![CDATA[
 		SELECT EVENT.CONTENT_ID, title,addr1,CAT3,TO_CHAR(EVENT_STARTDATE,'YYYY.MM.DD') as dbstart,TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend,FIRST_IMAGE,rownum
@@ -196,9 +204,35 @@
 	<delete id="cartDelete" parameterType="String">
 		delete from cart where cno=#{cno}
 	</delete>
+<!--	장바구니 전체 삭제-->
+	<delete id="cartDeleteAll" parameterType="String">
+		delete from cart where user_id=#{user_id}
+	</delete>
 
 	<select id="eventCartCount" resultType="int">
 		select eventcart_count from user_info where user_id=#{user_id}
+	</select>
+
+<!--	주문 생성-->
+	<insert id="eventOrderInsert" parameterType="HashMap">
+		insert into EVENT_ORDER (PAYMENT_ID,order_id, account, total_price, content_id, user_id)
+		values (eo_pid_seq.nextval,#{order_id},#{account},#{total_price},#{content_id},#{user_id})
+	</insert>
+<!--	주문 리스트-->
+	<select id="eventOrderList" parameterType="String" resultMap="orderMap">
+		select PAYMENT_ID, order_id, account, total_price, c.content_id, order_date, title, to_char(EVENT_STARTDATE,'YYYY.MM.DD') as dbstart, to_char(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, first_image
+		from EVENT_ORDER o
+		join CONTENT c on o.CONTENT_ID=c.CONTENT_ID
+		join event e on o.CONTENT_ID=e.CONTENT_ID
+		where USER_ID=#{user_id}
+	</select>
+<!--	주문 낱개 가져오기-->
+	<select id="eventOrderDetail" parameterType="hashmap" resultMap="orderMap">
+		select PAYMENT_ID, order_id, account, total_price, c.content_id, order_date, title, to_char(EVENT_STARTDATE,'YYYY.MM.DD') as dbstart, to_char(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, first_image
+		from EVENT_ORDER o
+				 join CONTENT c on o.CONTENT_ID=c.CONTENT_ID
+				 join event e on o.CONTENT_ID=e.CONTENT_ID
+		where PAYMENT_ID =#{PAYMENT_ID} and c.CONTENT_ID=#{content_id}
 	</select>
 
 	<!--	<select id="replace_data" resultMap="eventMap">-->

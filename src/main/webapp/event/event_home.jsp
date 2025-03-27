@@ -41,7 +41,6 @@
 	<!-- area list-->
     <div class="container-xxl py-4">
     	<div class="container">
-			<button class="btn" onclick="location.href='../mail/mail.do'">메일 인증하기</button>
     		<h3 class="main-h3 wow fadeInUp" data-wow-delay="0.1s">지역별 행사</h3>
     		<div class="tab-nav-wrap wow fadeInUp" data-wow-delay="0.1s">
     			<div class="tab-nav-item active" data-tab="1">서울</div>
