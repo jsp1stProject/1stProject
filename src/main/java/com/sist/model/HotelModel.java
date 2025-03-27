@@ -16,9 +16,11 @@ import com.sist.controller.RequestMapping;
 import com.sist.dao.HotelDAO;
 import com.sist.vo.ContentVO;
 import com.sist.vo.HotelVO;
+import com.sist.vo.ReviewVO;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class HotelModel {
@@ -172,11 +174,51 @@ public class HotelModel {
 		List<HotelVO> list = HotelDAO.hotelRoomData(content_id);
 		System.out.println("list: " + Arrays.asList(list));
 		List<HotelVO> imglist = HotelDAO.hotelDetailImg(content_id);
+		List<ReviewVO> rList = HotelDAO.hotelReviewList(content_id);
+		request.setAttribute("rList", rList);
 		request.setAttribute("imglist", imglist);
 		request.setAttribute("list", list);
 		request.setAttribute("vo", vo);
 		request.setAttribute("main_jsp", "../hotel/hotel_detail.jsp");
 		return "../main/main.jsp";
+	}
+	@RequestMapping("hotel/hotel_review_insert.do")
+	public String hotel_review_insert(HttpServletRequest request, HttpServletResponse response) {
+		// 1. 숙소 / 2. 행사 / 3. 축제 / 4. 맛집 / 5. 관광지
+		String type = request.getParameter("rtype");
+		String message = request.getParameter("message");
+		String content_id = request.getParameter("content_id");
+		HttpSession session = request.getSession();
+		String id = (String)session.getAttribute("user_id");
+		ReviewVO vo = new ReviewVO();
+		vo.setContent_id(Integer.parseInt(content_id));
+		vo.setType(Integer.parseInt(type));
+		vo.setUser_id(id);
+		vo.setMessage(message);
+		HotelDAO.hotelReviewInsert(vo);
+		return "redirect:../hotel/hotel_detail.do?content_id=" + content_id;
+	}
+	
+	@RequestMapping("hotel/hotel_review_update.do")
+	public String hotel_review_update(HttpServletRequest request, HttpServletResponse response) {
+		String no = request.getParameter("no");
+		String message = request.getParameter("message");
+		String content_id = request.getParameter("content_id");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("no", no);
+		map.put("message", message);
+		
+		HotelDAO.hotelReviewUpdate(map);
+		return "redirect:../hotel/hotel_detail.do?content_id=" + content_id;
+	}
+	
+	@RequestMapping("hotel/hotel_review_delete.do")
+	public String hotel_review_delete(HttpServletRequest request, HttpServletResponse response) {
+		String no = request.getParameter("no");
+		String content_id = request.getParameter("content_id");
+		HotelDAO.hotelReviewDelete(Integer.parseInt(no));
+		return "redirect:../hotel/hotel_detail.do?content_id=" + content_id;
 	}
 }
 

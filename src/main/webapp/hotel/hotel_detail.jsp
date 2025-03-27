@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -269,6 +269,19 @@ button:disabled {
     background-color: #d3d3d3; 
     color: #a9a9a9; 
 }
+.form-floating .form-control {
+	overflow-y: auto;
+	resize: none; 
+}
+.input-group > .form-control, .input-group > .form-select {
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 610px;
+}
+#update {
+	margin-left: 10px;
+}
 </style>
 <script type="text/javascript">
 $(function() {
@@ -296,7 +309,6 @@ $(function() {
         }
     });
 });
-
 
 </script>
 </head>
@@ -458,7 +470,88 @@ $(function() {
             </div>
         </div>
         <div class="detail_subWrap scrollTab_cont" id="sub4">
-            리뷰영역
+        		<c:if test="${sessionScope.user_id ne null}">
+        		<form method="post" action="../hotel/hotel_review_insert.do">
+	        		<input type="hidden" name="rtype" value="1">
+	        		<input type="hidden" name="content_id" value="${vo.cvo.content_id }">
+					<div class="form-floating mb-3">
+						<!-- 
+				  		<textarea class="form-control" name="message" id="floatingTextarea2" style="height: 100px"></textarea>
+				  		<label for="floatingTextarea2">리뷰 작성란</label>
+				  		-->
+				  		<div class="input-group mb-3">
+						  <textarea class="form-control" name="message" placeholder="리뷰 작성란" aria-label="Recipient's username" aria-describedby="button-addon2" style="height: 100px"></textarea>
+						  <button class="btn btn-outline-secondary" type="submit" id="button-addon2">작성</button>
+						</div>
+				</div>
+				</form>
+				</c:if>
+            <div>
+                <h4>리뷰 <b class="text-blue">231</b></h4>
+                <div class="d-flex align-content-center flex-column flex-wrap">
+                    <div class="score-avg align-self-center py-3">
+                        <div class="bigstar">
+                            4.2
+                        </div>
+                    </div>
+                    <div class="pt-3">
+                        <select class="form-select filter-sm" aria-label="Default select">
+                            <option value="0" selected>최신순</option>
+                            <option value="1">평가 높은순</option>
+                        </select>
+                    </div>
+                    <ul class="review-ul">
+                        <c:forEach var="rvo" items="${rList }" begin="0" end="2">
+                            <li>
+                                <div class="review-header">
+                                    <div class="user-name d-flex align-items-center">
+                                        <div class="user-pf" style="background-image:${userprofile}"></div>
+                                        <div class="d-flex flex-column">
+                                            <div class="user-score" data-score="0">
+                                                <div class="star"></div>
+                                                <div class="star"></div>
+                                                <div class="star"></div>
+                                                <div class="star"></div>
+                                                <div class="star"></div>
+                                            </div>
+                                            <p class="name">${rvo.user_id }
+                                            	<span class="created-time">
+                                            		<fmt:formatDate value="${rvo.regdate}" pattern="yyyy.MM.dd (E)" />
+                                            	</span>
+                                           	</p>
+                                           	<span>
+                                           		<c:if test="${sessionScope.user_id eq rvo.user_id }">
+                                           			<form method="post" action="../hotel/hotel_review_delete.do">
+                                           				<input type="hidden" name="no" value="${rvo.no }">
+                                           				<input type="hidden" name="content_id" value="${rvo.content_id }">
+	                                           			<button class="btn btn-primary btn-sm" type="button" id="r-update">수정</button>
+	                                           			<button class="btn btn-danger btn-sm" type="submit">삭제</button>
+                                           			</form>
+	                                           	</c:if>
+                                           	</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="review-cont" id="r-cont">
+                                	${rvo.message }
+	                                <div class="input-group mb-3" style="display: none;">
+	                                	<form method="post" action="../hotel/hotel_review_update.do">
+											<div class="input-group mb-3">
+												<input type="hidden" name="content_id" value="${rvo.content_id }">
+												<input type="hidden" name="no" value="${rvo.no }">
+										  		<textarea class="form-control" name="message" id="update" placeholder="리뷰 작성란" aria-label="Recipient's username" aria-describedby="button-addon2" style="height: 100px">${rvo.message }
+									  			</textarea>
+											  <button class="btn btn-outline-secondary" type="submit" id="button-addon2">작성</button>
+											</div>
+										</form>
+									</div>
+                                </div>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                    <button class="morebtn btn-white">리뷰 전체보기</button>
+                </div>
+            </div>
         </div>
     </div>
     <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=443acdfb0df827f13186e681c2acda8c"></script>
@@ -512,6 +605,12 @@ $(function() {
         map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
         }
         //tab
+        $(document).on("click",".scrollTab button",function(e){ //탭 클릭 시 해당 영역으로 이동
+            let target=$(e.target).attr("data-target");
+            let targetTop=$("#"+target).offset().top; //탭 컨텐츠 offset top
+            let headerHeight = $("nav").outerHeight() + $(".tabWrap").outerHeight(); //sticky 탭 포함 헤더 높이
+            $('html').scrollTop(targetTop-headerHeight+3);
+        });
         //scroll 시 sticky, active
         window.addEventListener('scroll',() => {
             let curScroll = window.scrollY+$("nav").outerHeight();
@@ -530,11 +629,30 @@ $(function() {
                 }
             });
         });
-        $(document).on("click",".scrollTab button",function(e){ //탭 클릭 시 해당 영역으로 이동
-            let target=$(e.target).attr("data-target");
-            let targetTop=$("#"+target).offset().top; //탭 컨텐츠 offset top
-            let headerHeight = $("nav").outerHeight() + $(".tabWrap").outerHeight(); //sticky 탭 포함 헤더 높이
-            $('html').scrollTop(targetTop-headerHeight+3);
+      //리뷰 더보기 버튼
+        $(document).on("click",".cont-morebtn",function(){
+           $(this).closest("li").addClass("show");
+           $(this).remove();
+        });
+
+        //리뷰 길이 세 줄 초과일 때만 더보기 버튼
+        let contents = document.querySelectorAll(".review-cont");
+        contents.forEach(function(el,index){
+            let morebtn=document.createElement("button");
+            morebtn.setAttribute("type","button");
+            morebtn.classList.add("cont-morebtn");
+            if(el.scrollHeight>el.clientHeight){
+                el.parentNode.appendChild(morebtn);
+            }
+        });
+        $(document).on("click", "#r-update", function() {
+        	let targetDiv = $('#r-cont');  // 숨기고 싶은 div의 ID
+
+            targetDiv.contents().filter(function() {
+                return this.nodeType === 3;  // 텍스트 노드
+            }).wrap('<span style="display:none;"></span>');
+        	
+            targetDiv.find(".input-group").show();
         });
     </script>
 </body>
