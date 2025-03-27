@@ -14,17 +14,18 @@
     WHERE rownum&lt;=8
   </select>
   <select id="sightsListData" resultType="SightsVO" parameterType="hashMap">
-   SELECT content_id, title, contenttype_id,first_image, addr1, num
-	FROM (SELECT content_id, title, contenttype_id,first_image, addr1, rownum as num
-	FROM (SELECT content.content_id, title, contenttype_id,first_image, addr1  
-	FROM content WHERE contenttype_id = 12))
-	WHERE num BETWEEN #{start} AND #{end}  
+   SELECT content_id, title, contenttype_id,first_image, addr1,cat3, num
+	FROM (SELECT content_id, title, contenttype_id,first_image, addr1,cat3, rownum as num
+	FROM (SELECT content.content_id, title, contenttype_id,first_image, addr1,cat3  
+	FROM content WHERE contenttype_id = 12 
+	ORDER BY DBMS_RANDOM.VALUE ))
+	WHERE num BETWEEN #{start} AND #{end}   
   </select>
   <select id="sightsTotalPage" resultType="int">
    SELECT CEIL(COUNT(*)/12.0) FROM content WHERE contenttype_id = 12 
   </select>
   <select id="sightsDetailData" resultType="SightsVO" parameterType="hashMap">
    SELECT * FROM content 
-   WHERE content_id=#{content_id}
+   WHERE content_id=#{content_id} 
   </select>
 </mapper>

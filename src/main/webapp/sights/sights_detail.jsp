@@ -11,8 +11,8 @@
 <body>
     <div class="container mini px-0">
         <div class="thumb_list${fn:length(imglist)<2?' nosub':''}" id="my-gallery">
-            <a href="${vo.cvo.first_image }" class="item">
-                <img alt="" src="${vo.cvo.first_image }">
+            <a href="${vo.first_image }" class="item">
+                <img alt="" src="${vo.first_image }">
             </a>
             <c:if test="${not empty imglist}">
                 <div class="sublist">
@@ -30,17 +30,17 @@
         <div class="detail_titleWrap">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <p class="cate">${vo.dbcate}</p>
-                    <p class="title">${vo.cvo.title}</p>
+                    <p class="cate">${vo.cat3}</p>
+                    <p class="title">${vo.title}</p>
                 </div>
                 <div class="detail_btnWrap">
                     <button type="button" class="bookmark-btn"></button>
                     <button type="button" class="share-btn"></button>
                 </div>
             </div>
-            <p class="location">${vo.cvo.addr1}</p>
-            <p class="eventdate"><b>${vo.dbstart}</b>부터 <b>${vo.dbend}</b>까지</p>
-            <button class="buy-btn btn-black mt-3" id="buybtn">입장권 구매하기</button>
+            <p class="location">${vo.addr1}</p>
+
+            
         </div>
 <%--        .scrollTab > div.item > button의 data-target과
             .scrollTab_cont의 id를 같은 값으로 설정--%>
@@ -50,55 +50,33 @@
                     <button type="button" data-target="sub1">소개</button>
                 </div>
                 <div class="item">
-                    <button type="button" data-target="sub2">행사정보</button>
+                    <button type="button" data-target="sub2">관광지정보</button>
                 </div>
                 <div class="item">
                     <button type="button" data-target="sub3">리뷰</button>
                 </div>
             </div>
         </div>
-        <div class="detail_subWrap scrollTab_cont" id="sub1">
-            <div>
-                <c:forEach items="${infolist}" var="info">
-                    <h4>${info.dvo.infoname}</h4>
-                    <p>${info.dvo.infotext}</p>
-                </c:forEach>
-            </div>
-        </div>
+        <!-- vo.info -->
         <div class="detail_subWrap scrollTab_cont" id="sub2">
             <div>
-                <h4>행사 이름</h4>
-                <p>${vo.cvo.title}</p>
+            	<img alt="" src="${vo.first_image }">
+                <h4>관광지 이름</h4>
+                <p>${vo.title}</p>
+                
+                <h4>관광지 분류</h4>
+                <p>${vo.cat3}</p>
+                
                 <h4>장소</h4>
-                <p>${vo.cvo.addr1} ${not empty vo.cvo.addr2&&vo.cvo.addr2 ne 'N/A'?vo.cvo.addr2:''}</p>
-                <h4>기간</h4>
-                <p>${vo.dbstart}부터 ${vo.dbend}까지</p>
-                <c:if test="${not empty vo.playtime&&vo.playtime ne 'N/A'}">
-                    <h4>운영 시간</h4>
-                    <p>${vo.playtime}</p>
+                <p>${vo.addr1} ${not empty vo.addr2&&vo.addr2 ne 'N/A'?vo.addr2:''}</p>
+				<h4>운영 시간</h4>
+                    <p>24시간</p>
+                <c:if test="">
+                    
                 </c:if>
-                <c:if test="${not empty vo.charge&&vo.charge ne 'N/A'}">
-                    <h4>요금</h4>
-                    <p>${vo.charge}</p>
-                </c:if>
-                <c:if test="${not empty vo.spendtime&&vo.spendtime ne 'N/A'}">
-                    <h4>관람 소요 시간</h4>
-                    <p>${vo.spendtime}</p>
-                </c:if>
-                <c:if test="${not empty vo.agelimit&&vo.agelimit ne 'N/A'}">
-                    <h4>관람 가능 연령</h4>
-                    <p>${vo.agelimit}</p>
-                </c:if>
-                <c:if test="${not empty vo.sponsor1&&vo.sponsor1 ne 'N/A'}">
-                    <h4>주최자</h4>
-                    <p>${vo.sponsor1}</p>
-                </c:if>
-                <c:if test="${not empty vo.sponsor2&&vo.sponsor2 ne 'N/A'}">
-                    <h4>주관사</h4>
-                    <p>${vo.sponsor2}</p>
-                </c:if>
-                <h4>오시는 길</h4>
-                <div id="map" style="width:100%; height:400px;"><a href="https://map.kakao.com/link/to/${vo.cvo.title},${vo.cvo.mapy},${vo.cvo.mapx}" target="_blank" class="findWay">길 찾기</a></div>
+  
+                <h4>관광지 위치 & 오시는 길</h4>
+                <div id="map" style="width:100%; height:400px;"><a href="https://map.kakao.com/link/to/${vo.title},${vo.mapy},${vo.mapx}" target="_blank" class="findWay">길 찾기</a></div>
             </div>
         </div>
         <div class="detail_subWrap scrollTab_cont" id="sub3">
@@ -141,6 +119,28 @@
                         </c:forEach>
                     </ul>
                     <button class="morebtn btn-white">리뷰 전체보기</button>
+                    
+                    <tr>
+                    <div class="user_text_review">
+                       <c:if test="${sessionScope.user_id==null }">
+                         <div class="leave-comment-area section_padding_50 clearfix">
+                                <div class="comment-form">
+                                  
+                                    <form action="#" method="post">
+                                        
+                                        <div class="form-group mt-3" >
+                                            <textarea name="msg" id="msg" cols="70" rows="4" placeholder="리뷰내용" style="float: left" required></textarea>
+                                            <input type=hidden name="type" value="1">
+                                            <input type=hidden name="rno" value="${vo.content_id }">
+                                            <button type="submit" class="btn btn-primary" style="width:60px;height: 100px; float: left">리뷰쓰기</button>
+                                        </div>
+                                        
+                                    </form>
+                                </div>
+                            </div>
+                       </c:if>
+                    </div>
+                    </tr>
                 </div>
             </div>
         </div>
@@ -185,41 +185,12 @@
                         </c:forEach>
                     </div>
                 </div>
+                <a href="javascript:history.back()" class="btn btn-sm btn-primary">목록으로 돌아가기</a>
             </div>
         </div>
     </div>
-    <div class="buy-wrap">
-        <ul class="buy-ul">
-            <li class="d-flex justify-content-between align-items-center"> <%-- li = 구매 아이템 --%>
-                <div>
-                    <p class="product">입장권</p>
-                    <p class="prod-price">
-                        <c:choose>
-                            <c:when test="${vo.price eq 0}">
-                                무료
-                            </c:when>
-                            <c:otherwise>
-                                <fmt:formatNumber value="${vo.price }" pattern="#,###" />원
-                            </c:otherwise>
-                        </c:choose>
-                    </p>
-                </div>
-                <div class="countwrap">
-                    <button type="button" class="count-down">-</button><input type="text" name="product_count" value="0" disabled><button type="button" class="count-up">+</button>
-                </div>
-            </li>
-            <li class="d-flex justify-content-end">
-                <div>
-                    <p class="product">합계</p>
-                    <p class="totalPrice">0원</p>
-                </div>
-            </li>
-            <li class="submitwrap">
-                <button type="button" class="buynow">바로구매</button>
-                <button type="button" class="cart">장바구니</button>
-            </li>
-        </ul>
-    </div>
+    <!-- div buy class -->
+    
     <script type="text/javascript">
         //Image Slide
         lightGallery(document.getElementById('my-gallery'), {
@@ -264,10 +235,10 @@
         //kakao map
         var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
         var options = { //지도를 생성할 때 필요한 기본 옵션
-            center: new kakao.maps.LatLng(${vo.cvo.mapy},${vo.cvo.mapx}), //지도의 중심좌표.
+            center: new kakao.maps.LatLng(${vo.mapy},${vo.mapx}), //지도의 중심좌표.
             // level: 3 //지도의 레벨(확대, 축소 정도)
         };
-        var markerPosition  = new kakao.maps.LatLng(${vo.cvo.mapy},${vo.cvo.mapx});
+        var markerPosition  = new kakao.maps.LatLng(${vo.mapy},${vo.mapx});
         var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
 
         var marker = new kakao.maps.Marker({

@@ -52,7 +52,7 @@ public class SightsModel {
 	
 	@RequestMapping("sights/sights_detail.do")
 	public String sights_detail(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("sights_detail.do");
+		System.out.println("sights_detail.do 값");
 		int content_id=Integer.parseInt(request.getParameter("content_id"));
 		System.out.println("content_id 값: " + content_id);
 	    //String content_id = request.getParameter("content_id");

@@ -12,22 +12,25 @@
 	<script type="text/javascript" src="http://code.jquery.com/jquery-js"></script>
 </head>
 <body>
-<!-- c: 버그 왜뜨는거야 -->
+
 	<div class="container">
 		<div class="row justify-content-center">
 			<div class="col-lg-3 py-3 px-0" style="position:relative">
 				<div class="filter-container">
 					<div class="d-flex justify-content-between px-2">
 						<button class="cpsbtn">필터</button>
-						<button type="button" class="btn btn-light resetbtn">초기화</button>
+						<button type="button" class="btn btn-light resetbtn" onclick="reset()">초기화</button>
 					</div>
 					<div class="filter-inner">
 						<div class="filter-wrap" id="filter">
-							<div class="filter-item col-lg-12 col-md-4 col-sm-12"> <!-- range 타입 -->
-								<h6>가격대</h6>
-								<div id="range-slider"></div>
-								<div class="d-flex justify-content-center range-value-wrap">
-									<input type="text" class="start" disabled value="0"><span class="ignr"> ~ </span><input type="text" class="end" disabled value="100000">
+							<!-- range 가격대 -->
+							<div class="filter-item"> <!--checkbox 타입-->
+								<h6>관광지 유형</h6>
+								<div class="checkbtn-wrap">
+									<input type="checkbox" name="cat1" id="t1" value="자연">
+									<label for="t1" data-id=${vo.cat1 }>자연</label>
+									<input type="checkbox" name="cat1" id="t2" value="문화">
+									<label for="t2" data-id=${vo.cat1 }>문화</label>
 								</div>
 							</div>
 							<div class="filter-item"> <!--checkbox 타입-->
@@ -78,17 +81,17 @@
 					<div class="container">
 						<h4 class="search-title mb-3"><span>관광지</span>에 대한 총 <span>${list.size() }</span> 개의 검색 결과</h4>
 						<ul class="content-ul event">
-							
+							<!-- ORDER BY DBMS_RANDOM.VALUE mapper listdata 에 안쪽 서브쿼리에 넣으면 데이터가 랜덤으로 바뀜 -->
 							 <c:forEach var="vo" items="${list }">
 							  <li>
-							  	<a href="../sights/sights_detail.do" class="d-flex">
+							  	<a href="../sights/sights_detail.do?content_id=${vo.content_id }" class="d-flex">
 							  	<div class="thumb-wrap" style="background-image:url(${vo.first_image})">
 							  		
 									<button type="button" class="bookmark-btn" name="bm-btn" data-id="${content_id}"></button>
 								</div>
 								<div class="d-flex flex-column flex-md-row right">
 											<div class="title-wrap">
-												<p class="cat"><span class=""></span><!--cat3으로 구분--></p>
+												<p class="cat">${vo.cat3 }<!--cat3으로 구분--></p>
 												<p class="content-name">${vo.title }</p>
 												<p class="location">${vo.addr1 }</p>
 												<p class="score"id="randomScore"></p>
@@ -199,7 +202,6 @@
 				disableFadeOut: false
 			})
 		});
-		
 		
 		// 랜덤 리뷰 나오게 해보기
 		function getRandomScore() {

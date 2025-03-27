@@ -44,9 +44,26 @@ public class SightsDAO {
 			return total;
 		}
 		public static SightsVO sightsDetailData(int content_id) {
-			SqlSession session=ssf.openSession(true);
+			SightsVO vo=null;
+			SqlSession session=null;
+			try
+			{
+			  session=ssf.openSession();
+			  vo=session.selectOne("sightsDetailData",content_id);
+			}
+			catch (Exception ex) 
+			{
+			  ex.printStackTrace();
+			}
+			finally
+			{
+			  if(session!=null)
+				  session.close();
+			}
+			return vo;
+			/*SqlSession session=ssf.openSession(true);
 			SightsVO vo=session.selectOne("sightsDetailData",content_id);
 			session.close();
-			return vo;
+			return vo;*/
 		}
 }

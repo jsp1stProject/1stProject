@@ -27,4 +27,6 @@ import lombok.Data;
 public class SightsVO {
 	private int content_id,contenttype_id, sigungucode, areacode, mapx, mapy;
 	private String title,addr1,addr2,zipcode, first_image,first_image2,cat1,cat2,cat3;
+	private ContentVO cvo = new ContentVO();
+	private MemberVO mvo = new MemberVO();
 }
