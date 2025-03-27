@@ -167,4 +167,23 @@
 		ON hr.content_id = h.content_id 
 		WHERE room_id = #{room_id}
     </select>
+    <select id="hotelReviewList" resultType="ReviewVO" parameterType="int">
+    	SELECT no, content_id, type, user_id, message, rate, regdate FROM review 
+    	WHERE content_id = #{content_id} 
+    	AND type = 1 
+    	ORDER BY no DESC 
+    </select>
+    <insert id="hotelReviewInsert" parameterType="ReviewVO">
+    	INSERT INTO review (no, content_id, type, user_id, message, regdate) 
+    				VALUES(rv_no_seq.nextval, #{content_id}, #{type}, #{user_id}, #{message}, SYSDATE)
+    </insert>
+    <update id="hotelReviewUpdate" parameterType="hashmap">
+    	UPDATE review 
+    	SET message = #{message} 
+    	WHERE no = #{no}
+    </update>
+    <delete id="hotelReviewDelete" parameterType="int">
+    	DELETE FROM review 
+    	WHERE no = #{no}
+    </delete>
 </mapper>

@@ -58,5 +58,29 @@ public class HotelDAO {
 		session.close();
 		return list;
 	}
-	
+	/** 호텔 리뷰 삽입 */
+	public static void hotelReviewInsert(ReviewVO vo) {
+		try(SqlSession session = ssf.openSession(true)) {
+			session.insert("hotelReviewInsert", vo);
+		}
+	}
+	/** 호텔 리뷰 수정 */
+	public static void hotelReviewUpdate(Map<String, Object> map) {
+		try(SqlSession session = ssf.openSession(true)) {
+			session.update("hotelReviewUpdate", map);
+		}
+	}
+	/** 호텔 리뷰 삭제 */
+	public static void hotelReviewDelete(int no) {
+		try(SqlSession session = ssf.openSession(true)) {
+			session.delete("hotelReviewDelete", no);
+		}
+	}
+	/** 호텔 리뷰 조회 */
+	public static List<ReviewVO> hotelReviewList(int content_id) {
+		try(SqlSession session = ssf.openSession(true)) {
+			List<ReviewVO> list = session.selectList("hotelReviewList", content_id);
+			return list;
+		}
+	}
 }
