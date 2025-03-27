@@ -6,9 +6,15 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.3/css/lightgallery.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.3/lightgallery.umd.min.js"></script>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=56b06fde10080b6a8a785311ba6b68d3"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/plugin/swiper/swiper-bundle.min.js"></script>
+<style type="text/css">
+    div#carouselExampleControls {
+        width: 50%;
+        margin: 0 auto;
+    }
+</style>
 <body>
     <div class="container mini px-0">
         <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
@@ -145,29 +151,23 @@
             </div>
         </div>
         <div class="detail_subWrap">
-        <div>
-        <h4 class="pb-2 mt-3">최근 본 맛집</h4>
-                <div class="swiper main-slide-list">
-                    <div class="swiper-wrapper">
-                    <c:if test="${not empty foodHistory}">
-    <div class="food-history">  <!-- 가로 정렬을 위한 부모 div -->
-        <c:forEach var="food" items="${foodHistory}">
-            <div class="food-item">
-                <a href="../food/food_detail.do?fno=${food.fno}">
-                    <img src="http://www.menupan.com${food.poster}" alt="${food.name}">
-                    <p>${food.name}</p>
-                </a>
-            </div>
-        </c:forEach>
-    </div>
-</c:if>
-                        <%-- <c:forEach var="c" items="${cookie}">
-    <c:if test="${fn:startsWith(c.key, 'food_')}">
-        <p>최근 본 음식: ${c.value.value}</p>
-    </c:if>
-</c:forEach> --%>
-                        
-                    </div>
+            <h4 class="pb-2 mt-3">최근 본 맛집</h4>
+            <div class="swiper main-slide-list">
+                <div class="swiper-wrapper">
+                    <c:forEach items="${foodHistory }" var="food">
+                        <div class="li-item swiper-slide">
+                            <a href="../food/food_detail.do?fno=${food.fno}">
+                                <div class="item-inner">
+                                    <div class="item-img" style="background-image:url('http://www.menupan.com${food.poster}');">
+                                    </div>
+                                    <div class="text-wrap">
+                                        <p class="date">${food.type}</p>
+                                        <p class="title">${food.name}</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </c:forEach>
                 </div>
             </div>
         </div>
@@ -227,6 +227,7 @@
             </li>
         </ul>
     </div> --%>
+    <script async defer type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=56b06fde10080b6a8a785311ba6b68d3"></script>
     <script type="text/javascript">
         //Image Slide
         lightGallery(document.getElementById('my-gallery'), {
@@ -269,25 +270,25 @@
         });
         
 		// 카카오맵
-        document.addEventListener("DOMContentLoaded", function() {
-            var mapContainer = document.getElementById('map'); // 지도를 표시할 div 
+        kakao.maps.load(function(){
+            var mapContainer = document.getElementById('map'); // 지도를 표시할 div
             var mapOption = {
                 center: new kakao.maps.LatLng(37.5665, 126.9780), // 기본 좌표 (서울시청)
                 level: 3 // 지도 확대 레벨
             };
 
-            // 지도를 생성합니다    
-            var map = new kakao.maps.Map(mapContainer, mapOption); 
+            // 지도를 생성합니다
+            var map = new kakao.maps.Map(mapContainer, mapOption);
 
             // 주소-좌표 변환 객체 생성
             var geocoder = new kakao.maps.services.Geocoder();
 
             // 주소 값이 존재하는지 확인
             var address = '${vo.address}';
-            if (!address || address.trim() === "") {
-                console.warn("주소 정보가 없습니다.");
-                return;
-            }
+            // if (!address || address.trim() === "") {
+            //     console.warn("주소 정보가 없습니다.");
+            //     return;
+            // }
 
             // 주소로 좌표를 검색
             geocoder.addressSearch(address, function(result, status) {
@@ -313,6 +314,8 @@
                 }
             });
         });
+
+
 
     
 
