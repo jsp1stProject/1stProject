@@ -14,7 +14,7 @@
         <a class="list-group-item list-group-item-action" href="../mypage/event_list.do" role="tab">내 이벤트</a>
         <a class="list-group-item list-group-item-action" href="#" role="tab">찜</a>
         <a class="list-group-item list-group-item-action" href="#" role="tab">리뷰</a>
-        <a class="list-group-item list-group-item-action" href="#" role="tab">쿠폰</a>
+        <a class="list-group-item list-group-item-action" href="../mypage/mycupon.do" role="tab">쿠폰</a>
     </div>
     <%--메뉴 추가할 때 위아래 목록 2개에 모두 추가해주세요--%>
     <div class="btn-group d-block d-lg-none mobilenav">
@@ -27,7 +27,7 @@
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">찜</a></li>
             <li><a class="dropdown-item" href="#">리뷰</a></li>
-            <li><a class="dropdown-item" href="#">쿠폰</a></li>
+            <li><a class="dropdown-item" href="../mypage/mycupon.do">쿠폰</a></li>
         </ul>
     </div>
 </div>
