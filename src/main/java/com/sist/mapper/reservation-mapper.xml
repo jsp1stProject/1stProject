@@ -84,4 +84,8 @@
 		SET status = 'A' 
 		WHERE reserve_id = #{reserve_id}	
 	</update>
+	<select id="rsvUserSearch" resultType="ReservationVO" parameterType="string">	
+		SELECT * FROM reservation 
+		WHERE user_id = #{user_id}
+	</select>
 </mapper>

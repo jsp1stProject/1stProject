@@ -84,4 +84,11 @@ private static SqlSessionFactory ssf;
 			session.update("rsvCancelApprove", reserve_id);
 		}
 	}
+	/** 회원 예약 조회*/
+	public static List<ReservationVO> rsvUserSearch(String user_id) {
+		try(SqlSession session = ssf.openSession()) {
+			List<ReservationVO> list = session.selectList("rsvUserSearch", user_id);
+			return list;
+		}
+	}
 }

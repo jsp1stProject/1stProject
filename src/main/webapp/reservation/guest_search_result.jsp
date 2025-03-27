@@ -26,7 +26,7 @@
 			<tr>
 				<td>${vo.reserve_id }</td>
 				<td>${vo.guest_name }</td>
-				<td>${roomtitle }${fn:trim(vo.status) }</td>
+				<td>${roomtitle }</td>
 				<td><fmt:formatNumber value="${vo.pay_amount }" pattern="#,###"/> 원</td>
 				<td><fmt:formatDate value="${vo.reserve_date}" pattern="yyyy.MM.dd (E)" /></td>
 				<td>

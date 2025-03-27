@@ -65,6 +65,7 @@
 							<c:if test="${sessionScope.user_id!=null }">
 								<h6>${sessionScope.name} 님</h6>
 								<li><a href="../mypage/myinfo.do">마이페이지</a></li>
+								<li><a href="../reservation/reservation_result.do">숙소예약</a></li>
 								<li><a href="../member/logout.do">로그아웃</a></li>
 							</c:if>
 							</ul>
