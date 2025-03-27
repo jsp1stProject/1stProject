@@ -118,25 +118,25 @@
                         </select>
                     </div>
                     <ul class="review-ul">
-                        <c:forEach begin="1" end="3" var="i">
+                        <c:forEach items="${rvlist}" begin="0" end="5" var="vo">
                             <li>
                                 <div class="review-header">
                                     <div class="user-name d-flex align-items-center">
-                                        <div class="user-pf" style="background-image:${userprofile}"></div>
+                                        <div class="user-pf"></div>
                                         <div class="d-flex flex-column">
-                                            <div class="user-score" data-score="${i}">
+                                            <div class="user-score" data-score="${vo.rate}">
                                                 <div class="star"></div>
                                                 <div class="star"></div>
                                                 <div class="star"></div>
                                                 <div class="star"></div>
                                                 <div class="star"></div>
                                             </div>
-                                            <p class="name">홍길동<span class="created-time">2025년 3월 12일</span></p>
+                                            <p class="name">${vo.mvo.nickname}<span class="created-time">${vo.dbday}</span></p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="review-cont">
-                                    세 줄 이상일 때만 말줄임표 + 더보기 버튼 내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용
+                                    ${vo.message}
                                 </div>
                             </li>
                         </c:forEach>

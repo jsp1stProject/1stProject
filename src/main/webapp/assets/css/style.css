@@ -1730,7 +1730,7 @@ button.resetbtn:focus{
 
 /*event main*/
 .event_main_wrap {
-    height:500px;
+    height:600px;
     background: no-repeat center center / cover;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200' fill='none'%3E%3Crect width='200' height='200' fill='%23F2F2F2'/%3E%3Crect x='44' y='56' width='111' height='87' rx='14' stroke='white' stroke-width='4'/%3E%3Cpath d='M53 120.705L77.1994 89.4879C79.2915 86.7891 83.4132 86.9349 85.3094 89.7748L104.705 118.824C106.676 121.775 111.007 121.792 113 118.856L123.901 102.802C125.855 99.9238 130.077 99.8708 132.102 102.699L145 120.705' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E");
     display: flex;

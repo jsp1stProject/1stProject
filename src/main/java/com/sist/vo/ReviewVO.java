@@ -9,4 +9,5 @@ public class ReviewVO {
 	private int no, content_id, rate, type;
 	private String user_id, message, dbday;
 	private Date regdate;
+	private MemberVO mvo;
 }

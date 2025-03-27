@@ -392,11 +392,13 @@ public class EventModel {
 		List<EventVO> imglist= eventDetailImg(id);
 		List<EventVO> infolist= eventDetailInfo(id);
 		List<ContentVO> nearlist= eventDetailHotel(vo.getCvo().getAreacode());
+		List<ReviewVO> rvlist=eventReviewList(contid);
 
 		request.setAttribute("imglist", imglist);
 		request.setAttribute("infolist", infolist);
 		request.setAttribute("vo", vo);
 		request.setAttribute("nearlist", nearlist);
+		request.setAttribute("rvlist", rvlist);
 
 		//쿠키
 		String cookies="";

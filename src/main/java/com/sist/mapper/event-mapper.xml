@@ -51,6 +51,11 @@
 		<result property="evo.dbend" column="dbend"></result>
 	</resultMap>
 
+	<resultMap id="reviewMap" type="ReviewVO">
+		<result property="mvo.name" column="name"></result>
+		<result property="mvo.nickname" column="nickname"></result>
+	</resultMap>
+
 	<select id="mainEventList" resultMap="eventMap">
 		<![CDATA[
 		SELECT EVENT.CONTENT_ID, title,addr1,CAT3,TO_CHAR(EVENT_STARTDATE,'YYYY.MM.DD') as dbstart,TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend,FIRST_IMAGE,rownum
@@ -233,6 +238,16 @@
 				 join CONTENT c on o.CONTENT_ID=c.CONTENT_ID
 				 join event e on o.CONTENT_ID=e.CONTENT_ID
 		where PAYMENT_ID =#{PAYMENT_ID} and c.CONTENT_ID=#{content_id}
+	</select>
+
+<!--	리뷰-->
+	<select id="eventReviewList" parameterType="hashmap" resultMap="reviewMap">
+		select no, content_id, type, user_id, message, rate, dbday, nickname, num
+		from (select t.*, rownum as num
+		from (select r.no,r.content_id,r.type,r.user_id as user_id,r.MESSAGE,r.rate,to_char(regdate,'YYYY.MM.DD') as dbday,u.NICKNAME from review r join USER_INFO u
+		on r.USER_ID = U.USER_ID
+		where content_id=#{content_id} order by REGDATE desc) t)
+		where num between #{start} and #{end}
 	</select>
 
 	<!--	<select id="replace_data" resultMap="eventMap">-->

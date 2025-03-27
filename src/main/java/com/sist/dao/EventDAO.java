@@ -281,6 +281,12 @@ public class EventDAO {
 		session.close();
 		return vo;
 	}
+	public static List<ReviewVO> eventReviewList(String content_id){
+		SqlSession session = ssf.openSession();
+		List<ReviewVO> list=session.selectList("eventReviewList", content_id);
+		session.close();
+		return list;
+	}
 	/*
 	가격 정규화
 	public static void test(){

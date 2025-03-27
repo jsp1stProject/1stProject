@@ -6,7 +6,7 @@
 <html>
 <body>
 	<div class="container-fluid p-0 pb-4 wow fadeIn" data-wow-delay="0.1s">
-		<div class="event_main_wrap" style="background-image:url(../assets/img/event_main.png)">
+		<div class="event_main_wrap" style="background-image:url(http://tong.visitkorea.or.kr/cms/resource/99/3354899_image2_1.png)">
 			<div class="event_main_schwrap">
 				<form method="post" action="../event/event_list.do" name="keywordform">
 					<div class="event_main_schinner">
