@@ -220,7 +220,7 @@
 	</insert>
 <!--	주문 리스트-->
 	<select id="eventOrderList" parameterType="String" resultMap="orderMap">
-		select PAYMENT_ID, order_id, account, total_price, c.content_id, order_date, title, to_char(EVENT_STARTDATE,'YYYY.MM.DD') as dbstart, to_char(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, first_image
+		select PAYMENT_ID, order_id, account, total_price, used, c.content_id, to_char(ORDER_DATE,'YYYY.MM.DD') as dbday, title, to_char(EVENT_STARTDATE,'YYYY.MM.DD') as dbstart, to_char(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, first_image
 		from EVENT_ORDER o
 		join CONTENT c on o.CONTENT_ID=c.CONTENT_ID
 		join event e on o.CONTENT_ID=e.CONTENT_ID
@@ -228,7 +228,7 @@
 	</select>
 <!--	주문 낱개 가져오기-->
 	<select id="eventOrderDetail" parameterType="hashmap" resultMap="orderMap">
-		select PAYMENT_ID, order_id, account, total_price, c.content_id, order_date, title, to_char(EVENT_STARTDATE,'YYYY.MM.DD') as dbstart, to_char(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, first_image
+		select PAYMENT_ID, order_id, account, total_price, used, c.content_id, order_date, title, to_char(EVENT_STARTDATE,'YYYY.MM.DD') as dbstart, to_char(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, first_image
 		from EVENT_ORDER o
 				 join CONTENT c on o.CONTENT_ID=c.CONTENT_ID
 				 join event e on o.CONTENT_ID=e.CONTENT_ID

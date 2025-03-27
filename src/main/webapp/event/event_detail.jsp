@@ -267,6 +267,12 @@
         $("#cart").on("click",function(e){
             e.preventDefault();
             cartUpdate(this); //cart 테이블 업데이트, eventcount session
+            //구매 팝업 초기화, 끄기
+            $("input[name=product_count]").val(0);
+            $(".totalPrice").text("0원");
+            total=0;
+            $(".buy-wrap").removeClass("active");
+            $(".buy-wrap").addClass("off");
         });
 
         //업데이트 ajax

@@ -2217,6 +2217,7 @@ li.show .review-cont {
     top: 62px;
     left: 0;
     right: 0px;
+    z-index: 1;
 }
 .mynav .mobilenav #dropdownMenuButton{
     border-radius: 0;
@@ -2304,5 +2305,18 @@ li.show .review-cont {
     padding:0;
     border:none;
     border-radius:0 5px 5px 0;
+}
+.list-group{
+    border-radius:0;
+}
+.list-group-item{
+    border-right:none;
+    border-left:none;
+}
+.list-group-item.active{
+    background:#ffffff;
+    color:var(--primary);
+    font-weight:600;
+rgba(0, 0, 0, 0.125)
 }
 /*mypage*/

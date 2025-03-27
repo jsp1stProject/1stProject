@@ -597,17 +597,20 @@ public class EventModel {
 		//세션에서 아이디 정보
 		HttpSession session = request.getSession();
 		String user_id = (String) session.getAttribute("user_id");
+		System.out.println("user_id:"+user_id);
+
 		List<EventOrderVO> list=eventOrderList(user_id);
+		System.out.println("list:"+list.size());
 		request.setAttribute("list", list);
 
 		request.setAttribute("event", "y"); //event page
 		request.setAttribute("main_jsp", "../mypage/event_list.jsp");
-		request.setAttribute("title", "행사");
+		request.setAttribute("title", "내 이벤트");
 		return "../main/main.jsp";
 	}
 
-//	행사 상세
-	@RequestMapping("mypage/event_list.do")
+//	행사 구매 상세
+	@RequestMapping("mypage/event_detail.do")
 	public String event_order_detail(HttpServletRequest request, HttpServletResponse response) {
 		//세션에서 아이디 정보
 		String order_id=request.getParameter("order_id");

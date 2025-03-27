@@ -149,11 +149,9 @@
         merchant_uid: `payment-`+crypto.randomUUID(), // 주문 고유 번호
         name: productsList(),
         amount: $("#total_price2").text().replace(/[^0-9]/g, ''),
-        buyer_email: "gildong@gmail.com",
+        buyer_email: "${sessionScope.email}",
         buyer_name: "${sessionScope.name}",
-        buyer_tel: "010-4242-4242",
-        buyer_addr: "서울특별시 강남구 신사동",
-        buyer_postcode: "01181",
+        buyer_tel: "${sessionScope.phone}",
       },
       async (response) => {
         if (response.error_code != null) {
