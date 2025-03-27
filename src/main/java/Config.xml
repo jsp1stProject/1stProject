@@ -29,6 +29,7 @@
   		<typeAlias type="com.sist.vo.FesCartVO" alias="FesCartVO"/>
   		<typeAlias type="com.sist.vo.CartVO" alias="CartVO"/>
   		<typeAlias type="com.sist.vo.EventOrderVO" alias="EventOrderVO"/>
+  		<typeAlias type="com.sist.vo.FoodReserveVO" alias="FoodReserveVO"/>
   	</typeAliases>
   	<environments default="development">
   		<environment id="development">

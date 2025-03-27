@@ -23,8 +23,6 @@ $(function(){
 	$('#ss').val('서울')
 	commons(1)
 	
-	
-	
 	$('#findBtn').click(function(){
 		commons(1)
 	})
@@ -38,7 +36,7 @@ $(function(){
 function commons(page)
 {
 	let ss=$('#ss').val();
-	let totalCount=$('#totalCount').val();
+	let totalCount = $('#totalCount').val(); 
 	let fdList = [];
 	 let fd = [];
         $('input[name="fd"]:checked').each(function() {
@@ -47,26 +45,20 @@ function commons(page)
         if (fdList.length === 0) {
             fdList = ["name", "theme", "address"]; // 모든 항목 검색
         }
-        console.log("📌 선택된 필드:", fdList); // 디버깅용
-        console.log("📌 검색어:", ss);
-        console.log("📌 페이지 번호:", page); 
 	$.ajax({
+		
 		type:'post',
 		url:'../food/food_find_ajax.do', 
-		data:{"fd":fdList.join(','),"ss":ss,"page":page,"totalCount":totalCount}, 
-		beforeSend: function () {
-            console.log("📢 AJAX 요청 시작!");
-        },
-        success: function (result) {
-        	 $("#searchKeyword").text(ss);   // ✅ 검색 키워드 업데이트
-        	    $("#totalCount").text(totalCount); // ✅ 총 검색 결과 수 업데이트
+		data:{"fd":fdList.join(','),"ss":ss,"page":page}, 
+        success: function (result) {        	
+        	console.log("📢 AJAX 요청 시작!");
             let json=JSON.parse(result)
 			jsonView(json)
         },
         error: function (xhr, status, error) {
-            console.error("🚨 AJAX 요청 실패!");
-            console.error("🚨 상태:", status);
-            console.error("🚨 오류 메시지:", error);
+            console.error("AJAX 요청 실패!");
+            console.error("상태:", status);
+            console.error("오류 메시지:", error);
         }
 		/* success:function(result){
 			console.log("총 페이지 수:", totalpage);
@@ -91,11 +83,12 @@ function jsonView(json)
 {
 	// 이미지 
 	let html=''
+		
 	json.map(function(food){
 		
 				html+='<ul class="content-ul event"  >'
 					html+='<li>'
-					html+='<a href="../food/food_detail.do?fno='+food.fno+'" class="d-flex">'
+					html+='<a href="../food/food_detail_before.do?fno='+food.fno+'" class="d-flex">'
 					html+='<div class="thumb-wrap" style="background-image:url(https://www.menupan.com'+food.poster+')">'
 					html+='<button type="button" class="bookmark-btn" name="bm-btn" data-id="#"></button>'
 						html+='</div>'
@@ -151,6 +144,7 @@ function jsonView(json)
 			            }
 			 html+='</ul>'
 				 
+				 
 	
 $('#view').html(html)
 	}
@@ -169,30 +163,6 @@ $('#view').html(html)
 					<div class="filter-inner">
 						<div class="filter-wrap" id="filter">
 							<div class="filter-item col-lg-12 col-md-4 col-sm-12"> <!-- range 타입 -->
-					<div class="filter-item"> <!-- range 타입 -->
-						<h6>가격대</h6>
-						<div id="range-slider"></div>
-						<div class="d-flex justify-content-center range-value-wrap">
-							<span class="start">0원</span><span class="ignr"> ~ </span><span class="end">100000</span>
-						</div>
-					</div>
-					<!-- <div class="filter-item"> checkbox 타입
-						<h6>맛집 유형</h6>
-						<div class="checkbtn-wrap" id="fd">
-							<input type="checkbox" name="type" id="fd">
-							<label for="힌식">한식</label>
-							<input type="checkbox" name="type" id="fd">
-							<label for="t2">일식</label>
-							<input type="checkbox" name="type" id="fd">
-							<label for="t3">중식</label>
-							<input type="checkbox" name="type" id="fd">
-							<label for="t4">양식</label>
-							<input type="checkbox" name="type" id="fd">
-							<label for="t5">카페</label>
-							<input type="checkbox" name="type" id="fd">
-							<label for="t6">기타</label>
-						</div>
-					</div> -->
 					<div class="filter-item">
 						<h6>검색 유형</h6>
 						<div class="checkbtn-wrap">
@@ -204,6 +174,9 @@ $('#view').html(html)
 							
 							 <input type="checkbox" id="fd3" name="fd" value="address" checked>
 							 <label for="fd3" class="label">주소</label>
+							 
+							 <input type="checkbox" id="fd4" name="fd" value="type">
+							 <label for="fd4" class="label">종류</label>
 						</div>
 					</div>
 					
@@ -229,12 +202,10 @@ $('#view').html(html)
 							</div>
 					</div>
 				
-	<h4 class="search-title mb-3">
-    <span id="searchKeyword"></span>에 대한 총 <span id="totalCount"></span> 건의 검색 결과
-    </h4>
+	<h4 class="search-title mb-3"><span id="ss"></span>에 대한 총 <span id="totalCount"></span> 건의 검색 결과</h4>
 
 	<div class="container" id="view"> 
-	
+	 
 	</div>
 	</div>
 	</div>
