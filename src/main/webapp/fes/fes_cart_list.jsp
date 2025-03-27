@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
 <script
 	src="${pageContext.request.contextPath }/assets/plugin/rangeslider/rangeslider.umd.min.js"></script>
 <link
@@ -18,13 +19,164 @@
 	href="//optimizer.poxo.com/css/ticketmdshop/e8fd6ad0e1e864d3709ee2de247ec0e0a2cf8dd3.84554ca7a5767d94093f7e391c642c44/1720492392"
 	crossorigin="anonymous">
 <script type="text/javascript">
+let sel=0;
+var IMP = window.IMP;
 
-$(function(){
+IMP.init("imp68206770"); 
+function requestPay(json,name,price) {
+    IMP.request_pay({
+        pg: "html5_inicis",
+        pay_method: "card",
+        merchant_uid: "ORD20180131-0000011",   // 주문번호
+        name: name,
+        amount: json.account,         // 숫자 타입
+        buyer_email: json.email,
+        buyer_name: json.name,
+        buyer_tel:json.phone,
+        buyer_addr: json.address,
+        buyer_postcode: json.post
+    }, function (rsp) { // callback
+    	location.href='http://localhost/JSPLastProject/fes/fes_home.do' 
+}); 
+    
+}
+$(function(){	
+
+	
+	$('up').click(function(){
+		console.log($('#fno').val())
+		console.log($('#price').val())
+		
+		console.log(total)
+		console.log($('#sel').val())
+		if(total===0)
+		{
+			if($('#price').val()==0)
+				alert("입장료 무료! 현장 추가결제 있을 수 있습니다")
+			else
+			{
+				alert("수량 선택하세요")
+			}
+			return
+		}
+		let fno=$('#fno').val();
+		let price=$('#price').val();
+		let account=$('#sel').val();
+		let name=$('#title').text()
+		$.ajax({
+			type:'post',
+			url:'../fes/fes_buy_insert.do',
+			data:{"fno":fno,"price":price,"account":account},
+			success:function(result)
+			{
+				alert(result)
+				let json=JSON.parse(result)
+				console.log(json)
+				console.log(price)
+				console.log(name)
+				requestPay(json,name,price)
+			}
+		})
+	})
+	
+	
 	$('#countup').click(function(){
-		console.log("수량변경 버튼 확인")
-		count
+		let fno=$('#fno').val();
+		let account=$('#quantity_id_0').val();
+		console.log("수량변경 버튼 업 확인")
+		console.log("account값 : "+account)
+		console.log("fno값 : "+fno)
+		account=Number(account)+1
+		$('#quantity_id_0').val(account);
+		
+	})
+	$('#countdown').click(function(){
+		let account=$('#quantity_id_0').val();
+		console.log("수량변경 버튼 다운확인")
+		if(account==1)
+		{
+			alert("최소 수량입니다.");
+		}
+		else
+		{
+			$('#quantity_id_0').val(account-1);
+		}
+
 	})
 })
+
+
+function countchange()
+{
+	console.log("수량변경확인버튼")
+	let account=$('#quantity_id_0').val();
+	let price=$('#price').val();
+	let fno=$('#fno').val();
+	
+	$.ajax({
+		type:'post',
+		url:'../fes/fes_cart_update.do',
+		data:{"fno":fno,"account":account},
+		success:function(result)
+		{
+			console.log("수량이 변경되었습니다.")
+			totalprice()
+		}
+	})
+	
+	
+}
+
+function totalprice()
+{	
+	console.log("totalprice함수 실행")
+	let account=$('#quantity_id_0').val();
+	console.log(account)
+	let price=$('#price').val();
+	console.log("갸격"+price)
+	let total=Number(price)*Number(account)
+	console.log(total)
+	$('#totalprice').text(total.toLocaleString())
+}
+
+
+function totalbuy()
+{
+	console.log($('#fno').val())
+	console.log($('#price').val())
+	
+	console.log(total)
+	console.log($('#sel').val())
+	if(total===0)
+	{
+		if($('#price').val()==0)
+			alert("입장료 무료! 현장 추가결제 있을 수 있습니다")
+		else
+		{
+			alert("수량 선택하세요")
+		}
+		return
+	}
+	let fno=$('#fno').val();
+	let price=$('#price').val();
+	let account=$('#sel').val();
+	let name=$('#title').text()
+	$.ajax({
+		type:'post',
+		url:'../fes/fes_buy_insert.do',
+		data:{"fno":fno,"price":price,"account":account},
+		success:function(result)
+		{
+			alert(result)
+			let json=JSON.parse(result)
+			console.log(json)
+			console.log(price)
+			console.log(name)
+			requestPay(json,name,price)
+		}
+	})
+	
+}
 </script>
 
 </head>
@@ -66,11 +218,12 @@ $(function(){
 									<h3>장바구니 상품</h3>
 								</div>
 								
-								<c:forEach var="vo" items="${list }">
+								
 								<div class="contents">
 									<div class="xans-element- xans-order xans-order-normtitle title subTitle ">
 										<h4>일반상품</h4>
 									</div>
+									<c:forEach var="vo" items="${list }">
 									<div
 										class="xans-element- xans-order xans-order-normnormal xans-record-">
 										<div class="xans-element- xans-order xans-order-list">
@@ -91,9 +244,10 @@ $(function(){
 															<a
 															href="#"
 															class="ec-product-name">${vo.fvo.title}</a>
+															
 														</strong>
 														<ul class="price">
-															<li id=""><strong>${vo.fvo.price}</strong>원 <span
+															<li id="price" name="price" value="${vo.fvo.price}"><strong>${vo.fvo.price}</strong>원 <span
 																class="displaynone"><span></span></span></li>
 															<li class="" id=""><span class="txtSecondary">-0</span>원
 																<span class="displaynone"><span></span></span></li>
@@ -108,18 +262,20 @@ $(function(){
 														<span class="label">수량</span>
 														<div class="">
 															<span class="ec-base-qty"> 
+															<div>
+															<input type="hidden" name="fno" value="${vo.fno}" id="fno">
+															</div>
 															<input
-																id="quantity_id_0" name="quantity_name_0" size="2"
-																value="${vo.account }" type="text"> 
-															<a href="javascript:;" class="up" name="countChange" id="countup">수량증가</a>
-															<a href="javascript:;" class="down" name="countChange" id="countdodwn">수량감소</a>
-															</span> <a href="javascript:;" class="btnNormal sizeQty"
-																onclick="Basket.modifyQuantity()">변경</a>
+																id="quantity_id_0" name="quantity_name_0" size="2" value="${vo.account }" type="text"> 
+															<a href="javascript:;" class="up" name="countup" id="countup">수량증가</a>
+															<a href="javascript:;" class="down" name="countdown" id="countdown">수량감소</a>
+															
+															</span> <a href="javascript:;" class="btnNormal sizeQty" name="countchange" onclick=countchange()>변경</a>
 														</div>
 														<div class="displaynone">1</div>
 													</div>
 													<div class="sumPrice">
-														<span class="label">주문금액</span> <strong>${vo.cart_price }</strong>원
+														<span class="label">주문금액</span> <strong name="totalprice" id="totalprice">${vo.cart_price }</strong>원
 														<span class="displaynone"></span>
 													</div>
 													<div class="buttonGroup">
@@ -131,12 +287,12 @@ $(function(){
 													</div>
 												</div>
 												<a href="#none" onclick="Basket.deleteBasketItem(0);"
-													class="btnDelete">삭제</a>
+													class="btnDelete" onclick="con">삭제</a>
 											</div>
 										</div>
 
 									</div>
-
+									</c:forEach>
 
 
 									<div
@@ -150,7 +306,7 @@ $(function(){
 
 									</div>
 								</div>
-								</c:forEach>
+								
 							</div>
 
 						</div>
@@ -239,8 +395,8 @@ $(function(){
 										<a href="#none" onclick="Basket.orderAll(this)"
 											link-order="/order/orderform.html?basket_type=all_buy"
 											link-login="/member/login.html"
-											class="btnSubmit gFull sizeL  ">전체상품주문</a> <a href="#none"
-											onclick="Basket.orderSelectBasket(this)"
+											class="btnSubmit gFull sizeL  onclick="totalbuy()">전체상품주문</a> <a href="#none"
+											
 											link-order="/order/orderform.html?basket_type=all_buy"
 											link-login="/member/login.html"
 											class="btnNormal gFull sizeL ">선택상품주문</a>
@@ -302,8 +458,16 @@ $(function(){
 		<!--#ez="1/5"-->
 	</div>
 	<!-- //wrap -->
-
-</body>
+	<script type="text/javascript">
+/* 	$(function(){
+		$('#countup').change(function(){
+			console.log("수량 증가버튼")
+		})
+		$('#countdown').change(function(){
+			console.log("수량 감소버튼")
+		})
+	}) */
+	</script>
 </body>
 </html>
 

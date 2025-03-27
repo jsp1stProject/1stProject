@@ -58,6 +58,28 @@ public class FesDAO {
 		return list;
 	}
 	
+	public static List<NoticeVO> fesHomeNotice()
+	{
+		List<NoticeVO> list=null;
+		SqlSession session=null;
+		try
+		{
+		  session=ssf.openSession();
+		  list=session.selectList("fesHomeNotice");
+		}
+		catch (Exception e) 
+		{
+			// TODO: handle exception
+		  e.printStackTrace();
+		}
+		finally
+		{
+		  if(session!=null)
+			  session.close();
+		}
+		return list;
+	}
+	
 	/*
 	<select id="fesHomeFindData" resultType="FesVO" parameterType="hashmap">
 	SELECT content_id, title, addr1, addr2,first_image, review_count, event_startdate, event_enddate, charge, agelimit, price, num
@@ -313,6 +335,14 @@ public class FesDAO {
 		  return list;
 	 }
 	
+	public static int fesFindTotalPage(Map map)
+	{
+		SqlSession session=ssf.openSession();
+		int totalpage=session.selectOne("fesFindTotalPage",map);
+		session.close();
+		return totalpage;
+		
+	}
 	public static void fesCartInsert(FesCartVO vo)
 	{
 		SqlSession session=null;
@@ -339,6 +369,27 @@ public class FesDAO {
 		}
 	}
 	
+	public static void fesCartListUpdate(Map map)
+	{
+		SqlSession session=null;
+		try {
+			session=ssf.openSession(true);
+			session.update("fesCartListUpdate",map);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		finally
+		{
+		  if(session!=null)
+			  session.close();
+		}	
+		
+	}
+	
+	
+	
+	
 	public static List<FesCartVO> fesCartListData(String user_id)
 	{
 		SqlSession session=null;
@@ -359,6 +410,59 @@ public class FesDAO {
 		return list;
 	}
 
+	public static void buyInsert(FesCartVO vo)
+	{
+		   SqlSession session=ssf.openSession(true);
+		   session.insert("buyInsert",vo);
+		   session.close();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public static void reviewInsert(ReviewVO vo)
+	{
+		  SqlSession session=ssf.openSession(true);
+		  session.insert("reviewInsert",vo);
+		  session.close();
+	}
+	public static List<ReviewVO> reviewListData(ReviewVO vo)
+	{
+		  SqlSession session=ssf.openSession();
+		  List<ReviewVO> list=session.selectList("reviewListData",vo);
+		  session.close();
+		  return list;
+	}
+	
+	 public static int reviewCount(ReviewVO vo)
+	  {
+		  SqlSession session=ssf.openSession();
+		  int count=session.selectOne("reviewCount",vo);
+		  session.close();
+		  return count;
+		  
+	  }
+	 public static void reviewDelete(int cno)
+	  {
+		  SqlSession session=ssf.openSession(true);
+		  session.delete("reviewDelete",cno);
+		  session.close();
+	  }
+	
+	 public static void reviewUpdate(ReviewVO vo)
+	  {
+		  SqlSession session=ssf.openSession(true);
+		  session.update("reviewUpdate",vo);
+		  session.close();
+	  }
+	
 
 }
 

@@ -9,9 +9,8 @@
 	<script src="${pageContext.request.contextPath }/assets/plugin/rangeslider/rangeslider.umd.min.js"></script>
 	<link href="${pageContext.request.contextPath }/assets/plugin/rangeslider/style.css" rel="stylesheet">
 	<script src="${pageContext.request.contextPath }/assets/plugin/scroll/slimscroll.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/jquery-js"></script>
-
 </head>
+
 <script type="text/javascript">
 
 
@@ -22,11 +21,17 @@ let cat3=[];
 let sd="${search}";
 let valueSet=[0,100000];
 
+window.onload = function () {
+	data_ajax(cat3,ac,sd,valueSet);
+	console.log("페이지실행")
+}
+
 function price_change(valueSet)
 {
 	console.log("valueSet배열로"+valueSet)
 	data_ajax(cat3,ac,sd,valueSet);
 }
+
 
 $(function(){
 
@@ -92,12 +97,10 @@ function data_ajax(cat3,ac,sd,valueSet)
 	 $.ajax({
          type: "post",
          url: "../fes/fes_list_ajax.do",
-         traditional: true,
-         data: {'cat3': cat3, 'ac': ac,"search":sd,"valueSet":valueSet},
-         
+         traditional:true,
+         data:{"cat3":cat3,"ac":ac,"search":sd,"valueSet":valueSet},
          success: function(result){
-        	 let json=JSON.parse(result)
-        	 
+        	 let json=JSON.parse(result)        	
         	 jsonView(json)
          }
       }); // ajax 종료
@@ -106,8 +109,53 @@ function data_ajax(cat3,ac,sd,valueSet)
 
 function jsonView(json)
 {
-	let html=''
-	json.map(function())
+	console.log("jsonView진입")
+	let html='';
+	html+='<h4 class="search-title mb-3">'
+		
+			+'<span>'+json[0].search+'</span>'
+			+'에 대한 총 <span>'+json.length+'</span> 건의 검색 결과</h4>'
+			+'<ul class="content-ul event"  >'
+	
+	json.map(function(fes){
+		html+='<li>'
+			+'<a href="../fes/fes_detail_before.do?content_id='+fes.content_id+'" class="d-flex">'
+			if(fes.first_image=='N/A')
+			{
+				html+='<div class="thumb-wrap">'	
+			}
+			else
+			{
+				html+='<div class="thumb-wrap" style="background-image:url('+fes.first_image+')">'
+			}
+			html+='<button type="button" class="bookmark-btn" name="bm-btn" ></button>'
+			+'</div>'
+			+'<div class="d-flex flex-column flex-md-row right">'
+			+'<div class="title-wrap">'
+			+'<p class="cat"><span class="fes"></span></p>'
+			+'<p class="content-name">'+fes.title+'</p>'
+			+'<p class="location">'+fes.addr1+'</p>'
+			+'<p class="score">4.3(23)</p>'
+			+'</div>'
+			+'<div class="price-wrap">'
+			if(fes.price==0)
+			{
+				html+='<p class="price">무료</p>'
+			}
+			else
+			{
+				html+='<p class="price">'+fes.price+'</p>'
+			}
+			
+			html+='</div>'
+				+'</div>'
+				+'</a>'
+				+'</li>'
+	
+
+	})
+	html+='</ul>'
+	$('#view').html(html)
 }
 
 </script>
@@ -120,7 +168,7 @@ function jsonView(json)
 						<button class="cpsbtn">필터</button>
 						<button type="button" class="btn btn-light resetbtn">초기화</button>
 					</div>
-					<div class="filter-wrap" id="filter">
+					<div class="filter-wrap" id="filter" style="height: 450px">
 						<div class="filter-item col-lg-12 col-md-4 col-sm-12"> <!-- range 타입 -->
 							<h6>가격대</h6>
 							<div id="range-slider"></div>
@@ -136,7 +184,7 @@ function jsonView(json)
 							<div class="checkbtn-wrap" id="cat3" >
 								<input type="checkbox" name="cat3" id="t1" value="A02070100" onclick="boxClick()">
 								<label for="t1">문화관광축제</label>
-								<input type="checkbox" name="cat3" id="t2" value="A02070200" onclick="boxClick()" >
+								<input type="checkbox" name="cat3" id="t2" value="A02070200" onclick="boxClick()">
 								<label for="t2">일반축제</label>
 							</div>
 							<!-- 
@@ -167,51 +215,32 @@ function jsonView(json)
 								<input type="checkbox" name="ac" id="t6" value=4 onclick="acClick()">
 								<label for="t6">대구</label>
 								<input type="checkbox" name="ac" id="t7" value=5 onclick="acClick()">
-								<label for="t6">광주</label>
+								<label for="t7">광주</label>
 								<input type="checkbox" name="ac" id="t8" value=6 onclick="acClick()">
-								<label for="t6">부산</label>
+								<label for="t8">부산</label>
 								<input type="checkbox" name="ac" id="t9" value=7 onclick="acClick()">
-								<label for="t6">울산</label>
+								<label for="t9">울산</label>
 								<input type="checkbox" name="ac" id="t10" value=8 onclick="acClick()">
-								<label for="t6">세종</label>
+								<label for="t10">세종</label>
 								<input type="checkbox" name="ac" id="t11" value=31 onclick="acClick()">
-								<label for="t6">경기</label>
+								<label for="t11">경기</label>
 								<input type="checkbox" name="ac" id="t12" value=32 onclick="acClick()">
-								<label for="t6">강원</label>
+								<label for="t12">강원</label>
 								<input type="checkbox" name="ac" id="t13" value=33 onclick="acClick()">
-								<label for="t6">충북</label>
+								<label for="t13">충북</label>
 								<input type="checkbox" name="ac" id="t14" value=34 onclick="acClick()">
-								<label for="t6">충남</label>
+								<label for="t14">충남</label>
 								<input type="checkbox" name="ac" id="t15" value=35 onclick="acClick()">
-								<label for="t6">경북</label>
+								<label for="t15">경북</label>
 								<input type="checkbox" name="ac" id="t16" value=36 onclick="acClick()">
-								<label for="t6">경남</label>
+								<label for="t16">경남</label>
 								<input type="checkbox" name="ac" id="t17" value=37 onclick="acClick()">
-								<label for="t6">전북</label>
+								<label for="t17">전북</label>
 								<input type="checkbox" name="ac" id="t18" value=38 onclick="acClick()">
-								<label for="t6">전남</label>
+								<label for="t18">전남</label>
 								<input type="checkbox" name="ac" id="t19" value=39 onclick="acClick()">
-								<label for="t6">제주</label>
+								<label for="t19">제주</label>
 							</div>
-							<!-- 
-							<h6>정렬</h6>
-							<div class="checkbtn-wrap">
-								<input type="checkbox" name="type" id="t7">
-								<label for="t1">오름차순</label>
-								<input type="checkbox" name="type" id="t8">
-								<label for="t2">내림차순</label>
-								<input type="checkbox" name="type" id="t9">
-								<label for="t1">리뷰</label>
-								<input type="checkbox" name="type" id="t10">
-								<label for="t2">조회</label>
-							</div>
-							<h6>가격</h6>
-							<div class="checkbtn-wrap">
-								<input type="checkbox" name="type" id="t11">
-								<label for="t1">무료</label>
-								<input type="checkbox" name="type" id="t12">
-								<label for="t2">유료</label>
-							</div> -->
 							</form>
 						</div>
 					</div>
@@ -222,43 +251,19 @@ function jsonView(json)
 				<div class="container-xxl py-3 px-0">
 					<div class="container">
 							<div class="sch_wrap page">
-								<input type="text" id="search" placeholder=${search }>
-								<input type="button" value="검색" id="ss" >
+								<input type="text" id="search" name="key" placeholder=>
+								<input type="submit"  value="검색" id="ss" >
 							</div>
 					</div>
 				</div> 
 				<div class="container-xxl py-3 px-0">
-					<div class="container">
-						<h4 class="search-title mb-3"><span>${search }</span>에 대한 총 <span>${totalcount}</span> 건의 검색 결과</h4>
-						<ul class="content-ul event">
-							<%-- <c:forEach begin="0" end="3"> --%>
-							<c:forEach var="vo" items="${list }">
-								<li><!--축제 -->
-									<a href="../fes/fes_detail_before.do?content_id=${vo.content_id }" class="d-flex">
-										<div class="thumb-wrap" style="background-image:url(${vo.first_image})">
-											<button type="button" class="bookmark-btn" name="bm-btn" data-id="${conid}"></button>
-										</div>
-										<div class="d-flex flex-column flex-md-row right">
-											<div class="title-wrap">
-												<p class="cat"><span class="fes"></span><!--cat3으로 구분--></p>
-												<p class="content-name">${vo.title}</p>
-												<p class="location">${vo.addr1}</p>
-												<p class="score">4.3(23)</p>
-											</div>
-											<div class="price-wrap">
-												<c:if test="${vo.price==0}">
-												<p class="price">무료</p>
-												</c:if>
-												<c:if test="${vo.price!=0}">	
-												<p class="price">${vo.price }</p>
-												</c:if>
-											</div>
-										</div>
-									</a>
-								</li>
-								
-							</c:forEach>
-						</ul>
+					<div class="container" id="view">
+						
+							
+							
+							
+							
+						
 					</div>
 				</div>
 				<div class="container-xxl py-3 px-0">
