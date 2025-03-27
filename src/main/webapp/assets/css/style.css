@@ -2320,3 +2320,97 @@ li.show .review-cont {
 rgba(0, 0, 0, 0.125)
 }
 /*mypage*/
+
+/*login*/
+.login_wrap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 10000;
+}
+
+.login_inner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    max-width: 340px;
+    height: auto;
+    background-color: #ffffff;
+    transform:translateX(-50%) translateY(-50%);
+    border-radius:10px;
+    padding:24px;
+}
+.login_wrap .logo{
+    width:100%;
+    height: 70px;
+    background: url('../img/logo_blue.png') no-repeat top center / 80%;
+    text-indent: 120%;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.login_wrap input{
+    width:100%;
+    padding: 12px;
+    border:none;
+}
+
+.login_wrap .input_wrap{
+    border:1px solid #dddddd;
+    overflow:hidden;
+    border-radius:14px 14px 0 0;
+}
+
+.login_wrap .input_wrap+.input_wrap{
+    border-top:none;
+    border-radius:0 0 14px 14px;
+    margin-bottom:6px;
+}
+.login_wrap button{
+    line-height:30px;
+}
+.login_wrap .btn-black{
+    border:1px solid #5c5c5c;
+    overflow:hidden;
+    border-radius:14px;
+    margin-bottom:6px;
+}
+.login_wrap .btn-black:hover{
+    background-color:#000000;
+}
+
+.login_wrap .btn-white{
+    border-radius:14px;
+
+}
+.login_wrap .btn-white:hover{
+    color:var(--primary);
+    border-color:var(--primary);
+}
+.login_wrap .find_wrap{
+    display:flex;
+    justify-content: space-between;
+}
+.login_wrap .find_wrap a{
+    font-size:14px;
+    padding: 4px 4px;
+    text-decoration:underline;
+}
+.login_wrap .find_wrap a:hover{
+    color:var(--primary);
+}
+button.canbtn {
+    width: 60px;
+    height: 60px;
+    background: no-repeat center center;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32' fill='none'%3E%3Cpath d='M5 5.5L16.25 16.75L27.5 28' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M27.5 5.5L16.25 16.75L5 28' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    right: -10px;
+    top: -56px;
+}
+/*login*/

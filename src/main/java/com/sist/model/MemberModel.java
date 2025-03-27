@@ -77,7 +77,7 @@ public class MemberModel {
 	@RequestMapping("member/login.do")
 	public String member_login(HttpServletRequest request,HttpServletResponse response) {
 		
-		return "../member/login.jsp";
+		return "../member/login_pop.jsp";
 	}
 	// 로그인 처리 
 	@RequestMapping("member/login_ok.do")

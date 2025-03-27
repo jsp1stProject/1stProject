@@ -3,8 +3,8 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <!DOCTYPE html>
 <html>
-<link rel="stylesheet" href="../shadow/css/shadowbox.css">
 <body>
+<jsp:include page="../member/login_pop.jsp"></jsp:include>
 	<%// wow는 main에서만 적용 %>
     <nav class="navbar navbar-expand-lg fixed-top py-lg-0 px-lg-4 ${title eq '메인'?'wow':'bg-white' }">
         <a href="${pageContext.request.contextPath }/main/main.do" class="navbar-brand ms-3 ms-lg-0">
@@ -111,7 +111,6 @@
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2 160 448c0 17.7 14.3 32 32 32s32-14.3 32-32l0-306.7L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"></path></svg>
 	</div>
 	<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
-	<script type="text/javascript" src="../shadow/js/shadowbox.js"></script>
     <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function(){
     	const inputWrap = document.querySelector(".sch_wrap");
@@ -135,22 +134,6 @@
     });
 	$(document).on("click",".userbtn", function(){
 		$(this).toggleClass('active');
-	});
-	
-	Shadowbox.init({
-        players: ['iframe']
-    });
-
-    // 로그인 버튼 클릭 시 Shadowbox로 팝업 띄우기
-	$(document).on("click","#loginBtn",function(event){
-		event.preventDefault(); // a 태그의 기본 동작 방지
-		Shadowbox.open({
-			content: '../member/login.do',
-			player: 'iframe',
-			width: 320,
-			height: 300,
-			title: '로그인'
-		});
 	});
 
 	//scroll-top btn
