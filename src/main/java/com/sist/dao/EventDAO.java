@@ -287,6 +287,12 @@ public class EventDAO {
 		session.close();
 		return list;
 	}
+	public static int eventReviewTotal(String content_id){
+		SqlSession session = ssf.openSession();
+		int count=session.selectOne("eventReviewTotal", content_id);
+		session.close();
+		return count;
+	}
 	/*
 	가격 정규화
 	public static void test(){

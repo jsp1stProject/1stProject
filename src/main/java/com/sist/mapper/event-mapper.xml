@@ -17,6 +17,7 @@
 		<result property="cvo.sigungucode" column="sigungucode"/>
 		<result property="cvo.overview" column="overview"/>
 		<result property="cvo.review_count" column="review_count"/>
+		<result property="cvo.review_total" column="review_total"/>
 		<result property="cvo.mapx" column="mapx"/>
 		<result property="cvo.mapy" column="mapy"/>
 		<result property="dvo.info_id" column="info_id"/>
@@ -144,7 +145,7 @@
 		where num between #{start} and #{end}
 	</select>
 	<select id="eventDetailData" resultMap="eventMap" parameterType="int">
-		SELECT e.content_id, TITLE, ADDR1, ADDR2, ZIPCODE, AREACODE, SIGUNGUCODE, MAPX, MAPY, TEL, OVERVIEW, REVIEW_COUNT, TO_CHAR(EVENT_STARTDATE,'YYYY.MM.DD') as dbstart, TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, CAT3, FIRST_IMAGE, SPONSOR1, SPONSOR2, PLAYTIME, CHARGE, SPENDTIME, AGELIMIT, PRICE, PRICE_INFO
+		SELECT e.content_id, TITLE, ADDR1, ADDR2, ZIPCODE, AREACODE, SIGUNGUCODE, MAPX, MAPY, TEL, OVERVIEW, REVIEW_COUNT, TO_CHAR(EVENT_STARTDATE,'YYYY.MM.DD') as dbstart, TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, CAT3, FIRST_IMAGE, SPONSOR1, SPONSOR2, PLAYTIME, CHARGE, SPENDTIME, AGELIMIT, PRICE, PRICE_INFO,REVIEW_COUNT,REVIEW_TOTAL
 		from EVENT e join CONTENT c on e.CONTENT_ID=c.CONTENT_ID
 		WHERE e.CONTENT_ID=#{contid}
 	</select>
@@ -248,6 +249,10 @@
 		on r.USER_ID = U.USER_ID
 		where content_id=#{content_id} order by REGDATE desc) t)
 		where num between #{start} and #{end}
+	</select>
+<!--	리뷰 총개수-->
+	<select id="eventReviewTotal" parameterType="String" resultType="int">
+		SELECT count(*) from review where CONTENT_ID=#{content_id}
 	</select>
 
 	<!--	<select id="replace_data" resultMap="eventMap">-->
