@@ -60,12 +60,13 @@
                   
                   <div class="form-group">
                     <label for="exampleInputPassword1">제목</label>
-                    <input type=""text"" class="form-control" id="exampleInputPassword1" value=${vo.subject } disabled>
+                    <%-- <input type=""text"" class="form-control" id="exampleInputPassword1" value=${vo.subject } disabled> --%>
+                    <input type="text" name=subject id=subject class="form-control" value=${vo.subject } disabled>
                   </div>
                   
                   <div class="form-group">
                     <label for="exampleInputPassword1">내용</label>
-                    <input type=""text"" class="form-control" id="exampleInputPassword1" value=${vo.content } disabled>
+                    <input type="text" class="form-control" id="exampleInputPassword1" value=${vo.content } disabled>
                   </div>
                   
                   

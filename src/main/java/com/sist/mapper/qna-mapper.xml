@@ -58,7 +58,7 @@
 <select id="qnaAdminDetailData" resultType="QnaVO" parameterType="int">
  SELECT no,name,subject, email,phone,type,type_detail,reserve_no,filename,filesize,content,TO_CHAR(regdate,'YYYY-MM-DD HH24:MI:SS') as dbday,group_id
  FROM qna_board
- WHERE group_id=#{group_id}
+ WHERE group_id=#{group_id} AND group_step=0
 </select>
 <update id="qnaAdminInsert" parameterType="QnaVO">
  INSERT INTO qna_board
@@ -79,6 +79,12 @@
  UPDATE qna_board SET
  anok='N'
  WHERE group_id=#{group_id}
+</update>
+
+<update id="qnaaAdminUpdate" parameterType="QnaVO">
+     UPDATE qna_board SET 
+     subject=#{subject},content=#{content}
+     WHERE group_id=#{group_id}
 </update>
 
 

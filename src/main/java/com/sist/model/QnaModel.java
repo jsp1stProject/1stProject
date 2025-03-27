@@ -172,6 +172,10 @@ public class QnaModel {
 		  
 		  QnaDAO.qnaUpdate(vo);
 	  }
+	 
+	 
+		 
+	
 	
 	 @RequestMapping("qna/qna_delete.do")
 	 public String qna_delete(HttpServletRequest request, HttpServletResponse res)
@@ -215,7 +219,7 @@ public class QnaModel {
 		   String gi=request.getParameter("gi"); //groud_id
 		   QnaVO vo=QnaDAO.qnaAdminDetailData(Integer.parseInt(gi));
 		   request.setAttribute("vo", vo);
-		   request.setAttribute("admin_jsp", "../qna/qna_admin_list.jsp");
+		   request.setAttribute("admin_jsp", "../qna/qna_admin_insert.jsp");
 
 			return "../adminpage/admin_main.jsp";
 	  }  
@@ -248,6 +252,35 @@ public class QnaModel {
 		  return "redirect:../qna/qna_admin_list.do";
 	  }  
 	
+	@RequestMapping("qna/qna_admin_update.do")
+	public String qna_admin_update(HttpServletRequest request, HttpServletResponse response)
+	{
+		String group_id=request.getParameter("gi");
+		System.out.println("어드민업데이트.두");
+		QnaVO vo=QnaDAO.qnaAdminDetailData(Integer.parseInt(group_id));
+		request.setAttribute("vo", vo);
+		request.setAttribute("admin_jsp", "../qna/qna_admin_update.jsp");
+	    return "../adminpage/admin_main.jsp";
+	}
+	
+	 @RequestMapping("qna/fes_qna_admin_update_ok.do")
+	  public void fes_qna_admin_update_ok(HttpServletRequest request, HttpServletResponse res)
+	  {
+		 System.out.println("어디민오케이");
+		  String subject=request.getParameter("subject");
+		  String content=request.getParameter("content");
+		  String group_id=request.getParameter("group_id");
+		  
+		  System.out.println("group_id="+group_id);
+		  System.out.println("subject="+subject);
+		  
+		  QnaVO vo=new QnaVO();
+		  vo.setSubject(subject);
+		  vo.setContent(content);
+		  vo.setGroup_id(Integer.parseInt(group_id));
+		  
+		  QnaDAO.qnaUpdate(vo);
+	  }
 	@RequestMapping("qna/qna_admin_delete.do")
 	public String qna_admin_delete(HttpServletRequest request,HttpServletResponse response)
 	{
