@@ -281,9 +281,9 @@ public class EventDAO {
 		session.close();
 		return vo;
 	}
-	public static List<ReviewVO> eventReviewList(String content_id){
+	public static List<ReviewVO> eventReviewList(HashMap map){
 		SqlSession session = ssf.openSession();
-		List<ReviewVO> list=session.selectList("eventReviewList", content_id);
+		List<ReviewVO> list=session.selectList("eventReviewList", map);
 		session.close();
 		return list;
 	}
