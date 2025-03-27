@@ -12,12 +12,12 @@ SELECT content_id, title, contenttype_id,first_image, addr1, tel, event_startdat
 </select>
 
 <select id="fesHomeData_DATE" resultType="FesVO">
-SELECT content_id, title, contenttype_id,first_image, addr1, tel, event_startdate, event_enddate,agelimit, num
-	FROM (SELECT content_id, title, contenttype_id,first_image, addr1, tel, event_startdate, event_enddate,agelimit, rownum as num
-	FROM (SELECT content.content_id, title, contenttype_id,first_image, addr1, tel, event_startdate, event_enddate,agelimit 
+SELECT content_id, title, contenttype_id,first_image, addr1, tel, TO_CHAR(event_enddate,'YYYY-MM-DD') as event_enddate,agelimit, num
+	FROM (SELECT content_id, title, contenttype_id,first_image, addr1, tel,  event_enddate,agelimit, rownum as num
+	FROM (SELECT content.content_id, title, contenttype_id,first_image, addr1, tel,  event_enddate,agelimit 
 	FROM content, event
 	WHERE content.content_id=event.content_id AND content.cat2='A0207'
-    AND SYSDATE&lt;event_enddate ORDER BY event_enddate ASC ))
+    AND SYSDATE &lt; event_enddate ORDER BY event_enddate ASC ))
     WHERE num between 1 and 4
 </select>
 
@@ -170,7 +170,7 @@ AND price BETWEEN ${min} AND ${max}
  </resultMap>
   <select id="fesCartListData" resultMap="fesCartMap" 
      parameterType="string">
-    SELECT cno,title,first_image,price,
+    SELECT cno,c.fno,title,first_image,price,
            account,cart_price
     FROM fescart c,content ct, event e
     WHERE c.fno=ct.content_id AND c.fno=e.content_id
@@ -182,6 +182,13 @@ AND price BETWEEN ${min} AND ${max}
     account=account+#{account}
     WHERE fno=#{fno} AND user_id=#{user_id}
   </update>
+  
+  <update id="fesCartListUpdate" parameterType="FesCartVO">
+    UPDATE fescart SET
+    account=#{account}
+    WHERE fno=#{fno} AND user_id=#{user_id}
+  </update>
+  
   <select id="fesCartCount" resultType="int" parameterType="FesCartVO">
     SELECT COUNT(*) FROM fescart
     WHERE fno=#{fno} AND user_id=#{user_id}
@@ -190,5 +197,41 @@ AND price BETWEEN ${min} AND ${max}
     DELETE FROM fescart
     WHERE fno=#{fno}
   </delete>
+  
+  <insert id="buyInsert" parameterType="FesCartVO">
+    INSERT INTO fescart VALUES(
+      fescart_cno_seq.nextval,#{fno},#{user_id},#{account}, #{cart_price},'Y',SYSDATE)
+  </insert>
+  
+
+
+
+
+<insert id="reviewInsert" parameterType="ReviewVO">
+    INSERT INTO review(no,content_id,type,user_id,message,rate,regdate)
+    VALUES((SELECT NVL(MAX(no)+1,1) FROM review),
+            #{content_id},#{type},#{user_id},#{message},#{rate},SYSDATE)
+ </insert>
+
+<select id="reviewListData" resultType="ReviewVO" parameterType="ReviewVO">
+    SELECT no,content_id,type,user_id,message,TO_CHAR(regdate,'YYYY-MM-DD HH24:MI:SS') as dbday
+    FROM review
+    WHERE content_id=#{content_id} AND type=#{type}
+    ORDER BY no DESC
+</select>
+<select id="reviewCount" resultType="int" parameterType="ReviewVO">
+    SELECT COUNT(*) FROM review
+    WHERE content_id=#{content_id} AND type=#{type}
+</select>
+<delete id="reviewDelete" parameterType="int">
+    DELETE FROM review 
+    WHERE no=#{no}
+  </delete>
+  <update id="reviewUpdate" parameterType="ReviewVO">
+    UPDATE review SET
+    message=#{message}
+    WHERE no=#{no}
+  </update>
+
 
 </mapper> 
