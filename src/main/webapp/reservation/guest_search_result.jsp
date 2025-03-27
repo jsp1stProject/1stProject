@@ -54,12 +54,8 @@
 <script type="text/javascript">
 	/*
 		TO-DO 
-		예약 취소 기능
 		숙박 예약도 동일하게
-		관리자용 숙박 관리 페이지
-		숙박 상세보기 덧글
 		쿠폰
-		공지사항 페이지네이션
 		이메일 인증
 	*/ 
 	var status = '${vo.status}';

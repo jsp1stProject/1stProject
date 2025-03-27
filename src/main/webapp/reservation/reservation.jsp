@@ -305,14 +305,8 @@
 				</form>
 				<hr class="text-muted">
 				<p>
-					======================== 쿠폰 목록 ========================
 					
 				</p>
-				<hr class="text-muted">
-				<p>
-					======================== 결제 수단 목록 ========================
-				</p>
-				
 			</div>
 			<div class="col-md-4 col-12 order-1 order-md-2">
 				<div class="card" style="width: 18rem; margin-bottom: 30px;">

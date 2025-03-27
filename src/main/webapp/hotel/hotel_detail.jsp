@@ -410,7 +410,7 @@ $(function() {
 			            <form method="post" action="../reservation/reservation.do">
 			            	<input type="hidden" name="room_id" value="${hrvo.room_id }">
 			            	<input type="hidden" name="content_id" value="${vo.cvo.content_id }">
-			            	<button class="reservation-button" id="day-button" type="submit"
+			            	<button class="reservation-button" id="day-button${hrvo.room_id }" type="submit"
                                         <c:if test="${hrvo.offseason_minfee1 == 0 or hrvo.offseason_minfee1 == '0'}">
                                             disabled
                                         </c:if>>
@@ -442,7 +442,7 @@ $(function() {
 			            <form method="post" action="../reservation/reservation_stay.do">
 			            	<input type="hidden" name="room_id" value="${hrvo.room_id }">
 			            	<input type="hidden" name="content_id" value="${vo.cvo.content_id }">
-			            <button class="reservation-button" id="day-button" type="submit"
+			            <button class="reservation-button" id="stay-button${hrvo.room_id }" type="submit"
                                         <c:if test="${hrvo.peakseason_minfee1 == 0 or hrvo.peakseason_minfee1 == '0'}">
                                             disabled
                                         </c:if>>
@@ -481,7 +481,7 @@ $(function() {
 				  		-->
 				  		<div class="input-group mb-3">
 						  <textarea class="form-control" name="message" placeholder="리뷰 작성란" aria-label="Recipient's username" aria-describedby="button-addon2" style="height: 100px"></textarea>
-						  <button class="btn btn-outline-secondary" type="submit" id="button-addon2">작성</button>
+						  <button class="btn btn-outline-secondary" type="submit" id="button-addon21">작성</button>
 						</div>
 				</div>
 				</form>
@@ -524,7 +524,7 @@ $(function() {
                                            			<form method="post" action="../hotel/hotel_review_delete.do">
                                            				<input type="hidden" name="no" value="${rvo.no }">
                                            				<input type="hidden" name="content_id" value="${rvo.content_id }">
-	                                           			<button class="btn btn-primary btn-sm" type="button" id="r-update">수정</button>
+	                                           			<button class="btn btn-primary btn-sm" type="button" id="r-update-${rvo.no }">수정</button>
 	                                           			<button class="btn btn-danger btn-sm" type="submit">삭제</button>
                                            			</form>
 	                                           	</c:if>
@@ -532,16 +532,17 @@ $(function() {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="review-cont" id="r-cont">
-                                	${rvo.message }
-	                                <div class="input-group mb-3" style="display: none;">
+                                <div class="review-cont">
+                                	<span id="r-cont${rvo.no }">
+                                		${rvo.message }
+                                	</span>
+	                                <div class="input-group mb-3" style="display: none;" id="r-u-${rvo.no }">
 	                                	<form method="post" action="../hotel/hotel_review_update.do">
-											<div class="input-group mb-3">
+											<div class="input-group mb-3" id="${rvo.no }">
 												<input type="hidden" name="content_id" value="${rvo.content_id }">
 												<input type="hidden" name="no" value="${rvo.no }">
-										  		<textarea class="form-control" name="message" id="update" placeholder="리뷰 작성란" aria-label="Recipient's username" aria-describedby="button-addon2" style="height: 100px">${rvo.message }
-									  			</textarea>
-											  <button class="btn btn-outline-secondary" type="submit" id="button-addon2">작성</button>
+										  		<textarea class="form-control" name="message" placeholder="리뷰 작성란" aria-label="Recipient's username" aria-describedby="button-addon2" style="height: 100px; margin-left: 10px;">${rvo.message }</textarea>
+											  <button class="btn btn-outline-secondary" type="submit" id="button-addon2${rvo.no }">작성</button>
 											</div>
 										</form>
 									</div>
@@ -645,14 +646,18 @@ $(function() {
                 el.parentNode.appendChild(morebtn);
             }
         });
-        $(document).on("click", "#r-update", function() {
-        	let targetDiv = $('#r-cont');  // 숨기고 싶은 div의 ID
-
-            targetDiv.contents().filter(function() {
-                return this.nodeType === 3;  // 텍스트 노드
-            }).wrap('<span style="display:none;"></span>');
-        	
-            targetDiv.find(".input-group").show();
+        $(window).on('load', function() {
+            $(document).on("click", "[id^='r-update-']", function() {
+                let targetDivId = $(this).attr('id').split('-')[2];  
+                let targetSpan = $('#r-cont' + targetDivId);
+                
+                targetSpan.remove(); 
+                
+                
+                let targetDiv = $('#r-u-' + targetDivId);
+                targetDiv.css('display', 'block'); 
+                $('.cont-morebtn').click();
+            });
         });
     </script>
 </body>
