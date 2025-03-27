@@ -390,7 +390,7 @@ public class FesModel {
 		  String no=request.getParameter("no");
 		  String content_id=request.getParameter("content_id");
 		  String type=request.getParameter("type");
-		  String message=request.getParameter("msg");
+		  String message=request.getParameter("message");
 		  
 		  ReviewVO vo=new ReviewVO();
 		  vo.setNo(Integer.parseInt(no));
@@ -398,6 +398,23 @@ public class FesModel {
 		  
 		  FesDAO.reviewUpdate(vo);
 		  return "redirect:../fes/fes_detail.do?content_id="+content_id;
+	  }
+	  
+	  @RequestMapping("mypage/mycupon.do")
+	  public String mycupon(HttpServletRequest request,  HttpServletResponse response)
+	  {
+		  System.out.println("페이지 들어가기");		  
+		  HttpSession session=request.getSession();
+		  String user_id=(String)session.getAttribute("user_id");
+		  System.out.println(user_id);
+		  List<UserCouponsVO> list=FesDAO.couponList(user_id);
+		  System.out.println(list.size());
+		  //vo.setEvent_enddate(enddate.substring(0, 10));
+		  request.setAttribute("list", list);
+		  //request.setAttribute("title", "메인");
+		  request.setAttribute("main_jsp", "../mypage/mycupon.jsp");
+		  return "../main/main.jsp";
+		  
 	  }
 
 }

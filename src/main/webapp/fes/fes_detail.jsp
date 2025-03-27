@@ -10,11 +10,10 @@
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=433db32967fe83b6259bc22338c25ba1&libraries=services"></script>
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
 <script src="/assets/plugin/swiper/swiper-bundle.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+<style type="text/css">
 
-<script type="text/javascript">
-
-
-</script>
+</style>
 <body>
     <div class="container mini px-0">
          <div class="thumb_list${fn:length(plist)<2?' nosub':''}" id="my-gallery">
@@ -113,44 +112,29 @@
                 <div id="map" style="width:100%; height:400px;"><a href="https://map.kakao.com/link/to/${vo.title},${vo.mapy},${vo.mapx}" target="_blank" class="findWay">길 찾기</a></div>
             </div>
         </div>
-        <div class="detail_subWrap scrollTab_cont" id="sub3">
-           <div>
+        <div class="detail_subWrap scrollTab_cont" id="sub4">
+        <c:if test="${sessionScope.user_id ne null}">
+        		<form method="post" action="../fes/review_insert.do">
+	        		<input type="hidden" name="type" value="3">
+	        		<input type="hidden" name="content_id" value="${vo.content_id }">
+					<div class="form-floating mb-3">
+						<!-- 
+				  		<textarea class="form-control" name="message" id="floatingTextarea2" style="height: 100px"></textarea>
+				  		<label for="floatingTextarea2">리뷰 작성란</label>
+				  		-->
+				  		<div class="input-group mb-3">
+						  <textarea class="form-control" name="msg" placeholder="리뷰 작성란" aria-label="Recipient's username" aria-describedby="button-addon2" style="height: 100px"></textarea>
+						  <button class="btn btn-outline-secondary" type="submit" id="button-addon2">작성</button>
+						</div>
+				</div>
+				</form>
+				</c:if>
+            <div>
                 <h4>리뷰 <b class="text-blue">231</b></h4>
-                <div>
-                 <button>리뷰쓰기</button>
-                <div>
                 <div class="d-flex align-content-center flex-column flex-wrap">
-                 	<ul class="review-ul">
-                 	 <li>
-                 	 	<form action="../fes/review_insert.do" method="post">
-                                <div class="review-header">
-                                    <div class="user-name d-flex align-items-center">
-                                        <div class="user-pf" style="background-image:"></div>
-                                        <div class="d-flex flex-column">
-                                            <div class="user-score" data-score="${i}">
-                                                <div class="star" value="1"></div>
-                                                <div class="star" value="2"></div>
-                                                <div class="star" value="3"></div>
-                                                <div class="star" value="4"></div>
-                                                <div class="star" value="5"></div>
-                                            </div>
-                                           
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="review-cont">
-                                    <textarea name="msg" id="msg" cols="70" rows="4" placeholder="Message" style="float: left" required></textarea>
-                                    <input type=hidden name="type" value="3">
-                                    <input type=hidden name="content_id" value="${vo.content_id }">
-                                    <button type="submit" class="btn btn-primary" style="width:100px;height: 95px;float: left">댓글쓰기</button>
-                                </div>
-                            </form>    
-                                
-                            </li>
-                 	</ul>
                     <div class="score-avg align-self-center py-3">
                         <div class="bigstar">
-                            4.2
+                            3.8
                         </div>
                     </div>
                     <div class="pt-3">
@@ -160,26 +144,50 @@
                         </select>
                     </div>
                     <ul class="review-ul">
-                        <c:forEach items="${rlist }" var="rvo">
-                        
+                        <c:forEach items="${rlist }" var="rvo" begin="0" end="2">
                             <li>
                                 <div class="review-header">
                                     <div class="user-name d-flex align-items-center">
-                                        <div class="user-pf" style="background-image:"></div>
+                                        <div class="user-pf" style="background-image:${userprofile}"></div>
                                         <div class="d-flex flex-column">
-                                            <div class="user-score" data-score="">
+                                            <div class="user-score" data-score="0">
                                                 <div class="star"></div>
                                                 <div class="star"></div>
                                                 <div class="star"></div>
                                                 <div class="star"></div>
                                                 <div class="star"></div>
                                             </div>
-                                            <p class="name">${rvo.user_id}<span class="created-time">2025년 3월 12일</span></p>
+                                            <p class="name">${rvo.user_id }
+                                            	<span class="created-time">
+                                            		<fmt:formatDate value="${rvo.regdate}" pattern="yyyy.MM.dd (E)" />
+                                            	</span>
+                                           	</p>
+                                           	<span>
+                                           		<c:if test="${sessionScope.user_id eq rvo.user_id }">
+                                           			<form method="post" action="../fes/review_delete.do">
+                                           				<input type="hidden" name="no" value="${rvo.no }">
+                                           				<input type="hidden" name="content_id" value="${rvo.content_id }">
+	                                           			<button class="btn btn-primary btn-sm" type="button" id="r-update-${rvo.no }">수정</button>
+	                                           			<button class="btn btn-danger btn-sm" type="submit">삭제</button>
+                                           			</form>
+	                                           	</c:if>
+                                           	</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="review-cont">
-                                    ${rvo.message}
+                                <div class="review-cont" id="r-cont">
+                                	${rvo.message }
+	                                <div class="input-group mb-3" style="display: block; margin-left: 10px; width: 400px" > 
+	                                	<form method="post" action="../fes/review_update.do">
+											<div class="input-group mb-3">
+												<input type="hidden" name="content_id" value="${rvo.content_id }">
+												<input type="hidden" name="no" value="${rvo.no }">
+										  		<textarea class="form-control" name="message" placeholder="리뷰 작성란" aria-label="Recipient's username" aria-describedby="button-addon2" style="height: 100px">${rvo.message }
+									  			</textarea>
+											  <button class="btn btn-outline-secondary" type="submit"">작성</button>
+											</div>
+										</form>
+									</div>
                                 </div>
                             </li>
                         </c:forEach>
@@ -479,31 +487,20 @@
             if(el.scrollHeight>el.clientHeight){
                 el.parentNode.appendChild(morebtn);
             }
-        });
-
-        //슬라이드
-        const swiper = new Swiper('.main-slide-list', {
-            loop: false,
-            navigation: false,
-
-            breakpoints: {
-                0:{
-                    slidesPerView: 3,  //브라우저가 0보다 클 때
-                    spaceBetween: 10,
-                },
-                768: {
-                    slidesPerView: 4,  //브라우저가 768보다 클 때
-                    spaceBetween: 10,
-                },
-                991: {
-                    slidesPerView: 5,  //브라우저가 991보다 클 때
-                    spaceBetween: 10,
-                },
-                1200: {
-                    slidesPerView: 5,  //브라우저가 1200보다 클 때
-                    spaceBetween: 10,
-                },
-            },
+        }); 
+        $(window).on('load', function() {
+            $(document).on("click", "[id^='r-update-']", function() {
+                console.log("???")
+            	let targetDivId = $(this).attr('id').split('-')[2];  
+                let targetSpan = $('#r-cont' + targetDivId);
+                
+                targetSpan.remove(); 
+                
+                
+                let targetDiv = $('#r-u-' + targetDivId);
+                targetDiv.css('display', 'block'); 
+                $('.cont-morebtn').click();
+            });
         });
     </script>
 </body>

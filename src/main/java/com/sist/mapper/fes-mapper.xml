@@ -233,5 +233,9 @@ AND price BETWEEN ${min} AND ${max}
     WHERE no=#{no}
   </update>
 
+<select id="couponList" parameterType="string" resultType="UserCouponsVO">
+ SELECT no, user_id, name, serial_number, TO_CHAR(issued_at,'YYYY-MM-DD') as issued_at2, TO_CHAR(expired_at,'YYYY-MM-DD') as expired_at2 , status, TO_CHAR(regdate,'YYYY-MM-DD') as dbday, info FROM user_coupon
+ WHERE user_id=#{user_id}
+</select>
 
 </mapper> 

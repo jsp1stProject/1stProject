@@ -462,6 +462,14 @@ public class FesDAO {
 		  session.update("reviewUpdate",vo);
 		  session.close();
 	  }
+	 
+	 public static List<UserCouponsVO> couponList(String user_id)
+	 {
+		 SqlSession session=ssf.openSession();
+		 List<UserCouponsVO> list=session.selectList("couponList",user_id);
+		 session.close();
+		 return list;
+	 }
 	
 
 }
