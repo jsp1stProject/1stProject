@@ -26,7 +26,9 @@
 	                        <a href="404.html" class="nav-item nav-link">404 Page</a>
 	                    </div>
 	                </div>
-	                <a href="../adminpage/admin_main.do" class="nav-item nav-link">관리자페이지</a>
+					<c:if test="${sessionScope.admin eq 'Y'}">
+						<a href="../adminpage/admin_main.do" class="nav-item nav-link">관리자</a>
+					</c:if>
 	            </div>
 	        </div> 
 	        <div class="d-flex justify-content-end align-self-baseline">
