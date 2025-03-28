@@ -34,6 +34,8 @@
 		<result property="cvo.first_image" column="first_image"/>
 		<result property="cvo.cat3" column="cat3"/>
 		<result property="cvo.content_id" column="content_id"/>
+		<result property="cvo.review_count" column="review_count"/>
+		<result property="cvo.review_total" column="review_total"/>
 		<!-- hotel_room TABLE(hrvo) -->
 		<result property="hrvo.offseason_minfee1" column="offseason_minfee1"/>
 	</resultMap>
@@ -77,8 +79,8 @@
 		and rownum&lt;5
 	</select>
 	<select id="mainHotelList" resultMap="hotelMap" parameterType="int">
-		select TITLE,OFFSEASON_MINFEE1,CAT3,FIRST_IMAGE,CONTENT_ID
-		from (SELECT h.TITLE,h.OFFSEASON_MINFEE1,h.CAT3,h.FIRST_IMAGE,h.CONTENT_ID
+		select TITLE,OFFSEASON_MINFEE1,CAT3,FIRST_IMAGE,CONTENT_ID,REVIEW_COUNT,REVIEW_TOTAL
+		from (SELECT h.TITLE,h.OFFSEASON_MINFEE1,h.CAT3,h.FIRST_IMAGE,h.CONTENT_ID,REVIEW_COUNT,REVIEW_TOTAL
 		FROM hotel_list_view h join content c on h.CONTENT_ID=c.CONTENT_ID
 		where c.areacode=#{areacode} and OFFSEASON_MINFEE1!=0
 		order by OFFSEASON_MINFEE1)
@@ -254,6 +256,27 @@
 	<select id="eventReviewTotal" parameterType="String" resultType="int">
 		SELECT count(*) from review where CONTENT_ID=#{content_id}
 	</select>
+<!--	리뷰 작성-->
+	<insert id="eventReviewInsert" parameterType="hashmap">
+		INSERT into review (no,content_id,type,user_id,MESSAGE,RATE)
+		values (rv_no_seq.nextval, #{content_id}, 2, #{user_id}, #{message}, #{rate})
+	</insert>
+<!--	이벤트 주문에 사용전/사용완료/리뷰작성완료 상태 설정-->
+	<update id="eventOrderUsedUpdate" parameterType="hashmap">
+		update EVENT_ORDER set used=#{used}
+		where order_id=#{order_id}
+	</update>
+<!--	리뷰 작성 시 리뷰 작성 대상인 주문 건만 표출-->
+	<select id="eventMyReviewOrderList" parameterType="hashmap" resultMap="orderMap">
+		select PAYMENT_ID, order_id, account, total_price, used, c.content_id, to_char(ORDER_DATE,'""YYYY"년 "MM"월 "DD"일"') as dbday, title
+		from EVENT_ORDER o
+				 join CONTENT c on o.CONTENT_ID=c.CONTENT_ID
+				 join event e on o.CONTENT_ID=e.CONTENT_ID
+		where USER_ID=#{user_id}
+		and c.CONTENT_ID=#{content_id}
+		and USED='y'
+	</select>
+
 
 	<!--	<select id="replace_data" resultMap="eventMap">-->
 	<!--		SELECT CONTENT_ID,CHARGE from event-->

@@ -398,6 +398,17 @@ public class EventModel {
 		map.put("end", 5);
 		List<ReviewVO> rvlist=eventReviewList(map);
 
+		HttpSession session = request.getSession();
+		if(session.getAttribute("user_id")!=null){
+			String user_id = (String) session.getAttribute("user_id");
+			HashMap map2=new HashMap();
+			map2.put("content_id", contid);
+			map2.put("user_id", user_id);
+			List<EventOrderVO> orderlist = eventMyReviewOrderList(map2);
+			request.setAttribute("orderlist", orderlist);
+		}
+
+
 		request.setAttribute("imglist", imglist);
 		request.setAttribute("infolist", infolist);
 		request.setAttribute("vo", vo);
@@ -446,7 +457,47 @@ public class EventModel {
 		request.setAttribute("title", "상세보기");
 		return "../main/main.jsp";
 	}
+//	행사 리뷰 작성
+	@RequestMapping("event/review_insert.do")
+	public void event_review_insert(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("application/x-json;charset=UTF-8");
+		//request 파싱
+		JSONObject json = jsonParse(request, response); //content_id,rate,message
+		//세션에서 아이디 정보
+		HttpSession session = request.getSession();
+		String user_id = (String) session.getAttribute("user_id");
 
+		if (json.size() == 0) return; //값이 없으면 종료
+		String content_id = (String) json.get("content_id");
+		int rate = Integer.parseInt((String) json.get("rate"));
+		String message = (String) json.get("message");
+		String order_id = (String) json.get("order_id");
+		System.out.println(content_id);
+		System.out.println(rate);
+		System.out.println(message);
+
+		HashMap map = new HashMap();
+		map.put("user_id", user_id);
+		map.put("content_id", content_id);
+		map.put("rate", rate);
+		map.put("message", message);
+		map.put("order_id", order_id);
+		map.put("used","r");
+		System.out.println("order_id:"+order_id);
+		eventReviewInsert(map);
+
+		JSONObject obj=new JSONObject();
+		obj.put("statement", "success");
+
+		PrintWriter out;
+		try {
+			out = response.getWriter();
+			out.write(obj.toJSONString());
+			out.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 //	장바구니 cart
 	@RequestMapping("event/cart.do")
 	public String event_cart(HttpServletRequest request, HttpServletResponse response) {

@@ -209,7 +209,7 @@ AND price BETWEEN ${min} AND ${max}
 
 <insert id="reviewInsert" parameterType="ReviewVO">
     INSERT INTO review(no,content_id,type,user_id,message,rate,regdate)
-    VALUES((SELECT NVL(MAX(no)+1,1) FROM review),
+    VALUES(rv_no_seq.nextval,
             #{content_id},#{type},#{user_id},#{message},#{rate},SYSDATE)
  </insert>
 

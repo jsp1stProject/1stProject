@@ -293,6 +293,18 @@ public class EventDAO {
 		session.close();
 		return count;
 	}
+	public static void eventReviewInsert(HashMap map){
+		SqlSession session = ssf.openSession(true);
+		session.insert("eventReviewInsert", map);
+		session.update("eventOrderUsedUpdate", map);
+		session.close();
+	}
+	public static List<EventOrderVO> eventMyReviewOrderList(HashMap map){
+		SqlSession session = ssf.openSession();
+		List<EventOrderVO> list=session.selectList("eventMyReviewOrderList", map);
+		session.close();
+		return list;
+	}
 	/*
 	가격 정규화
 	public static void test(){

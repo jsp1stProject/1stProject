@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="C" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.3/css/lightgallery.min.css">
@@ -142,6 +143,12 @@
                         </c:forEach>
                     </ul>
                     <button class="morebtn btn-white">리뷰 전체보기</button>
+                    <c:if test="${sessionScope.user_id ne null && fn:length(orderlist) ne 0}">
+                        <button class="buy-btn btn-black mt-2" id="reviewbtn">리뷰 쓰기</button>
+                    </c:if>
+                    <c:if test="${fn:length(orderlist) eq 0}">
+                        <button class="buy-btn btn-black mt-2" disabled>리뷰 쓰기</button>
+                    </c:if>
                 </div>
             </div>
         </div>
@@ -189,7 +196,7 @@
             </div>
         </div>
     </div>
-    <div class="buy-wrap">
+    <div class="buy-wrap" id="buy">
         <ul class="buy-ul">
             <li class="d-flex justify-content-between align-items-center"> <%-- li = 구매 아이템 --%>
                 <div>
@@ -221,7 +228,95 @@
             </li>
         </ul>
     </div>
+    <c:if test="${user_id ne null}">
+        <div class="buy-wrap" id="review">
+            <form action="" method="post" name="review_insert">
+                <div class="popinner">
+                    <div class="review-content">
+                        <p class="title">리뷰 쓰기</p>
+                        <div class="user-score" id="review-starbtn" data-score="5">
+                            <button type="button" class="star" id="star1">1점</button>
+                            <button type="button" class="star" id="star2">2점</button>
+                            <button type="button" class="star" id="star3">3점</button>
+                            <button type="button" class="star" id="star4">4점</button>
+                            <button type="button" class="star" id="star5">5점</button>
+                        </div>
+                        <input type="hidden" name="rate" value="5">
+                        <input type="hidden" name="content_id" value="${vo.content_id}">
+                        <c:if test="${fn:length(orderlist) ne 0}">
+                            <p class="mb-1 mx-1">어떤 구매 내역으로 리뷰를 작성할까요?</p>
+                            <select name="order_id">
+                                <C:forEach items="${orderlist}" var="vo">
+                                    <option value="${vo.order_id}">${vo.dbday} ${vo.account}매 구매</option>
+                                </C:forEach>
+                            </select>
+                        </c:if>
+                            <textarea name="message" class="review-textarea" placeholder="어떤 경험을 했는지 알려주세요." required></textarea>
+                    </div>
+                    <div class="submitwrap">
+                        <button type="button" class="buynow">바로구매</button>
+                        <button type="submit" class="cart" id="review_insert">리뷰 작성하기</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </c:if>
     <script type="text/javascript">
+        //리뷰 팝업 띄우기
+        $(document).on("click","#reviewbtn",function(){
+            $("#review").addClass("active");
+            $("#review").removeClass("off");
+        });
+        $(document).on("click","#review",function(e){
+            if(e.target!==this) return
+            $("#review").removeClass("active");
+            $("#review").addClass("off");
+        });
+        //리뷰 별점 작성
+        $(document).on("click","#review-starbtn button",function(e){
+            let star=$(this).attr("id").substr(4,4);
+            $("#review-starbtn").attr("data-score",star);
+            $("input[name=rate]").val(star);
+        });
+        //리뷰 submit 이벤트
+        const form=$("form[name=review_insert]")[0];
+        $(form).on("submit",function(e){
+            e.preventDefault();
+            if(!form.checkValidity()){
+                form.reportValidity();
+                return;
+            }
+            reviewInsert();
+        });
+        //리뷰 insert ajax
+        async function reviewInsert(){
+            try{
+                let formData=new FormData(form);
+                for (const x of formData) {
+                    console.log(x);
+                };
+                let response=await axios({
+                    method:'post',
+                    url:'review_insert.do',
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    data:formData
+                })
+                console.log(response);
+                if(response.data.statement=="success"){
+                    location.reload();
+                }else if(response.data.statement=="failed"){
+                    alert("리뷰 작성 실패")
+                }else{
+                    alert("실패")
+                }
+            }catch(e){
+                console.log(e);
+                throw new Error(e);
+            }
+        }
+
         //Image Slide
         lightGallery(document.getElementById('my-gallery'), {
             thumbnail: true,
@@ -230,15 +325,14 @@
 
         //구매 팝업 띄우기
         $(document).on("click","#buybtn",function(){
-            $(".buy-wrap").addClass("active");
-            $(".buy-wrap").removeClass("off");
+            $("#buy").addClass("active");
+            $("#buy").removeClass("off");
         });
-        $(document).on("click",".buy-wrap",function(e){
+        $(document).on("click","#buy",function(e){
             if(e.target!==this) return
-            $(".buy-wrap").removeClass("active");
-            $(".buy-wrap").addClass("off");
+            $("#buy").removeClass("active");
+            $("#buy").addClass("off");
         });
-
         //수량 변경
         let total=0;
         $(document).on("click",".countwrap button",function(e){
