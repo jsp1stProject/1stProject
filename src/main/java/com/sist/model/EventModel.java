@@ -2,10 +2,8 @@ package com.sist.model;
 
 import com.sist.controller.Controller;
 import com.sist.controller.RequestMapping;
-import com.sist.dao.EventDAO;
 import com.sist.dao.MailDAO;
 import com.sist.vo.*;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -382,7 +380,7 @@ public class EventModel {
 			e.printStackTrace();
 		}
 	}
-
+//상세페이지
 	@RequestMapping("event/event_detail.do")
 	public String event_detail(HttpServletRequest request, HttpServletResponse response) {
 		String contid=request.getParameter("id");
@@ -414,6 +412,7 @@ public class EventModel {
 		request.setAttribute("vo", vo);
 		request.setAttribute("nearlist", nearlist);
 		request.setAttribute("rvlist", rvlist);
+		request.setAttribute("reviewmode", "insert");//리뷰 쓰기 창 include 시 사용
 
 		//쿠키
 		String cookies="";
@@ -610,6 +609,35 @@ public class EventModel {
 			e.printStackTrace();
 			System.out.println("ioe오류");
 		}
+	}
+	@RequestMapping("event/cart_ok.do")
+	public String event_cart_ok(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("application/x-json;charset=UTF-8");
+		//request 파싱
+		JSONObject json = jsonParse(request, response); //merchant_uid, user_id
+		String user_id = (String) json.get("user_id");
+		String merchant_uid = (String) json.get("merchant_uid");
+		System.out.println("merchant_uid:"+ merchant_uid);
+		System.out.println("user_id:"+user_id);
+
+		HashMap map = new HashMap();
+		map.put("user_id", user_id);
+		List<CartVO> list=cartList(map); //해당 유저의 장바구니 목록 (장바구니 전체 주문만 가능하도록 기능 제한함)
+		for(CartVO vo:list){ //장바구니 목록 전체 주문 실행
+			HashMap map2=new HashMap();
+			map2.put("merchant_uid", merchant_uid);
+			map2.put("account", vo.getAccount());
+			map2.put("total_price", vo.getTotal_price());
+			map2.put("content_id", vo.getCvo().getContent_id());
+			map2.put("user_id", user_id);
+			eventOrderInsert(map2);
+		}
+		cartDeleteAll(user_id); //주문 완료 후 장바구니 초기화
+
+		request.setAttribute("event", "y"); //event page
+		request.setAttribute("main_jsp", "../event/cart_ok.jsp");
+		request.setAttribute("title", "장바구니");
+		return "../main/main.jsp";
 	}
 // 주문저장
 	@RequestMapping("event/order_ok.do")

@@ -228,7 +228,7 @@
             </li>
         </ul>
     </div>
-    <c:if test="${user_id ne null}">
+    <c:if test="${sessionScope.user_id ne null && fn:length(orderlist) ne 0}">
         <div class="buy-wrap" id="review">
             <form action="" method="post" name="review_insert">
                 <div class="popinner">

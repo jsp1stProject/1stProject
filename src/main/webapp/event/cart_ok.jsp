@@ -139,6 +139,7 @@
 </div>
 <!-- //wrap -->
 <script type="text/javascript">
+  alert("구매가 완료되었습니다.\n구매한 티켓은 마이페이지에서 확인하실 수 있어요.");
   IMP.init("imp65865212");
   //결제 portone
   async function pay(){
@@ -152,10 +153,7 @@
         buyer_email: "${sessionScope.email}",
         buyer_name: "${sessionScope.name}",
         buyer_tel: "${sessionScope.phone}",
-        m_redirect_url:window.location.host+"/web/event/cart_ok.do",
-        customData:{
-          user_id: "${user_id}"
-        }
+        m_redirect_url:window.location.host+"/web/event/cart_ok.do"
       },
       async (response) => {
         if (response.error_code != null) {
