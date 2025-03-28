@@ -14,7 +14,7 @@ STATUS            VARCHAR2(20)
 @Data
 public class FoodReserveVO {
 	private int res_id,people;
-	private String res_time,status;
+	private String res_time,status,dbday;
 	private Date res_date;
 	private UserVO uvo=new UserVO();
 	private FoodVO fvo=new FoodVO();
