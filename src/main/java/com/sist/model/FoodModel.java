@@ -1,7 +1,12 @@
 package com.sist.model;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
+
+import javax.swing.plaf.InternalFrameUI;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -10,10 +15,11 @@ import com.sist.controller.Controller;
 import com.sist.controller.RequestMapping;
 import com.sist.dao.*;
 import com.sist.vo.*;
-
+import java.sql.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 @Controller
 public class FoodModel {
 	@RequestMapping("food/food_detail_before.do")
@@ -58,6 +64,18 @@ public class FoodModel {
 		            }
 		        }
 		    }
+		    
+		      ReviewVO rvo=new ReviewVO();
+			  rvo.setNo(Integer.parseInt(fno));
+			  rvo.setType(4);
+			  System.out.println("진입");
+			  List<ReviewVO> list=FoodDAO.foodReviewListData(Integer.parseInt(fno));
+			  System.out.println("list:"+list);
+			  
+			  int count=FoodDAO.foodReviewCount(Integer.parseInt(fno));
+			  System.out.println("count"+count);
+			  request.setAttribute("count", count);
+			  request.setAttribute("rList", list);
 
 		    request.setAttribute("foodHistory", foodHistory);
 		request.setAttribute("main_jsp", "../food/food_detail_2.jsp");
@@ -146,6 +164,88 @@ public class FoodModel {
 
 		  
 	  }
+	//리뷰
+	private String[] urls={"","",
+			  "","","food/food_detail.do?fno=",""};
+	
+	  @RequestMapping("food/food_review_insert.do")
+	  public String food_review_insert(HttpServletRequest request,
+			  HttpServletResponse response)
+	  {
+		  
+		  String fno=request.getParameter("fno");
+		  String message=request.getParameter("message");
+		  
+		  
+		  HttpSession session=request.getSession();
+		  String user_id=(String)session.getAttribute("user_id");
+		  System.out.println("user_id"+user_id);
+		  ReviewVO vo=new ReviewVO();
+		  
+		  vo.setUser_id(user_id);
+		  vo.setMessage(message);
+		  vo.setFno(Integer.parseInt(fno));
+	
+		 
+		  FoodDAO.foodReviewInsert(vo);
+		  System.out.println("vo"+vo);
+		  return "redirect:../"+urls[4]+fno;
+	  }
+	  
+	  @RequestMapping("food/food_review_delete.do")
+	  public String food_review_delete(HttpServletRequest request,
+			  HttpServletResponse response)
+	  {
+		  String fno=request.getParameter("fno");
+		  System.out.println("delete fno:"+fno);
+		  String no=request.getParameter("no");
+		  
+		  System.out.println("no:"+no);
+		
+		  
+		  
+		  FoodDAO.foodReviewDelete(Integer.parseInt(no));
+		  return "redirect:../"+urls[4]+fno;
+	  }
+	  
+	  @RequestMapping("food/food_review_update.do")
+	  public String food_review_update(HttpServletRequest request,
+			  HttpServletResponse response)
+	  {
+		  String fno = request.getParameter("fno");
+		    String no = request.getParameter("no");
+		    
+		    // 댓글 데이터 가져오기
+		    ReviewVO vo = FoodDAO.foodReviewData(Integer.parseInt(no));
+		    request.setAttribute("vo", vo);  // 댓글 정보 넘겨주기
+		    request.setAttribute("fno", fno);
+		    
+		    
+		    return "../food/food_detail.jsp";
+	  }
+	  @RequestMapping("food/food_review_update_process.do")
+	  public void food_review_update_process(HttpServletRequest request,
+	          HttpServletResponse response) {
+	      String no = request.getParameter("no");
+	      String message = request.getParameter("message");
+
+	      // 리뷰 데이터 수정
+	      ReviewVO rvo = new ReviewVO();
+	      rvo.setNo(Integer.parseInt(no));
+	      rvo.setMessage(message);
+
+	      // 리뷰 업데이트
+	      FoodDAO.foodReviewUpdate(rvo);
+
+	      // 응답 결과 전달 (성공시 아무 내용도 없이 응답)
+	      try {
+			response.getWriter().write("success");
+		} catch (Exception ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+	  }
+	
 	// 맛집 홈
 	@RequestMapping("food/food_home.do")
 	  public String main_main(HttpServletRequest request,HttpServletResponse response)
@@ -166,50 +266,105 @@ public class FoodModel {
 	   public String food_reserve(HttpServletRequest request,
 			   HttpServletResponse response)
 	   {
+		String fno = request.getParameter("fno");
+		String name=request.getParameter("name");
+		 FoodVO fvo = FoodDAO.foodReserveId(Integer.parseInt(fno));
+		 request.setAttribute("fvo", fvo);
+		    
+			 if (name == null || name.isEmpty()) 
+			        System.out.println("name 값이 없음");
 		request.setAttribute("main_jsp", "../food/food_reserve.jsp");
-		  // 화면 변경
-		  request.setAttribute("title", "메인");
-		  return "../main/main.jsp";
+		return "../main/main.jsp";
 	   }
+	@RequestMapping("food/food_reserve_ok.do")
+	public String food_reserve_ok(HttpServletRequest request,
+			   HttpServletResponse response) {
+	        
+	        String res_date = request.getParameter("res_date");
+	       String res_time=request.getParameter("res_time");
+	        String people = request.getParameter("people");
+	        HttpSession session=request.getSession();
+			String user_id=(String)session.getAttribute("user_id");
+			String fno = request.getParameter("fno");
+			String name=request.getParameter("name");
+	        
+	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	        Date parsedDate = null;
+			try {
+				parsedDate = sdf.parse(res_date);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			 // 맛집 번호 가져오기
+			
+			
+			
+		    System.out.println(" name: " + name);
+		    FoodVO fvo = FoodDAO.foodReserveId(Integer.parseInt(fno)); // DAO에서 맛집 정보 가져오
+		    request.setAttribute("fvo", fvo);
+			System.out.println("fno:"+fno);
+	        FoodReserveVO vo = new FoodReserveVO();
+	        vo.setFvo(fvo);
+	        vo.setRes_date(parsedDate);
+	        System.out.println("여기");
+	        vo.setRes_time(res_time);
+	        vo.setPeople(Integer.parseInt(people));
+	        
+	        System.out.println("vo"+vo);
+	        // DAO를 통해 예약 저장
+	        FoodDAO.foodReserve(vo);
+	        System.out.println("vo:"+vo);
+
+			   return "redirect:../food/food_find.do"; // JSON 반환
+	    }
+	   
+
+
+
 	
 	// 관리자 페이지
 	@RequestMapping("food/admin_food_list.do")
 	public String admin_food_list(HttpServletRequest request,HttpServletResponse response)
 	{
-		//String fd=request.getParameter("fd");
-		//String ss=request.getParameter("ss");
-		String page = request.getParameter("page");
-	    if (page == null) page = "1";
-	    //if (fd == null) fd = "address";  // 기본값 설정
-	    //if (ss == null || ss.trim().isEmpty()) ss = "마포";  // 기본 검색어 설정
-	    int curpage = Integer.parseInt(page);
-	    
-	    Map map=new HashMap();
-	    map.put("start", (curpage * 12) - 11);
-	    map.put("end", curpage * 12);
-	    //map.put("fd", fd);
-	    //map.put("ss", ss);
+		String fd = request.getParameter("fd");
+        String ss = request.getParameter("ss");
+        String page = request.getParameter("page");
 
-	    List<FoodVO> aList = FoodDAO.adminFoodListData(map);
-	    
-	    int totalpage = FoodDAO.adminFoodTotalPage(map);
-	    
-	    final int BLOCK = 10;
-	    int startPage = ((curpage - 1) / BLOCK * BLOCK) + 1;
-	    int endPage = startPage + BLOCK - 1;
-	    if (endPage > totalpage) endPage = totalpage;
+        if (page == null) page = "1";
+        if (fd == null || fd.trim().isEmpty()) fd = "address";  // 기본값 설정
+        if (ss == null || ss.trim().isEmpty()) ss = "마포";  // 기본 검색어 설정
 
-	    request.setAttribute("aList", aList);
-	    request.setAttribute("curpage", curpage);
-	    request.setAttribute("totalpage", totalpage);
-	    request.setAttribute("startPage", startPage);
-	    request.setAttribute("endPage", endPage);
+        int curpage = Integer.parseInt(page);
 
+        Map map = new HashMap();
+        map.put("start", (curpage * 12) - 11);
+        map.put("end", curpage * 12);
+        map.put("fd", fd);
+        map.put("ss", ss);
+        
+        
+        List<FoodVO> foodList = FoodDAO.adminFoodListData(map);
+        int totalpage = FoodDAO.adminFoodTotalPage(map);
+        
+        final int BLOCK=10;
+		  int startPage=((curpage-1)/BLOCK*BLOCK)+1;
+		  int endPage=((curpage-1)/BLOCK*BLOCK)+BLOCK;
+		  if(endPage>totalpage)
+			 endPage=totalpage;
+		  
+	
+		  request.setAttribute("startPage", startPage);
+		  request.setAttribute("endPage",endPage);
+        request.setAttribute("aList", foodList);
+        request.setAttribute("curpage", curpage);
+        request.setAttribute("totalpage", totalpage);
 	    request.setAttribute("wide", "y");
 	    request.setAttribute("admin_jsp", "../food/admin_food_list.jsp");
 		   return "../adminpage/admin_main.jsp";
 	}
-
+	
 	@RequestMapping("food/food_insert.do")
 	   public String food_insert(HttpServletRequest request,
 			   HttpServletResponse response)
@@ -257,7 +412,6 @@ public class FoodModel {
 			   HttpServletResponse response)
 	   {
 		   String fno=request.getParameter("fno");
-		   System.out.println("update fno:"+fno);
 		   FoodVO vo=FoodDAO.adminFoodUpdateData(Integer.parseInt(fno));
 		   request.setAttribute("vo", vo);
 		   
@@ -271,7 +425,6 @@ public class FoodModel {
 	   {
 		   // invoke(obj,request,response)
 		   String fno=request.getParameter("fno");
-		   System.out.println("fno:"+fno);
 		   String name=request.getParameter("name");
 		   String type=request.getParameter("type");
 		   String content=request.getParameter("content");
