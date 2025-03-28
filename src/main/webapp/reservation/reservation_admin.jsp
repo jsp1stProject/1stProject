@@ -44,7 +44,7 @@
                             <c:when test="${fn:trim(vo.status) == 'O'}">예약 가능</c:when>
                             <c:when test="${fn:trim(vo.status) == 'R'}">예약 대기 중</c:when>
                             <c:when test="${fn:trim(vo.status) == 'C'}">예약 완료</c:when>
-                            <c:when test="${fn:trim(vo.status) == 'X'}">예약 취소</c:when>
+                            <c:when test="${fn:trim(vo.status) == 'X'}">예약 취소 대기</c:when>
                             <c:when test="${fn:trim(vo.status) == 'A'}">취소 완료</c:when>
                             <c:otherwise></c:otherwise>
                         </c:choose>
@@ -63,7 +63,7 @@
 	                           	</form>
                             </c:when>
                             <c:when test="${fn:trim(vo.status) == 'C'}">예약 완료</c:when>
-                            <c:when test="${fn:trim(vo.status) == 'X'}">예약 요청
+                            <c:when test="${fn:trim(vo.status) == 'X'}">
                             	<form action="../reservation/reservation_approve_cancel.do" style="display:inline;">
                             		<input type="hidden" name="rsv-id" value="${vo.reserve_id}">
                             		<button class="btn btn-primary" type="submit">승인</button>

@@ -336,7 +336,7 @@ public class ReservationModel {
 	public String reservation_cancel(HttpServletRequest request, HttpServletResponse response) {
 		int reservId = Integer.parseInt(request.getParameter("rsv-id"));
 		ReservationDAO.rsvCancel(reservId);
-		return "redirect:../reservation/guest_search.do";
+		return "redirect:../reservation/reservation_result.do";
 	}
 	@RequestMapping("reservation/reservation_approve_cancel.do")
 	public String reservation_approve_cancel(HttpServletRequest request, HttpServletResponse response) {
