@@ -6,6 +6,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
+
+<
 <style type="text/css">
 /*pagination*/
 .pagination{
@@ -89,17 +92,10 @@
   <div class="container">
     <div class="row">
      <div class="card col-12">
-              <div class="card-header text-end" id="food_find">
-                <h3 class="card-title"><b>맛집 게시물 관리</b></h3>
-                <select id="fd" class="form-sm ">
-                               <option value="name">업체명</option>
-                               <option value="type">음식종류</option>
-                               <option value="theme">테마</option>
-                               <option value="address" selected>주소</option>
-                             </select>
-                             <input type=text size=15 id="ss" class="form-control-sm">
-                             <input type=button value="검색" class="btn-sm btn-primary" id="findBtn">
-              </div>
+  <!-- 검색부분 -->
+<div class="card-header text-end" id="food_find">
+    <h3 class="card-title"><b>맛집 게시물 관리</b></h3>
+</div>
               <!-- /.card-header -->
               <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped">
