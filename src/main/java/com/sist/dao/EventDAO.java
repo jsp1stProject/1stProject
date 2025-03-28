@@ -296,7 +296,7 @@ public class EventDAO {
 	public static void eventReviewInsert(HashMap map){
 		SqlSession session = ssf.openSession(true);
 		session.insert("eventReviewInsert", map);
-		session.update("eventOrderUsedUpdate", map);
+		session.update("eventOrderUsedUpdate", map); //주문내역에서 리뷰 작성상태로 변경
 		session.close();
 	}
 	public static List<EventOrderVO> eventMyReviewOrderList(HashMap map){
@@ -305,6 +305,7 @@ public class EventDAO {
 		session.close();
 		return list;
 	}
+
 	/*
 	가격 정규화
 	public static void test(){
