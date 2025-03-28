@@ -17,6 +17,7 @@
 				<tr>
 					<th>예약번호</th>
 					<th>예약자 성명</th>
+					<th>객실명</th>
 					<th>가격</th>
 					<th>예약 날짜</th>
 					<th>입실 및 퇴실 날짜</th>
@@ -26,6 +27,7 @@
 					<tr>
 						<td>${vo.reserve_id }</td>
 						<td>${vo.guest_name }</td>
+						<td>${vo.hrvo.roomtitle }</td>
 						<td><fmt:formatNumber value="${vo.pay_amount }" pattern="#,###"/> 원</td>
 						<td><fmt:formatDate value="${vo.reserve_date}" pattern="yyyy.MM.dd (E)" /></td>
 						<td>

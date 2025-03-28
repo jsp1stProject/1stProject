@@ -220,7 +220,17 @@ public class ReservationModel {
 	public void rsv_purchase(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession();
 		String user_id = (String)session.getAttribute("user_id");
-		int rsvId = ReservationDAO.rsvGuestRsvId();
+		int rsvId = 0;
+		try {
+		    Integer tempId = ReservationDAO.rsvGuestRsvId(); 
+		    rsvId = tempId; 
+		} catch (NullPointerException ex) {
+		    throw new RuntimeException("Reservation ID cannot be null", ex);
+		} catch (Exception ex) {
+		    ex.printStackTrace();
+		    rsvId = 0; // 기본값 설정
+		}
+		
 		
 		if (user_id != null) {
 			MemberVO vo = MemberDAO.memberInfoData(user_id);

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sist.mapper.reservation-mapper">
+	<resultMap type="ReservationVO" id="rsvMap">
+        <result property="hrvo.roomtitle" column="roomtitle"/>
+	</resultMap>
 	<insert id="rsvInsert" parameterType="ReservationVO">
 		<!-- 
 			쿠폰 적용 여부
@@ -60,9 +63,13 @@
 		      ORDER BY reserve_id DESC)
 		WHERE ROWNUM = 1
 	</select>
-	<select id="rsvAdminData" resultType="ReservationVO">
-		SELECT * FROM reservation 
-		WHERE status != 'O'
+	<select id="rsvAdminData" resultMap="rsvMap">
+		SELECT r.*, roomtitle 
+		FROM reservation r
+		JOIN hotel_room hr
+		ON r.room_id = hr.room_id
+		WHERE status != 'O' 
+		ORDER BY r.reserve_id DESC
 	</select>
 	<update id="rsvUpdateApprove" parameterType="int">
 		UPDATE reservation 
@@ -84,8 +91,11 @@
 		SET status = 'A' 
 		WHERE reserve_id = #{reserve_id}	
 	</update>
-	<select id="rsvUserSearch" resultType="ReservationVO" parameterType="string">	
-		SELECT * FROM reservation 
+	<select id="rsvUserSearch" resultMap="rsvMap" parameterType="string">	
+		SELECT r.*, roomtitle 
+		FROM reservation r
+		JOIN hotel_room hr
+		ON r.room_id = hr.room_id
 		WHERE user_id = #{user_id}
 	</select>
 </mapper>
