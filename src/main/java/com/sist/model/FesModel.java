@@ -411,7 +411,7 @@ public class FesModel {
 		  System.out.println(list.size());
 		  //vo.setEvent_enddate(enddate.substring(0, 10));
 		  request.setAttribute("list", list);
-		  //request.setAttribute("title", "메인");
+		  request.setAttribute("title", "메인");
 		  request.setAttribute("main_jsp", "../mypage/mycupon.jsp");
 		  return "../main/main.jsp";
 		  
