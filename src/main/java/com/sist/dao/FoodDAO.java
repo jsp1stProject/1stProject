@@ -34,6 +34,84 @@ public class FoodDAO {
 		  session.close();
 		  return vo;
 	  }
+	// 리뷰
+	/*
+	 * <select id="reviewListData" resultType="ReviewVO" parameterType="ReviewVO">
+    SELECT no,type,content_id,rate,user_id,message,TO_CHAR(regdate,'YYYY-MM-DD HH24:MI:SS') as dbday
+    FROM review
+    WHERE content_id=#{content_id} AND type=#{type}
+    ORDER BY no DESC
+  </select>
+  <select id="reviewCount" resultType="int" parameterType="reviewVO">
+    SELECT COUNT(*) FROM review
+    WHERE content_id=#{content_id} AND type=#{type}
+  </select>
+	 */
+	public static List<ReviewVO> foodReviewListData(int fno)
+	{
+		SqlSession session=ssf.openSession();
+		List<ReviewVO> list=session.selectList("foodReviewListData",fno);
+		session.close();
+		return list;
+	}
+	public static ReviewVO foodReviewData(int no)
+	{
+		SqlSession session=ssf.openSession();
+		ReviewVO vo=session.selectOne("foodReviewData",no);
+		session.close();
+		return vo;
+	}
+	public static int foodReviewCount(int fno)
+	{
+		SqlSession session=ssf.openSession();
+		int total=session.selectOne("foodReviewCount",fno);
+		session.close();
+		return total;
+	}
+	/*
+	 * <insert id="reviewInsert" parameterType="reviewVO">
+    INSERT INTO review(no,type,content_id,rate,user_id,message)
+    VALUES((SELECT NVL(MAX(no)+1,1) FROM review),
+            #{no},#{type},#{content_id},#{rate},#{user_id},
+            #{message},(SELECT NVL(MAX(group_id)+1,1) FROM review))
+  </insert>
+  <delete id="reviewDelete" parameterType="int">
+    DELETE FROM review 
+    WHERE no=#{no}
+  </delete>
+  <update id="reviewUpdate" parameterType="reviewVO">
+    UPDATE review SET
+    message=#{message}
+    WHERE no=#{no}
+  </update>
+  
+	 */
+	public static void foodReviewInsert(ReviewVO vo)
+	  {
+		  SqlSession session=ssf.openSession(true);
+		  session.insert("foodReviewInsert",vo);
+		  session.close();
+	  }
+	public static ReviewVO foodReviewDetailData(int no)
+	  {
+		  SqlSession session=ssf.openSession();
+		  ReviewVO vo=session.selectOne("foodReviewDetailData",no);
+		  session.close();
+		  return vo;
+	  }
+	 public static void foodReviewUpdate(ReviewVO vo)
+	  {
+		  SqlSession session=ssf.openSession(true);
+		  session.update("foodReviewUpdate",vo);
+		  session.close();
+	  }
+	 
+	 public static void foodReviewDelete(int no)
+	  {
+		  SqlSession session=ssf.openSession(true);
+		  session.delete("foodReviewDelete",no);
+		  session.close();
+	  }
 	// 검색
 	/*
 	 * <select id="foodFindData" resultType="FoodVO" parameterType="hashmap">
@@ -69,6 +147,27 @@ public class FoodDAO {
 		session.close();
 		return total;
 	}
+	// 예약
+/*
+ * <insert id="foodReserve" parameterType="FoodReserveVO">
+   INSERT INTO food_reserve VALUES(
+     res_id=#{res_id},res_date=#{res_date},res_time=#{res_time},people=#{people},status=#{status}
+   )
+ </insert>
+ */
+	public static void foodReserve(FoodReserveVO vo)
+	  {
+		  SqlSession session=ssf.openSession(true);
+		  session.insert("foodReserve",vo);
+		  session.close();
+	  }
+	public static FoodVO foodReserveId(int fno)
+	  {
+		  SqlSession session=ssf.openSession();
+		  FoodVO vo=session.selectOne("foodReserveId",fno);
+		  session.close();
+		  return vo;
+	  }
 	// 홈화면
 	public static List<FoodVO> foodMainHouseData5()
 	  {
@@ -161,6 +260,5 @@ public class FoodDAO {
 		  session.delete("adminFoodDelete",fno);
 		  session.close();
 	  }
-	
 
 }
