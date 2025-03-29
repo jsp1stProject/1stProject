@@ -55,7 +55,7 @@
 			</table>
 		</c:when>
 		<c:otherwise>
-			<h3 style="margin: 100px 0 100px 0;">존재하지 않는 예약입니다.</h3>
+			<h3 style="margin: 100px 0 100px 0;">예약 된 숙소가 없습니다.</h3>
 		</c:otherwise>
 		</c:choose>
 	</div>

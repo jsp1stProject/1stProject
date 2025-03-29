@@ -143,12 +143,12 @@ $(document).ready(function() {
     $('#id').focus(function() {
     	$('#idCheck').html('')
     })
+   	let isAvailable = true;
     $('#id').blur(function() {
     	// 중복체크
     	let id = $('#id').val(); 
     	let pwd = $('#pwd').val();
     	let name = $('#name').val();
-    	
     	// 아이디 공백 체크
         if (id.trim() === '') {
             $('#idCheck').html('<span class="vaildationCheck" style="color: red;">•아이디: 필수정보입니다.</span>');
@@ -170,9 +170,16 @@ $(document).ready(function() {
     		        }
 				} else {
 					$('#idCheck').html('<span class="vaildationCheck" style="color: red;">•이미 존재하는 아이디입니다.</span>');
+					isAvailable = false;
 				}
     		}
     	});
+    });
+    $('#trans').on('click', function() {
+    	if (isAvailable === false) {
+    		alert('이미 존재하는 아이디입니다.')
+			return false;
+		}
     });
     $('#pwd').focus(function() {
         $('#pwdCheck').html('');

@@ -97,6 +97,9 @@
 	font-size: 18px;
 	margin: 0 15px;
 }
+.container .back:hover {
+	cursor: pointer;
+}
 </style>
 <script type="text/javascript">
 	$(function() {
@@ -272,7 +275,7 @@
     </div>
 	</div>
 	<div class="container">
-		<a href="#">&lt; 뒤로가기</a>
+		<div class="mt-3"><img alt="" src="../assets/img/back.png" class="back" onclick="history.back()"><span class="fs-3 p-3">예약 확인 및 결제</span></div>
 	</div>
 	<div class="container">
 		<div class="row">
@@ -366,6 +369,7 @@
 	const datepickr = $('#dateInput').flatpickr({
 	    locale: 'ko',
 	    mode: 'range',
+	    showMonths: 2,
 	    enableTime: true, 
 	    minDate: 'today',
 	    disable: disabledDates,

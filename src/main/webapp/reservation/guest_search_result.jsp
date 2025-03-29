@@ -34,19 +34,26 @@
 					<fmt:formatDate value="${vo.check_out_date}" pattern="yyyy.MM.dd (E)" />
 				</td>
 				<td id="status">
-					<c:if test="${fn:trim(vo.status) eq 'R'}">
+				<c:choose>
+					<c:when test="${fn:trim(vo.status) eq 'O'}">예약 승인 거절</c:when>
+			    	<c:when test="${fn:trim(vo.status) eq 'C'}">예약 완료</c:when>
+			   		<c:when test="${fn:trim(vo.status) eq 'X'}">예약 취소 대기중</c:when>
+			   	 	<c:when test="${fn:trim(vo.status) eq 'A'}">취소 완료</c:when>
+					<c:when test="${fn:trim(vo.status) eq 'R'}">
 						예약 대기중
 						<form action="../reservation/reservation_cancel.do" method="post">
 							<input type="hidden" name="rsv-id" value="${vo.reserve_id}"/>
 							<button type="submit" class="btn btn-danger">예약 취소</button>
 						</form>
-					</c:if>
+					</c:when>
+					<c:otherwise>알 수 없는 상태</c:otherwise>
+				</c:choose>
 				</td>
 			</tr>
 		</table>
 		</c:when>
 		<c:otherwise>
-			<h3 style="margin: 100px 0 100px 0;">존재하지 않는 예약입니다.</h3>
+			<h3 style="margin: 100px 0 100px 0;">예약 된 숙소가 없습니다.</h3>
 		</c:otherwise>
 		</c:choose>
 	</div>

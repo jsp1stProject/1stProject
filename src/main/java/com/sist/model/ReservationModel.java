@@ -240,6 +240,7 @@ public class ReservationModel {
 			obj.put("phone", vo.getPhone());
 			obj.put("address", vo.getAddr1() + " " + vo.getAddr2());
 			obj.put("post", vo.getPost());
+			obj.put("rsvid", rsvId);
 			try {
 				response.setContentType("text/plain;charset=UTF-8");
 				PrintWriter out = response.getWriter();

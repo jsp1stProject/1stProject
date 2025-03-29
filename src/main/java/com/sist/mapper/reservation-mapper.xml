@@ -97,5 +97,6 @@
 		JOIN hotel_room hr
 		ON r.room_id = hr.room_id
 		WHERE user_id = #{user_id}
+		ORDER BY reserve_id DESC
 	</select>
 </mapper>

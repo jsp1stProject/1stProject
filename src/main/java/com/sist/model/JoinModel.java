@@ -25,9 +25,7 @@ public class JoinModel {
 	@RequestMapping("member/join_idcheck_ok.do")
 	public void member_id_ok(HttpServletRequest request, HttpServletResponse response) {
 		String id = request.getParameter("id");
-		
 		int idCount = JoinDAO.userIdCheck(id);
-		
 		try {
 			response.setContentType("text/html;charset=UTF-8");
 			PrintWriter out = response.getWriter();
