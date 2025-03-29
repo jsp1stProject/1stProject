@@ -173,8 +173,10 @@
             user_id: "${user_id}"
           }),
         }).then((order) => {return order.json()})
-                .then((data) => console.log(data.statement))
-        if(confirm("주문이 완료되었습니다.")) document.location = '../event/main.do';
+          .then((data) => {
+            console.log(data.statement);
+            if(confirm("주문이 완료되었습니다.")) document.location = '../mypage/event_list.do';
+          })
       },
     );
   }

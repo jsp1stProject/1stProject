@@ -109,7 +109,14 @@
                 <div class="d-flex align-content-center flex-column flex-wrap">
                     <div class="score-avg align-self-center py-3">
                         <div class="bigstar">
-                            ${((vo.cvo.review_total+0.0)/(vo.cvo.review_count+0.0)) eq 'NaN'?'0':(vo.cvo.review_total+0.0)/(vo.cvo.review_count+0.0)}
+                            <C:choose>
+                                <C:when test="${vo.cvo.review_total eq 0}">
+                                    0
+                                </C:when>
+                                <C:otherwise>
+                                    <fmt:formatNumber value="${(vo.cvo.review_total+0.0)/(vo.cvo.review_count+0.0)}" pattern=".0"></fmt:formatNumber>
+                                </C:otherwise>
+                            </C:choose>
                         </div>
                     </div>
                     <div class="pt-3">
@@ -245,9 +252,9 @@
                         <input type="hidden" name="content_id" value="${vo.content_id}">
                         <c:if test="${fn:length(orderlist) ne 0}">
                             <p class="mb-1 mx-1">어떤 구매 내역으로 리뷰를 작성할까요?</p>
-                            <select name="order_id">
+                            <select name="payment_id">
                                 <C:forEach items="${orderlist}" var="vo">
-                                    <option value="${vo.order_id}">${vo.dbday} ${vo.account}매 구매</option>
+                                    <option value="${vo.payment_id}">${vo.dbday} ${vo.account}매 구매</option>
                                 </C:forEach>
                             </select>
                         </c:if>

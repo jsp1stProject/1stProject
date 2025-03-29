@@ -269,9 +269,9 @@ public class EventDAO {
 		session.close();
 	}
 	//주문 리스트
-	public static List<EventOrderVO> eventOrderList(String user_id){
+	public static List<EventOrderVO> eventOrderList(HashMap map){
 		SqlSession session = ssf.openSession();
-		List<EventOrderVO> list=session.selectList("eventOrderList", user_id);
+		List<EventOrderVO> list=session.selectList("eventOrderList", map);
 		session.close();
 		return list;
 	}
@@ -286,6 +286,12 @@ public class EventDAO {
 		List<ReviewVO> list=session.selectList("eventReviewList", map);
 		session.close();
 		return list;
+	}
+	public static int eventOrderCount(HashMap map){
+		SqlSession session = ssf.openSession();
+		int count=session.selectOne("eventOrderCount", map);
+		session.close();
+		return count;
 	}
 	public static int eventReviewTotal(String content_id){
 		SqlSession session = ssf.openSession();
@@ -304,6 +310,12 @@ public class EventDAO {
 		List<EventOrderVO> list=session.selectList("eventMyReviewOrderList", map);
 		session.close();
 		return list;
+	}
+//	주문 사용처리
+	public static void eventOrderUsedUpdate(HashMap map){
+		SqlSession session = ssf.openSession(true);
+		session.update("eventOrderUsedUpdate", map);
+		session.close();
 	}
 
 	/*

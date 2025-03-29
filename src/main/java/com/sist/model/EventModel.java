@@ -470,7 +470,7 @@ public class EventModel {
 		String content_id = (String) json.get("content_id");
 		int rate = Integer.parseInt((String) json.get("rate"));
 		String message = (String) json.get("message");
-		String order_id = (String) json.get("order_id");
+		String payment_id = (String) json.get("payment_id");
 		System.out.println(content_id);
 		System.out.println(rate);
 		System.out.println(message);
@@ -480,9 +480,9 @@ public class EventModel {
 		map.put("content_id", content_id);
 		map.put("rate", rate);
 		map.put("message", message);
-		map.put("order_id", order_id);
+		map.put("payment_id", payment_id);
 		map.put("used","r");
-		System.out.println("order_id:"+order_id);
+		System.out.println("payment_id:"+payment_id);
 		eventReviewInsert(map);
 
 		JSONObject obj=new JSONObject();
@@ -682,11 +682,22 @@ public class EventModel {
 		//세션에서 아이디 정보
 		HttpSession session = request.getSession();
 		String user_id = (String) session.getAttribute("user_id");
-		System.out.println("user_id:"+user_id);
 
-		List<EventOrderVO> list=eventOrderList(user_id);
+		HashMap map = new HashMap();
+		map.put("user_id", user_id);
+		if(request.getParameter("used")!=null){
+			String used=request.getParameter("used");
+			map.put("used", used);
+		}else{
+			map.put("used", 'a');
+		}
+		List<EventOrderVO> list=eventOrderList(map);
 		System.out.println("list:"+list.size());
 		request.setAttribute("list", list);
+
+		map.put("used",'n');
+		int count=eventOrderCount(map);
+		request.setAttribute("count", count);
 
 		request.setAttribute("event", "y"); //event page
 		request.setAttribute("main_jsp", "../mypage/event_list.jsp");
@@ -713,5 +724,39 @@ public class EventModel {
 		request.setAttribute("main_jsp", "../mypage/event_detail.jsp");
 		request.setAttribute("title", "행사");
 		return "../main/main.jsp";
+	}
+//	사용완료처리
+	@RequestMapping("event/used.do")
+	public void event_used(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("application/x-json;charset=UTF-8");
+		//request 파싱
+		JSONObject json = jsonParse(request, response); //payment_id, user_id
+
+		JSONObject obj=new JSONObject();
+
+		//세션에서 아이디 정보
+		HttpSession session = request.getSession();
+		if(session.getAttribute("user_id")==null){
+			obj.put("statement","failed");
+			obj.put("msg","로그인이 만료되었습니다. 다시 시도해주세요.");
+		}
+		String payment_id = (String) json.get("payment_id");
+		System.out.println("payment_id:"+payment_id);
+		HashMap map = new HashMap();
+		map.put("payment_id", payment_id);
+		map.put("used","y");
+		eventOrderUsedUpdate(map);
+
+		obj.put("statement", "success");
+		PrintWriter out=null;
+		try {
+			out=response.getWriter();
+			out.write(obj.toJSONString());
+			out.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("ioe오류");
+		}
+
 	}
 }

@@ -61,7 +61,7 @@
 
 	<select id="mainEventList" resultMap="eventMap">
 		<![CDATA[
-		SELECT EVENT.CONTENT_ID, title,addr1,CAT3,TO_CHAR(EVENT_STARTDATE,'YYYY.MM.DD') as dbstart,TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend,FIRST_IMAGE,rownum
+		SELECT EVENT.CONTENT_ID, title,addr1,CAT3,TO_CHAR(EVENT_STARTDATE,'YYYY.MM.DD') as dbstart,TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend,FIRST_IMAGE,rownum,review_count
 		from EVENT,CONTENT
 		where event.CONTENT_ID=content.CONTENT_ID
 		and EVENT_ENDDATE >= sysdate
@@ -116,15 +116,15 @@
 	</select>
 	<!--검색 리스트-->
 	<select id="eventSearchList" resultMap="eventMap" parameterType="hashmap">
-		SELECT content_id, TITLE, addr1, addr2, TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, CAT3, FIRST_IMAGE, price, num
-		FROM (SELECT e.*,rownum as num
-		FROM event_list_view e
+		SELECT content_id, TITLE, addr1, addr2, TO_CHAR(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, CAT3, FIRST_IMAGE, price, review_count, review_total, num
+		FROM (SELECT v.*, c.review_count as review_count, c.review_total as review_total, rownum as num
+		FROM event_list_view v join content c on v.content_id=c.content_id
 		<choose>
 			<when test="key!=null">
 				WHERE regexp_like(TITLE,#{key},'i')
 			</when>
 			<when test="areacode!=null">
-				WHERE AREACODE in
+				WHERE v.AREACODE in
 				<foreach collection="areacode" item="c" separator="," open="(" close=")">
 					#{c}
 				</foreach>
@@ -227,12 +227,25 @@
 		values (eo_pid_seq.nextval,#{order_id},#{account},#{total_price},#{content_id},#{user_id})
 	</insert>
 <!--	주문 리스트-->
-	<select id="eventOrderList" parameterType="String" resultMap="orderMap">
+	<select id="eventOrderList" parameterType="hashmap" resultMap="orderMap">
 		select PAYMENT_ID, order_id, account, total_price, used, c.content_id, to_char(ORDER_DATE,'YYYY.MM.DD') as dbday, title, to_char(EVENT_STARTDATE,'YYYY.MM.DD') as dbstart, to_char(EVENT_ENDDATE,'YYYY.MM.DD') as dbend, first_image
 		from EVENT_ORDER o
 		join CONTENT c on o.CONTENT_ID=c.CONTENT_ID
 		join event e on o.CONTENT_ID=e.CONTENT_ID
 		where USER_ID=#{user_id}
+		<if test="used != null">
+			<choose>
+				<when test='used.equals("a")'>
+				</when>
+				<when test='used.equals("y")'>
+					AND used in('y','r')
+				</when>
+		  		<when test='used.equals("n")'>
+					AND used=#{used}
+				</when>
+			</choose>
+		</if>
+		order by o.order_date desc
 	</select>
 <!--	주문 낱개 가져오기-->
 	<select id="eventOrderDetail" parameterType="hashmap" resultMap="orderMap">
@@ -241,6 +254,14 @@
 				 join CONTENT c on o.CONTENT_ID=c.CONTENT_ID
 				 join event e on o.CONTENT_ID=e.CONTENT_ID
 		where PAYMENT_ID =#{PAYMENT_ID} and c.CONTENT_ID=#{content_id}
+	</select>
+<!--	미사용 주문 개수-->
+	<select id="eventOrderCount" resultType="int">
+		select count(*) from EVENT_ORDER o
+		where USER_ID=#{user_id}
+		<if test="used != null">
+			AND used=#{used}
+		</if>
 	</select>
 
 <!--	리뷰-->
@@ -264,7 +285,7 @@
 <!--	이벤트 주문에 사용전/사용완료/리뷰작성완료 상태 설정-->
 	<update id="eventOrderUsedUpdate" parameterType="hashmap">
 		update EVENT_ORDER set used=#{used}
-		where order_id=#{order_id}
+		where payment_id=#{payment_id}
 	</update>
 <!--	리뷰 작성 시 리뷰 작성 대상인 주문 건만 표출-->
 	<select id="eventMyReviewOrderList" parameterType="hashmap" resultMap="orderMap">
