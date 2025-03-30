@@ -173,18 +173,12 @@ function saveComment(no) {
 		<div class="detail_subWrap scrollTab_cont" id="sub3">
 			<div>
 				<h4>
-					리뷰 <b class="text-blue">231</b>
+					댓글 <b class="text-blue">231</b>
 				</h4>
 				<div class="d-flex align-content-center flex-column flex-wrap">
 					<div class="score-avg align-self-center py-3">
 						<div class="bigstar">4.2</div>
-					</div>
-					<div class="pt-3">
-						<select class="form-select filter-sm" aria-label="Default select">
-							<option value="0" selected>최신순</option>
-							<option value="1">평가 높은순</option>
-						</select>
-					</div>
+					</div>	
 					<ul class="review-ul">
 						<c:forEach var="rvo" items="${rList }">
 							<li>
