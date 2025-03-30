@@ -27,7 +27,7 @@
 		<div class="row justify-content-center">
 			<jsp:include page="mynav.jsp"></jsp:include>
 			<div class="col-lg-9 col-12">
-				<h3 class="pt-3 pt-lg-0 pb-3">내 티켓</h3>
+				<h3 class="pt-3 pt-lg-0 pb-3">내 이벤트</h3>
 				<div>
 					<form action="../mypage/event_list.do" method="post" name="filter">
 						<select name="used" id="used" class="form-select filter-sm">
