@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sist.mapper.qna-mapper">
+<!-- 회원 -->
+<!-- 리스트 -->
+<select id="qnaListData" resultType="QnaVO" parameterType="hashmap">
+ SELECT no,subject,name,TO_CHAR(regdate,'YYYY-MM-DD') as dbday,hit,group_tab,type,type_detail,num
+   FROM (SELECT no,subject,name,regdate,hit,group_tab,type,type_detail,rownum as num 
+   FROM (SELECT no,subject,name,regdate,hit,group_tab,type,type_detail
+   FROM qna_board ORDER BY group_id DESC,group_step ASC))
+   WHERE num BETWEEN #{start} AND #{end}
+</select>
+<select id="qnaRowCount" resultType="int">
+ SELECT COUNT(*) 
+ FROM qna_board
+</select>
+<!-- 새글작성 -->
+<insert id="qnaInsert" parameterType="QnaVO">
+ INSERT INTO qna_board(no,user_id,name,email,phone,type,type_detail,reserve_no,subject,content,filename,filesize,pwd,group_id) 
+ VALUES((SELECT NVL(MAX(no)+1,1) FROM qna_board), #{user_id}, #{name},#{email}, #{phone}, #{type}, #{type_detail}, #{reserve_no},
+ 			 #{subject}, #{content}, #{filename}, #{filesize},#{pwd}, (SELECT NVL(MAX(group_id)+1,1) FROM qna_board))
+</insert>
+<update id="qnaHitIncrement" parameterType="int">
+ UPDATE qna_board SET
+  hit=hit+1
+ WHERE no=#{no} 
+</update>
+
+<!-- 상세보기 -->
+<select id="qnaDetailData" resultType="QnaVO" parameterType="int">
+     SELECT no,name,user_id,subject,email,phone,type,type_detail,reserve_no,filename,filesize,content,hit,TO_CHAR(regdate,'YYYY-MM-DD') as dbday,group_id
+     FROM qna_board
+     WHERE no=#{no}
+</select>
+<delete id="qnaDelete" parameterType="int">
+ DELETE FROM qna_board
+ WHERE group_id=#{group_id}
+</delete>
+<update id="qnaUpdate" parameterType="QnaVO">
+     UPDATE qna_board SET 
+     subject=#{subject},content=#{content}
+     WHERE no=#{no}
+</update>
+   
+<!-- 관리자 -->
+<select id="qnaAdminListData" resultType="QnaVO" parameterType="hashmap">
+ SELECT no,subject,name,TO_CHAR(regdate,'YYYY-MM-DD') as dbday,hit,group_tab,group_id,group_step,anok,num
+   FROM (SELECT no,subject,name,regdate,hit,group_tab,group_id,group_step,anok,rownum as num 
+   FROM (SELECT no,subject,name,regdate,hit,group_tab,group_id,group_step,anok
+   FROM qna_board WHERE group_step=0 ORDER BY group_id DESC))
+   WHERE num BETWEEN #{start} AND #{end}
+</select>
+<select id="qnaAdminRowCount" resultType="int">
+ SELECT COUNT(*) 
+ FROM qna_board
+ WHERE group_step=0
+</select>
+<select id="qnaAdminDetailData" resultType="QnaVO" parameterType="int">
+ SELECT no,name,subject, email,phone,type,type_detail,reserve_no,filename,filesize,content,TO_CHAR(regdate,'YYYY-MM-DD HH24:MI:SS') as dbday,group_id
+ FROM qna_board
+ WHERE group_id=#{group_id} AND group_step=0
+</select>
+<update id="qnaAdminInsert" parameterType="QnaVO">
+ INSERT INTO qna_board
+ VALUES((SELECT NVL(MAX(no)+1,1) FROM qna_board),#{user_id},
+            '관리자','manager@naver.com','','답변','답변','',#{subject},#{content},'',0,'1111',SYSDATE,'0',#{group_id},1,1,'Y')
+</update>
+<update id="qnaAdminAnOKChange" parameterType="int">
+ UPDATE qna_board SET
+ anok='Y'
+ WHERE group_id=#{group_id}
+</update>
+
+<delete id="qnaAdminDelete" parameterType="int">
+ DELETE FROM qna_board
+ WHERE group_id=#{group_id} AND group_step=1
+</delete>
+<update id="qnaAdminDeleteOk" parameterType="int">
+ UPDATE qna_board SET
+ anok='N'
+ WHERE group_id=#{group_id}
+</update>
+
+<update id="qnaaAdminUpdate" parameterType="QnaVO">
+     UPDATE qna_board SET 
+     subject=#{subject},content=#{content}
+     WHERE group_id=#{group_id}
+</update>
+
+
+
+
+
+<!-- 
+<insert id="boardInsert" parameterType="BoardVO">
+ <selectKey keyProperty="no" resultType="int" order="BEFORE"> BEFORE => 먼저수행해라
+  SELECT NVL(MAX(no)+1,1) as no FROM qna_board
+ </selectKey>
+  INSERT INTO qna_board VALUES(
+  	#{no},#{name}, #{email}, #{phone}, #{type}, #{type_detail}, #{reserve_no}, #{subject}, #{content}, #{filename}, #{filesize}, #{pwd}, SYSDATE, 0
+  )
+</insert>
+<update id="boardHitIncrement" parameterType="int">
+ UPDATE qna_board SET
+ hit=hit+1
+ WHERE no=#{no}
+</update>
+<select id="boardDetailData" resultType="BoardVO" parameterType="int">
+ SELECT no,name,email,phone,type,type_detail,reserve_no,subject,content,filename,filesize,hit,TO_CHAR(regdate,'YYYY-MM-DD HH24:MI:SS') as dbday
+ FROM qna_board
+ WHERE no=#{no}
+</select>
+
+ 수정
+ <update id="boardUpdate" parameterType="BoardVO">
+  UPDATE qna_board SET
+  name=#{name},email=#{email},type=#{type}, type_detail=#{type_detail}, reserve_no=#{reserve_no}, subject=#{subject},content=#{content},filename=#{filename},filesize=#{filesize}
+  WHERE no=#{no}
+ </update> 
+ 삭제
+ <select id="boardGetPassword" resultType="string" parameterType="int">
+  SELECT pwd FROM qna_boardd
+  WHERE no=#{no}
+ </select>
+ <delete id="boardDelete" parameterType="int">
+  DELETE FROM qna_board
+  WHERE no=#{no}
+ </delete> -->
+</mapper>

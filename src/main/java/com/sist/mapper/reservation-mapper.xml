@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sist.mapper.reservation-mapper">
+	<resultMap type="ReservationVO" id="rsvMap">
+        <result property="hrvo.roomtitle" column="roomtitle"/>
+	</resultMap>
+	<insert id="rsvInsert" parameterType="ReservationVO">
+		<!-- 
+			쿠폰 적용 여부
+			회원 여부
+			status
+				O: 예약 가능
+				R: 예약 대기 중
+				C: 예약 완료
+				X: 예약 취소 대기 중
+				A: 취소 완료
+		 -->
+		INSERT INTO reservation (reserve_id, content_id, room_id, offseason_minfee1, reserve_date, check_in_date, 
+								 check_out_date, people_count, arrival_type, pay_amount, status
+								 <if test="isCouponApplied">
+								 	, user_coupon
+								 </if>
+								 <if test="isMember">
+								 	, user_id 
+								 </if>
+								 <if test="guest_name != null">
+								 	, guest_name
+								 </if>
+								 <if test="guest_phone != null">
+								 	, guest_phone
+								 </if>
+								 )
+		 			VALUES(RESERVE_RI_SEQ.nextval, #{content_id}, #{room_id}, #{offseason_minfee1}, SYSDATE, 
+		 				   #{check_in_date}, #{check_out_date}, #{people_count}, #{arrival_type}, #{pay_amount}, #{status}
+		 				   <if test="isCouponApplied">
+		 				   		, #{user_coupon}
+		 				   </if>
+		 				   <if test="isMember">
+		 				   		, #{user_id}
+		 				   </if>
+		 				   <if test="guest_name != null">
+						 		, #{guest_name}
+						 	</if>
+						 	<if test="guest_phone != null">
+						 		, #{guest_phone}
+						 	</if>
+		 				   )
+	</insert>
+	<select id="rsvCheckDate" resultType="map" parameterType="int">
+		SELECT check_in_date, check_out_date FROM reservation WHERE room_id = #{room_id} AND status IN ('R', 'C')
+	</select>
+	<select id="rsvGuestSearch" resultType="ReservationVO" parameterType="hashmap">
+		SELECT reserve_id, guest_name, guest_phone, offseason_minfee1, reserve_date, check_in_date, check_out_date, people_count, pay_amount, status, room_id 
+		FROM reservation 
+		WHERE reserve_id = #{reserve_id}
+		AND guest_phone = #{guest_phone} 
+		AND guest_name = #{guest_name}
+	</select>
+	<select id="rsvGuestRsvId" resultType="int">
+		SELECT reserve_id 
+		FROM (SELECT reserve_id 
+		      FROM reservation 
+		      ORDER BY reserve_id DESC)
+		WHERE ROWNUM = 1
+	</select>
+	<select id="rsvAdminData" resultMap="rsvMap">
+		SELECT r.*, roomtitle 
+		FROM reservation r
+		JOIN hotel_room hr
+		ON r.room_id = hr.room_id
+		WHERE status != 'O' 
+		ORDER BY r.reserve_id DESC
+	</select>
+	<update id="rsvUpdateApprove" parameterType="int">
+		UPDATE reservation 
+		SET status = 'C'
+		WHERE reserve_id = #{reserve_id}
+	</update>
+	<update id="rsvUpdateReject" parameterType="int">
+		UPDATE reservation 
+		SET status = 'O'
+		WHERE reserve_id = #{reserve_id}
+	</update>
+	<update id="rsvCancel" parameterType="int">
+		UPDATE reservation 
+		SET status = 'X' 
+		WHERE reserve_id = #{reserve_id}
+	</update>
+	<update id="rsvCancelApprove" parameterType="int">
+		UPDATE reservation 
+		SET status = 'A' 
+		WHERE reserve_id = #{reserve_id}	
+	</update>
+	<select id="rsvUserSearch" resultMap="rsvMap" parameterType="string">	
+		SELECT r.*, roomtitle 
+		FROM reservation r
+		JOIN hotel_room hr
+		ON r.room_id = hr.room_id
+		WHERE user_id = #{user_id}
+		ORDER BY reserve_id DESC
+	</select>
+</mapper>

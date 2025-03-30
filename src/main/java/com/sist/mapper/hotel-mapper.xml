@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sist.mapper.hotel-mapper">
+		<!-- 
+			검색 필터 추가 예시 - 동적으로 추가할 것
+			SELECT sub.content_id, sub.contenttype_id, sub.title, sub.addr1 
+			FROM (
+			    SELECT c.content_id, c.contenttype_id, c.title, c.addr1 
+			    FROM content c
+			    JOIN hotel h ON c.content_id = h.content_id) sub
+			WHERE sub.contenttype_id = 32
+			AND (sub.addr1 LIKE '%강원%' OR sub.addr1 LIKE '%부산%')
+		 -->
+		<!-- <id property="contentId" column="content_id"/>
+		
+		<association property="hvo" javaType="HotelVO">
+			<result property="subFacility" column="subfacility"/>
+		</association> -->
+	
+	<resultMap type="HotelVO" id="hotelMap">
+		<!-- content TABLE(cvo) -->
+		<result property="cvo.title" column="title"/>
+		<result property="cvo.addr1" column="addr1"/>
+		<result property="cvo.first_image" column="first_image"/>
+		<result property="cvo.first_image2" column="first_image2"/>
+		<result property="cvo.cat3" column="cat3"/>
+		<result property="cvo.content_id" column="content_id"/>
+		<result property="cvo.mapy" column="mapy"/> 
+		<result property="cvo.mapx" column="mapx"/>
+		<result property="cvo.overview" column="overview"/>
+		<!-- hotel_room TABLE(hrvo) -->
+		<result property="hrvo.roomtitle" column="roomtitle"/>
+		<result property="hrvo.offseason_minfee1" column="offseason_minfee1"/>
+		<result property="hrvo.peakseason_minfee1" column="peakseason_minfee1"/>
+		<result property="hrvo.roomintro" column="roomintro"/>
+		<result property="hrvo.bath" column="bath"/>
+		<result property="hrvo.aircondition" column="aircondition"/>
+		<result property="hrvo.tv" column="tv"/>
+		<result property="hrvo.pc" column="pc"/>
+		<result property="hrvo.internet" column="internet"/>
+		<result property="hrvo.refrigerator" column="refrigerator"/>
+		<result property="hrvo.hairdryer" column="hairdryer"/>
+		<result property="hrvo.img1" column="img1"/>
+		<result property="hrvo.img2" column="img2"/>
+		<result property="hrvo.img3" column="img3"/>
+		<result property="hrvo.room_id" column="room_id"/>
+		
+		<!-- hotel_detail_img -->
+		<result property="hdivo.origin_img" column="origin_img"/>
+		<result property="hdivo.thumb_img" column="thumb_img"/>
+	</resultMap>
+	
+	
+	<select id="hotelListData" resultMap="hotelMap" parameterType="hashmap">
+		SELECT * FROM (SELECT hotel_list_view.*, rownum as num
+					   FROM hotel_list_view 
+			<where>
+				<if test="cat3 != null and cat3.length > 0">
+					AND cat3 IN
+					<foreach collection="cat3" item="cat3" open="(" separator="," close=")">
+						#{cat3}
+					</foreach>
+				</if>
+				
+				<if test="locations != null and locations.length > 0">
+					AND (
+					<foreach collection="locations" item="location" separator=" OR ">
+						SUBSTR(addr1, 1, INSTR(addr1, ' ') - 1) LIKE '%'||#{location}||'%' 
+					</foreach>
+					)
+				</if>
+				
+				<if test="title != null and title != ''">
+					AND title LIKE '%'||#{title}||'%'
+				</if>
+				
+				<if test="min != null and max != null">
+					AND offseason_minfee1 BETWEEN #{min} AND #{max}
+				</if>
+			</where>
+			) 
+			WHERE num BETWEEN #{start} AND #{end}
+	</select>
+	<select id="hotelTotalPage" resultType="int" parameterType="hashmap">
+		SELECT DECODE(COUNT(*) / 15.0, 0, 1, COUNT(*) / 15.0) FROM hotel_list_view  
+			<where>
+				<if test="cat3 != null and cat3.length > 0">
+					AND cat3 IN
+					<foreach collection="cat3" item="cat3" open="(" separator="," close=")">
+						#{cat3}
+					</foreach>
+				</if>
+				
+				<if test="locations != null and locations.length > 0">
+					AND (
+					<foreach collection="locations" item="location" separator=" OR ">
+						SUBSTR(addr1, 1, INSTR(addr1, ' ') - 1) LIKE '%'||#{location}||'%' 
+					</foreach>
+					)
+				</if>
+				
+				<if test="title != null and title != ''">
+					AND title LIKE '%'||#{title}||'%'
+				</if>
+				
+				<if test="min != null and max != null">
+					AND offseason_minfee1 BETWEEN #{min} AND #{max}
+				</if>
+			</where>	
+	</select>
+	<select id="hotelTotalCount" resultType="int" parameterType="hashmap">
+		SELECT COUNT(*) FROM hotel_list_view  
+			<where>
+				<if test="cat3 != null and cat3.length > 0">
+					AND cat3 IN
+					<foreach collection="cat3" item="cat3" open="(" separator="," close=")">
+						#{cat3}
+					</foreach>
+				</if>
+				
+				<if test="locations != null and locations.length > 0">
+					AND (
+					<foreach collection="locations" item="location" separator=" OR ">
+						SUBSTR(addr1, 1, INSTR(addr1, ' ') - 1) LIKE '%'||#{location}||'%' 
+					</foreach>
+					)
+				</if>
+				
+				<if test="title != null and title != ''">
+					AND title LIKE '%'||#{title}||'%'
+				</if>
+				
+				<if test="min != null and max != null">
+					AND offseason_minfee1 BETWEEN #{min} AND #{max}
+				</if>
+			</where>	
+	</select>
+	<select id="hotelDetailData" resultMap="hotelMap" parameterType="int">
+		SELECT c.content_id, c.title, c.addr1, c.first_image, c.cat3, 
+		       h.check_in_time, h.check_out_time, h.chkcooking, h.info_center, h.parking, h.room_count, h.subfacility, 
+		       h.barbecue, h.beverage, h.campfire, h.karaoke, h.fitness, h.publicbath, h.sauna, h.refund_regulation, c.mapy, c.mapx,
+		       c.overview
+		FROM content c 
+		JOIN hotel h ON c.content_id = h.content_id 
+		WHERE c.content_id = #{content_id} 
+	</select>
+	<select id="hotelRoomData" resultType="HotelRoomVO" parameterType="int">
+		SELECT room_id, roomtitle, offseason_minfee1, peakseason_minfee1, bath, aircondition, 
+       	tv, pc, internet, refrigerator, hairdryer, img1, img2, img3, content_id 
+		FROM hotel_room 
+		WHERE content_id = ${content_id}
+	</select>
+    <select id="hotelDetailImg" resultMap="hotelMap" parameterType="int">
+    	SELECT no, c.content_id, origin_img, thumb_img
+    	FROM content c
+    	JOIN  hotel_detail_img hdi
+    	ON c.content_id = hdi.content_id
+    	WHERE c.content_id = #{content_id}
+    </select>
+    <select id="rsvHotelData" resultMap="hotelMap" parameterType="int">
+    	SELECT room_id, title, roomtitle, offseason_minfee1, img1, bathfacility, aircondition, tv, pc, internet, refrigerator, hairdryer, peakseason_minfee1, 
+    		   check_in_time, check_out_time, c.content_id
+		FROM hotel_room hr
+		JOIN content c
+		ON hr.content_id = c.content_id
+		JOIN hotel h
+		ON hr.content_id = h.content_id 
+		WHERE room_id = #{room_id}
+    </select>
+    <select id="hotelReviewList" resultType="ReviewVO" parameterType="int">
+    	SELECT no, content_id, type, user_id, message, rate, regdate FROM review 
+    	WHERE content_id = #{content_id} 
+    	AND type = 1 
+    	ORDER BY no DESC 
+    </select>
+    <insert id="hotelReviewInsert" parameterType="ReviewVO">
+    	INSERT INTO review (no, content_id, type, user_id, message, regdate) 
+    				VALUES(rv_no_seq.nextval, #{content_id}, #{type}, #{user_id}, #{message}, SYSDATE)
+    </insert>
+    <update id="hotelReviewUpdate" parameterType="hashmap">
+    	UPDATE review 
+    	SET message = #{message} 
+    	WHERE no = #{no}
+    </update>
+    <delete id="hotelReviewDelete" parameterType="int">
+    	DELETE FROM review 
+    	WHERE no = #{no}
+    </delete>
+</mapper>

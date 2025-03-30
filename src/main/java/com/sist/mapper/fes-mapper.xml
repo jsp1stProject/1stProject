@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sist.mapper.Fes-mapper">
+<!-- 축제 홈 -->
+<select id="fesHomeData" resultType="FesVO">
+SELECT content_id, title, contenttype_id,first_image, addr1, tel, event_startdate, event_enddate,agelimit,price,overview, num
+	FROM (SELECT content_id, title, contenttype_id,first_image, addr1, tel, event_startdate, event_enddate,agelimit,price,overview, rownum as num
+	FROM (SELECT content.content_id, title, contenttype_id,first_image, addr1, tel, event_startdate, event_enddate,agelimit,price,overview 
+	FROM content, event
+	WHERE content.content_id=event.content_id AND content.cat2='A0207' ORDER BY dbms_random.value))
+	WHERE num between 1 and 5
+</select>
+
+<select id="fesHomeData_DATE" resultType="FesVO">
+SELECT content_id, title, contenttype_id,first_image, addr1, tel, TO_CHAR(event_enddate,'YYYY-MM-DD') as event_enddate,agelimit, num
+	FROM (SELECT content_id, title, contenttype_id,first_image, addr1, tel,  event_enddate,agelimit, rownum as num
+	FROM (SELECT content.content_id, title, contenttype_id,first_image, addr1, tel,  event_enddate,agelimit 
+	FROM content, event
+	WHERE content.content_id=event.content_id AND content.cat2='A0207'
+    AND SYSDATE &lt; event_enddate ORDER BY event_enddate ASC ))
+    WHERE num between 1 and 4
+</select>
+
+<select id="fesHomeNotice" resultType="NoticeVO">
+ SELECT no, subject, content, TO_CHAR(regdate,'YYYY/MM/DD') as dbday,rownum
+ FROM notice_board
+ WHERE rownum between 1 and 5
+ ORDER BY regdate DESC
+</select>
+  
+<!--  축제 목록 -->
+<select id="fesListData" resultType="FesVO" parameterType="hashmap">
+
+   SELECT content_id, title, contenttype_id,first_image, addr1, tel, event_startdate, event_enddate,agelimit, num
+	FROM (SELECT content_id, title, contenttype_id,first_image, addr1, tel, event_startdate, event_enddate,agelimit, rownum as num
+	FROM (SELECT content.content_id, title, contenttype_id,first_image, addr1, tel, event_startdate, event_enddate,agelimit 
+	FROM content, event
+	WHERE content.content_id=event.content_id AND content.cat2='A0207'))
+	WHERE num BETWEEN #{start} AND #{end}  
+   
+</select>
+
+<select id="fesTotalPage" resultType="int">
+  SELECT CEIL(COUNT(*)/12.0) 
+  FROM content,event 
+  WHERE content.content_id=event.content_id
+  
+</select>
+
+<!--  축제 상세보기 -->
+<select id="fesDetailData" resultType="FesVO" parameterType="int">
+  <!-- 
+  SELECT * 
+  FROM content,event,event_detail,detail_image
+  WHERE content.content_id=event.content_id 
+  	AND content.content_id=event_detail.content_id 
+  	AND content.content_id=detail_image.content_id
+  	AND content.cat2='A0207'
+	AND content.content_id=#{content_id}
+	AND infoname='행사소개'
+    -->
+  SELECT *
+  FROM content,event
+  WHERE content.content_id=event.content_id 
+  	AND content.cat2='A0207'
+	AND content.content_id=#{content_id}
+</select>
+<select id="fesInfoData" resultType="FesVO" parameterType="int">
+  SELECT * 
+  FROM event_detail
+  WHERE content_id=#{content_id}
+</select>
+
+<select id="fesPosterData" resultType="FesVO" parameterType="int">
+  SELECT * 
+  FROM detail_image
+  WHERE content_id=#{content_id}
+</select>
+<!-- 축제 히트증가부분 추가예정 -->
+
+  
+  
+<!-- 축제 홈에서 검색하기 -->
+
+<select id="fesHomeFindData" resultType="FesVO" parameterType="hashmap">
+SELECT content_id, title, addr1, addr2,first_image, review_count, event_startdate, event_enddate, charge, agelimit, price, num
+FROM (SELECT content_id, title, addr1, addr2, first_image, review_count, event_startdate, event_enddate, charge, agelimit, price, rownum as num
+FROM (SELECT content.content_id, title, addr1, addr2, first_image, review_count, event_startdate, event_enddate, charge, agelimit, price
+FROM content, event
+WHERE content.content_id=event.content_id AND content.cat2='A0207' 
+	 AND title||addr1||addr2 LIKE '%'||#{search}||'%'
+))
+WHERE num BETWEEN #{start} AND #{end}	 
+
+</select>
+
+<select id="fesHomeTotalCount" resultType="int" parameterType="string"> 
+  SELECT COUNT(*)
+  FROM content,event 
+  WHERE content.content_id=event.content_id 
+  AND content.cat2='A0207'
+  AND  title||addr1||addr2 LIKE '%'||#{search}||'%' 
+</select>
+
+
+<!-- 축제 검색하기 -->
+<select id="fesFindData" resultType="FesVO" parameterType="hashmap">
+SELECT content_id, title, addr1, addr2, zipcode, sigungucode, areacode, first_image, review_count, event_startdate, event_enddate, charge, agelimit, price, price_info, num
+FROM (SELECT content_id, title, addr1, addr2, zipcode, sigungucode, areacode, first_image, review_count, event_startdate, event_enddate, charge, agelimit, price, price_info, rownum as num
+FROM (SELECT content.content_id, title, addr1, addr2, zipcode, sigungucode, areacode, first_image, review_count, event_startdate, event_enddate, charge, agelimit, price, price_info
+FROM content, event
+WHERE content.content_id=event.content_id AND content.cat2='A0207'
+AND title||addr1||addr2 LIKE '%'||#{search}||'%'
+AND price BETWEEN ${min} AND ${max}
+ <trim prefix="AND" suffixOverrides="AND" >
+
+	<if test="cat3List!=null" >
+	  cat3 IN<foreach collection="cat3List" item="cat3" open="(" close=")" separator="," >
+	    	#{cat3}      
+	    </foreach>
+	    AND
+	</if>
+	<if test="acList!=null">
+	  areacode IN   <foreach collection="acList" item="ac" open="(" close=")" separator=",">
+	    	${ac}      
+	    </foreach>
+	    AND
+	 </if>
+	 
+</trim>
+	 
+
+))
+</select>
+<select id="fesFindTotalPage" resultType="int" parameterType="hashmap">
+ SELECT CEIL(COUNT(*)/12.0)
+ FROM content,event
+ WHERE content.content_id=event.content_id AND content.cat2='A0207'
+ AND title||addr1||addr2 LIKE '%'||#{search}||'%'
+ AND price BETWEEN ${min} AND ${max}
+ <trim prefix="AND" suffixOverrides="AND" >
+
+	<if test="cat3List!=null" >
+	  cat3 IN<foreach collection="cat3List" item="cat3" open="(" close=")" separator="," >
+	    	#{cat3}      
+	    </foreach>
+	    AND
+	</if>
+	<if test="acList!=null">
+	  areacode IN   <foreach collection="acList" item="ac" open="(" close=")" separator=",">
+	    	${ac}      
+	    </foreach>
+	    AND
+	 </if>
+	 
+</trim>
+	 
+</select>
+ 
+<!--               장바구나 관련 mapper           -->
+
+<insert id="fesCartInsert" parameterType="FesCartVO">
+  INSERT INTO fescart VALUES(fescart_cno_seq.nextval,#{fno},#{user_id},#{account},#{cart_price},'N',SYSDATE)
+</insert>
+
+<resultMap type="FesCartVO" id="fesCartMap">
+    <result property="fvo.title" column="title"/>
+    <result property="fvo.first_image" column="first_image"/>
+    <result property="fvo.price" column="price"/>
+ </resultMap>
+  <select id="fesCartListData" resultMap="fesCartMap" 
+     parameterType="string">
+    SELECT cno,c.fno,title,first_image,price,
+           account,cart_price
+    FROM fescart c,content ct, event e
+    WHERE c.fno=ct.content_id AND c.fno=e.content_id
+    AND user_id=#{user_id} AND isbuy='N'
+    ORDER BY cno DESC
+  </select>
+  <update id="fesCartUpdate" parameterType="FesCartVO">
+    UPDATE fescart SET
+    account=account+#{account}
+    WHERE fno=#{fno} AND user_id=#{user_id}
+  </update>
+  
+  <update id="fesCartListUpdate" parameterType="FesCartVO">
+    UPDATE fescart SET
+    account=#{account}
+    WHERE fno=#{fno} AND user_id=#{user_id}
+  </update>
+  
+  <select id="fesCartCount" resultType="int" parameterType="FesCartVO">
+    SELECT COUNT(*) FROM fescart
+    WHERE fno=#{fno} AND user_id=#{user_id}
+  </select>
+  <delete id="fesCartCancel" parameterType="int">
+    DELETE FROM fescart
+    WHERE fno=#{fno}
+  </delete>
+  
+  <insert id="buyInsert" parameterType="FesCartVO">
+    INSERT INTO fescart VALUES(
+      fescart_cno_seq.nextval,#{fno},#{user_id},#{account}, #{cart_price},'Y',SYSDATE)
+  </insert>
+  
+
+
+
+
+<insert id="reviewInsert" parameterType="ReviewVO">
+    INSERT INTO review(no,content_id,type,user_id,message,rate,regdate)
+    VALUES(rv_no_seq.nextval,
+            #{content_id},#{type},#{user_id},#{message},#{rate},SYSDATE)
+ </insert>
+
+<select id="reviewListData" resultType="ReviewVO" parameterType="ReviewVO">
+    SELECT no,content_id,type,user_id,message,TO_CHAR(regdate,'YYYY-MM-DD HH24:MI:SS') as dbday
+    FROM review
+    WHERE content_id=#{content_id} AND type=#{type}
+    ORDER BY no DESC
+</select>
+<select id="reviewCount" resultType="int" parameterType="ReviewVO">
+    SELECT COUNT(*) FROM review
+    WHERE content_id=#{content_id} AND type=#{type}
+</select>
+<delete id="reviewDelete" parameterType="int">
+    DELETE FROM review 
+    WHERE no=#{no}
+  </delete>
+  <update id="reviewUpdate" parameterType="ReviewVO">
+    UPDATE review SET
+    message=#{message}
+    WHERE no=#{no}
+  </update>
+
+<select id="couponList" parameterType="string" resultType="UserCouponsVO">
+ SELECT no, user_id, name, serial_number, TO_CHAR(issued_at,'YYYY-MM-DD') as issued_at2, TO_CHAR(expired_at,'YYYY-MM-DD') as expired_at2 , status, TO_CHAR(regdate,'YYYY-MM-DD') as dbday, info FROM user_coupon
+ WHERE user_id=#{user_id}
+</select>
+
+</mapper> 
