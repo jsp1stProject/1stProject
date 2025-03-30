@@ -68,6 +68,20 @@ function saveComment(no) {
 </script>
 <body>
 	<div class="container mini px-0">
+	<div class="container-xxl py-3 px-0">
+					<div class="container">
+							
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><i class="fa fa-home" aria-hidden="true"></i> 맛집</li>
+                            <li class="breadcrumb-item"><a href="#">${vo.type }</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">${vo.name }</li>
+                        </ol>
+            </div>
+			<h2 id="topTitle" class="text-center">${vo.name }</h2>
+			<div class="address text-center" id="topAddr">
+				<span>${vo.address }</span>
+			</div>
+		</div>
 		<div id="carouselExampleControls" class="carousel slide"
 			data-bs-ride="carousel">
 			<div class="carousel-inner">
@@ -100,17 +114,11 @@ function saveComment(no) {
 		</div>
 
 		<div class="detail_titleWrap">
-			<div class="d-flex justify-content-between align-items-start">
-				<div>
-					<p class="type">${vo.type}</p>
-					<p class="name">${vo.name}</p>
-				</div>
-				<div class="detail_btnWrap">
+			
+				<div class="detail_btnWrap" style="float:right">
 					<button type="button" class="bookmark-btn"></button>
 					<button type="button" class="share-btn"></button>
 				</div>
-			</div>
-			<p class="location">${vo.address}</p>
 			<a href="../food/food_reserve.do?fno=${vo.fno }&name=${vo.name}"><button
 					class="buy-btn btn-black mt-3">예약하기</button></a>
 		</div>
