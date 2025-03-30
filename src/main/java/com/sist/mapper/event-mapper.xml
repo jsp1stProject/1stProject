@@ -135,7 +135,7 @@
 			AND price between #{filtermin} and #{filtermax}
 		</if>
 		<if test="cate != null">
-			AND CAT3 in
+			AND v.CAT3 in
 			<foreach collection="cate" item="c" separator="," open="(" close=")">
 				#{c}
 			</foreach>
