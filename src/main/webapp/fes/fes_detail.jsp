@@ -70,10 +70,10 @@
         </div>
         <div class="detail_subWrap scrollTab_cont" id="sub1">
             <div>
-               <%--  <c:forEach items="${infolist}" var="info">
-                    <h4>${info.dvo.infoname}</h4>
-                    <p>${info.dvo.infotext}</p>
-                </c:forEach> --%>
+               <c:forEach items="${ilist}" var="info">
+                    <h4>${info.infoname}</h4>
+                    <p>${info.infotext}</p>
+                </c:forEach>
             </div>
         </div>
         <div class="detail_subWrap scrollTab_cont" id="sub2">
@@ -112,7 +112,7 @@
                 <div id="map" style="width:100%; height:400px;"><a href="https://map.kakao.com/link/to/${vo.title},${vo.mapy},${vo.mapx}" target="_blank" class="findWay">길 찾기</a></div>
             </div>
         </div>
-        <div class="detail_subWrap scrollTab_cont" id="sub4">
+        <div class="detail_subWrap scrollTab_cont" id="sub3">
         <c:if test="${sessionScope.user_id ne null}">
         		<form method="post" action="../fes/review_insert.do">
 	        		<input type="hidden" name="type" value="3">
@@ -218,7 +218,7 @@
                         </c:forEach>
                     </div>
                 </div> --%>
-                <h4 class="pb-2 mt-3">최근 확인한 행사</h4>
+                <%-- <h4 class="pb-2 mt-3">최근 확인한 행사</h4>
                 <div class="swiper main-slide-list">
                     <div class="swiper-wrapper">
                         <c:forEach items="${clist }" var="vo">
@@ -236,7 +236,7 @@
                             </div>
                         </c:forEach>
                     </div>
-                </div>
+                </div> --%>
             </div>
         </div>
     </div>
@@ -280,6 +280,7 @@
         </ul>
     </div>
     <script type="text/javascript">
+    	user_id="${user_id}"
         //Image Slide
         lightGallery(document.getElementById('my-gallery'), {
             thumbnail: true,
@@ -288,8 +289,17 @@
 
         //구매 팝업
         $(document).on("click","#buybtn",function(){
-            $(".buy-wrap").addClass("active");
-            $(".buy-wrap").removeClass("off");
+        	if(user_id=="")
+			{
+				alert("로그인이 필요한 기능입니다")
+				//location.href='../member/login.do' 
+				
+			}
+        	else
+        	{	
+            	$(".buy-wrap").addClass("active");
+            	$(".buy-wrap").removeClass("off");
+        	}
         });
         $(document).on("click",".buy-wrap",function(e){
             if(e.target!==this) return
@@ -362,7 +372,7 @@
 		            buyer_addr: json.address,
 		            buyer_postcode: json.post
 		        }, function (rsp) { // callback
-		        	location.href='http://localhost/JSPLastProject/fes/fes_home.do' 
+		        	location.href='../fes/fes_home.do' 
 		        }); 
 		    
 		    
@@ -371,6 +381,8 @@
 
 		$(function(){
 			$('#buy').click(function(){
+				
+				
 				console.log($('#fno').val())
 				console.log($('#cart_price').val())
 				
@@ -396,7 +408,7 @@
 					data:{"fno":fno,"price":price,"account":account},
 					success:function(result)
 					{
-						alert(result)
+						//alert(result)
 						let json=JSON.parse(result)
 						console.log(json)
 						console.log(price)
