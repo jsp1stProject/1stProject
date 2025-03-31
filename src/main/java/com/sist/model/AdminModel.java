@@ -14,7 +14,7 @@ public class AdminModel {
 		request.setAttribute("wide", "y");
 		request.setAttribute("admin_jsp", "../adminpage/admin_home.jsp");
 //		request.setAttribute("main_jsp", "../adminpage/admin_home.jsp");
-		return "../adminpage/admin_main.jsp";
+		return "redirect:../notice/notice_admin_list.do";
 	}
 	
 	
