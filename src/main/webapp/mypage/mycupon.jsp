@@ -5,6 +5,11 @@
 <script type="text/javascript" >
 	// Initiate the wowjs
 	new WOW().init();
+	//공지사항 slidedown
+	$(document).on('click','.notice-title',function(){
+		$(this).closest('li').toggleClass('active');
+		$(this).siblings('.notice-content').slideToggle('fast');
+	});
 </script>
 <body>
   <div class="container pt-3">
@@ -26,7 +31,6 @@
 							</div>
 						</li>
 					</c:forEach>
-
 				</ul>
 			</div>
       </div>

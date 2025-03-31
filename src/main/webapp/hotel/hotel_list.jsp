@@ -208,80 +208,82 @@ a:hover{
 	<div class="container">
 		<div class="row justify-content-center">
 			<div class="col-lg-3 py-3 px-0" style="position:relative">
-				<div class="filter-container active">
-					<div class="d-flex justify-content-between px-2">
+				<div class="filter-container container">
+					<div class="d-flex justify-content-between">
 						<button class="cpsbtn">필터</button>
 						<button type="button" class="btn btn-light resetbtn">초기화</button>
 					</div>
-					<div class="filter-wrap" id="filter">
-						<div class="filter-item col-lg-12 col-md-4 col-sm-12"> <!-- range 타입 -->
-							<h6>가격대</h6>
-							<div id="range-slider"></div>
-							<div class="d-flex justify-content-center range-value-wrap">
-								<input type="text" class="start" id="start" disabled value="0"><span class="ignr"> ~ </span><input type="text" class="end" id="end" disabled value="100000">
+					<div class="filter-inner">
+						<div class="filter-wrap" id="filter">
+							<div class="filter-item col-lg-12 col-md-4 col-sm-12"> <!-- range 타입 -->
+								<h6>가격대</h6>
+								<div id="range-slider"></div>
+								<div class="d-flex justify-content-center range-value-wrap">
+									<input type="text" class="start" id="start" disabled value="0"><span class="ignr"> ~ </span><input type="text" class="end" id="end" disabled value="100000">
+								</div>
 							</div>
-						</div>
-					<div class="filter-item"> <!--checkbox 타입-->
-						<h6>숙소 유형</h6>
-						<div class="checkbtn-wrap">
-							<input type="checkbox" name="cat3" id="t1" value="관광호텔">
-							<label for="t1">관광호텔</label>
-							<input type="checkbox" name="cat3" id="t2" value="펜션">
-							<label for="t2">펜션</label>
-							<input type="checkbox" name="cat3" id="t3" value="모텔">
-							<label for="t3">모텔</label>
-							<input type="checkbox" name="cat3" id="t4" value="민박">
-							<label for="t4">민박</label>
-							<input type="checkbox" name="cat3" id="t5" value="홈스테이">
-							<label for="t5">홈스테이</label>
-							<input type="checkbox" name="cat3" id="t6" value="게스트하우스">
-							<label for="t6">게스트하우스</label>
-						</div>
-					</div>
-					<div class="filter-tiem">
-						<h6>#지역</h6>
-						<div class="checkbtn-wrap">
-							<input type="checkbox" name="location1" id="l1" value="서울">
-						    <label for="l1">서울</label>
-						    <input type="checkbox" name="location1" id="l2" value="인천">
-						    <label for="l2">인천</label>
-						    <input type="checkbox" name="location1" id="l3" value="대전">
-						    <label for="l3">대전</label>
-						    <input type="checkbox" name="location1" id="l4" value="대구">
-						    <label for="l4">대구</label>
-						    <input type="checkbox" name="location1" id="l5" value="광주">
-						    <label for="l5">광주</label>
-						    <input type="checkbox" name="location1" id="l6" value="부산">
-						    <label for="l6">부산</label>
-						    <input type="checkbox" name="location1" id="l7" value="울산">
-						    <label for="l7">울산</label>
-						    <input type="checkbox" name="location1" id="l8" value="세종">
-						    <label for="l8">세종</label>
-						    <input type="checkbox" name="location1" id="l31" value="경기">
-						    <label for="l31">경기</label>
-						    <input type="checkbox" name="location1" id="l32" value="강원">
-						    <label for="l32">강원</label>
-						    <input type="checkbox" name="location1" id="l33" value="충북">
-						    <label for="l33">충북</label>
-						    <input type="checkbox" name="location1" id="l34" value="충남">
-						    <label for="l34">충남</label>
-						    <input type="checkbox" name="location1" id="l35" value="경북">
-						    <label for="l35">경북</label>
-						    <input type="checkbox" name="location1" id="l36" value="경남">
-						    <label for="l36">경남</label>
-						    <input type="checkbox" name="location1" id="l37" value="전북">
-						    <label for="l37">전북</label>
-						    <input type="checkbox" name="location1" id="l38" value="전남">
-						    <label for="l38">전남</label>
-						    <input type="checkbox" name="location1" id="l39" value="제주">
-						    <label for="l39">제주</label>
+							<div class="filter-item"> <!--checkbox 타입-->
+								<h6>숙소 유형</h6>
+								<div class="checkbtn-wrap">
+									<input type="checkbox" name="cat3" id="t1" value="관광호텔">
+									<label for="t1">관광호텔</label>
+									<input type="checkbox" name="cat3" id="t2" value="펜션">
+									<label for="t2">펜션</label>
+									<input type="checkbox" name="cat3" id="t3" value="모텔">
+									<label for="t3">모텔</label>
+									<input type="checkbox" name="cat3" id="t4" value="민박">
+									<label for="t4">민박</label>
+									<input type="checkbox" name="cat3" id="t5" value="홈스테이">
+									<label for="t5">홈스테이</label>
+									<input type="checkbox" name="cat3" id="t6" value="게스트하우스">
+									<label for="t6">게스트하우스</label>
+								</div>
+							</div>
+							<div class="filter-tiem">
+								<h6>#지역</h6>
+								<div class="checkbtn-wrap">
+									<input type="checkbox" name="location1" id="l1" value="서울">
+									<label for="l1">서울</label>
+									<input type="checkbox" name="location1" id="l2" value="인천">
+									<label for="l2">인천</label>
+									<input type="checkbox" name="location1" id="l3" value="대전">
+									<label for="l3">대전</label>
+									<input type="checkbox" name="location1" id="l4" value="대구">
+									<label for="l4">대구</label>
+									<input type="checkbox" name="location1" id="l5" value="광주">
+									<label for="l5">광주</label>
+									<input type="checkbox" name="location1" id="l6" value="부산">
+									<label for="l6">부산</label>
+									<input type="checkbox" name="location1" id="l7" value="울산">
+									<label for="l7">울산</label>
+									<input type="checkbox" name="location1" id="l8" value="세종">
+									<label for="l8">세종</label>
+									<input type="checkbox" name="location1" id="l31" value="경기">
+									<label for="l31">경기</label>
+									<input type="checkbox" name="location1" id="l32" value="강원">
+									<label for="l32">강원</label>
+									<input type="checkbox" name="location1" id="l33" value="충북">
+									<label for="l33">충북</label>
+									<input type="checkbox" name="location1" id="l34" value="충남">
+									<label for="l34">충남</label>
+									<input type="checkbox" name="location1" id="l35" value="경북">
+									<label for="l35">경북</label>
+									<input type="checkbox" name="location1" id="l36" value="경남">
+									<label for="l36">경남</label>
+									<input type="checkbox" name="location1" id="l37" value="전북">
+									<label for="l37">전북</label>
+									<input type="checkbox" name="location1" id="l38" value="전남">
+									<label for="l38">전남</label>
+									<input type="checkbox" name="location1" id="l39" value="제주">
+									<label for="l39">제주</label>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			</div>
 			<div class="col-md-9 px-0">
-				<div class="container-xxl py-3 px-0">
+				<div class="container-xxl py-lg-3 pt-4 px-0">
 					<div class="container">
 						<!-- <form action="" method="post" name="page-search"> -->
 							<div class="sch_wrap page">
@@ -322,10 +324,8 @@ a:hover{
 		var con=$(this).closest('.filter-container')
 		if(con.hasClass('active')){
 			con.removeClass('active');
-			$('.slimScrollDiv').fadeOut(300);
 		}else{
 			con.addClass('active');
-			$('.slimScrollDiv').fadeIn(300);
 		}
 	});
 	rangeSlider(document.querySelector('#range-slider'), {

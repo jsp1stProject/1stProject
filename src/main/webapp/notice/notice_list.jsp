@@ -35,10 +35,8 @@
 				<hr class="text-muted">
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-7">
-			</div>
-			<div class="col-5" style="margin-bottom: 4px">
+		<div class="row d-flex justify-content-end">
+			<div class="col-lg-5 col-md-8 col-sm-12" style="margin-bottom: 4px">
 				<form method="post" action="../notice/notice_list.do" id="searchForm">
 				<div class="input-group mb-3">
 					<select class="form-select select-type" id="searchType" name="searchType" aria-label="Default select example" style="flex-grow: 0; width: 81px;">
