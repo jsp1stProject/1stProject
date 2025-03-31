@@ -150,19 +150,19 @@
 		$('html').scrollTop(0);
 	})
 
-	let form=$("form[name=main-search]")[0];
+	let mform=$("form[name=main-search]")[0];
 	$("#main-searchbtn").on("click",function(e){
 		e.preventDefault();
-		if(!form.checkValidity()){
-			form.reportValidity();
+		if(!mform.checkValidity()){
+			mform.reportValidity();
 			return;
 		}else{
 			if($("select[name=option]").val()=="2"){
 				var input = $("<input>")
 						.attr("type", "hidden")
 						.attr("name", "mode").val("search");
-				$(form).append(input);
-				$(form).attr("action","../event/event_list.do").submit();
+				$(mform).append(input);
+				$(mform).attr("action","../event/event_list.do").submit();
 			}
 		}
 	});
