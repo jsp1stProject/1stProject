@@ -11,7 +11,7 @@
 <body>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 <script type="text/javascript" src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <div class="container pt-5 pt-lg-3">
     <div class="row justify-content-center">
       <jsp:include page="mynav.jsp"></jsp:include>
@@ -23,7 +23,7 @@
             <div id="profilewrap" onclick="profileupload();">
               <div></div>
             </div>
-            <input type="hidden" id="user_id" name="user_id" value="${vo.user_id}">
+            <input type="hidden" id="user_id2" name="user_id" value="${vo.user_id}">
             <label for="name">이름</label>
             <input type="text" id="name" name="name" placeholder="이름" value="${vo.name}" required>
             <label for="nickname">별명</label>
