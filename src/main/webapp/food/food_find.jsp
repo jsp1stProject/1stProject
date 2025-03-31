@@ -6,9 +6,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-	<script src="${pageContext.request.contextPath }/assets/plugin/rangeslider/rangeslider.umd.min.js"></script>
-	<link href="${pageContext.request.contextPath }/assets/plugin/rangeslider/style.css" rel="stylesheet">
-	<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
 <style type="text/css">
 .page-item{
   cursor: pointer;
@@ -115,35 +112,30 @@ function jsonView(json)
 			html+='<ul class="pagination">'
 				if(json[0].startPage>1)
 			      {
-			       html+='<li class="page-item">'
-			    	   
-			       html+='<a class="page-link" onclick="prev('+(json[0].startPage-1)+')"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a>'
-			       html+='<a class="page-link" onclick="prev('+(json[0].curpage-1)+')"><i class="fa fa-angle-left" aria-hidden="true"></i></a>'
-			       html+='</li>'
+			       html+='<a class="bfarr" onclick="prev('+(json[0].startPage-1)+')"><div class="arr left" style="left:9px"></div><div class="arr left" style="left:16px"></div></a>'
+			       html+='<a class="bfarr" onclick="prev('+(json[0].curpage-1)+')"><div class="arr left"></div></a>'
 			      }
 			            
 			      for(let i=json[0].startPage;i<=json[0].endPage;i++)
 			      {
 			    	  if(json[0].curpage===i)
 			    	  {
-			    		  html+='<li class="page-item active"><a class="page-link" onclick="pageChange('+i+')">'+i+'</a></li>'
+			    		  html+='<a class="active" onclick="pageChange('+i+')">'+i+'</a>'
 			    	  }
 			    	  else
 			    	  {
-			    		  html+='<li class="page-item"><a class="page-link" onclick="pageChange('+i+')">'+i+'</a></li>'
+			    		  html+='<a class="" onclick="pageChange('+i+')">'+i+'</a>'
 			    	  }
 			    	  
 			      }
 			            
 			            if(json[0].endPage<json[0].totalpage)
 			            {
-			            	html+='<li class="page-item">'
-			            		html+='<a class="page-link" onclick="next('+(json[0].curpage+1)+')"><i class="fa fa-angle-right" aria-hidden="true"></i></a>'
-			            	html+='<a class="page-link" onclick="next('+(json[0].totalpage)+')"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a>'
-			            	html+='</li>'
+							html+='<a class="afarr" onclick="next('+(json[0].curpage+1)+')"><div class="arr right"></div></a>'
+			            	html+='<a class="afarr" onclick="next('+(json[0].totalpage)+')"><div class="arr right" style="left:9px"></div><div class="arr right" style="left:16px;"></div></a>'
 			            }
 			 html+='</ul>'
-				 
+
 				 
 	
 $('#view').html(html)
@@ -153,69 +145,52 @@ $('#view').html(html)
 <body> 
 
 <div class="container" id="contant-wrap">
-		<div class="row justify-content-center">
-			<div class="col-sm-3 py-3 px-0" style="position:relative">
-				<div class="filter-container">
-					<div class="d-flex justify-content-between px-2">
-						<button class="cpsbtn">필터</button>
-						<button type="button" class="btn btn-light resetbtn">초기화</button>
-					</div>
-					<div class="filter-inner">
-						<div class="filter-wrap" id="filter">
-							<div class="filter-item col-lg-12 col-md-4 col-sm-12"> <!-- range 타입 -->
-					<div class="filter-item">
-						<h6>검색 유형</h6>
-						<div class="checkbtn-wrap">
-					     	 <input type="checkbox" id="fd1" name="fd" value="name">
-    						 <label for="fd1" class="label">맛집명</label>
+	<div class="row justify-content-center">
+		<div class="col-lg-3 py-3 px-0" style="position:relative">
+			<div class="filter-container container">
+				<div class="d-flex justify-content-between">
+					<button class="cpsbtn">필터</button>
+					<button type="button" class="btn btn-light resetbtn">초기화</button>
+				</div>
+				<div class="filter-inner pt-3">
+					<div class="filter-wrap" id="filter">
+						<div class="filter-item">
+							<h6>검색 유형</h6>
+							<div class="checkbtn-wrap">
+								 <input type="checkbox" id="fd1" name="fd" value="name">
+								 <label for="fd1" class="label">맛집명</label>
 
-							 <input type="checkbox" id="fd2" name="fd" value="theme">
-							 <label for="fd2" class="label">테마</label>
-							
-							 <input type="checkbox" id="fd3" name="fd" value="address" checked>
-							 <label for="fd3" class="label">주소</label>
-							 
-							 <input type="checkbox" id="fd4" name="fd" value="type">
-							 <label for="fd4" class="label">종류</label>
+								 <input type="checkbox" id="fd2" name="fd" value="theme">
+								 <label for="fd2" class="label">테마</label>
+
+								 <input type="checkbox" id="fd3" name="fd" value="address" checked>
+								 <label for="fd3" class="label">주소</label>
+
+								 <input type="checkbox" id="fd4" name="fd" value="type">
+								 <label for="fd4" class="label">종류</label>
+							</div>
 						</div>
 					</div>
-					
 				</div>
 			</div>
-			</div>
-			
-				</div>
-				</div>
-			
-		
-				
-
-<div class="col-lg-9 px-0">
-				<div class="container-xxl py-3 px-0">
-					<div class="container">
-							<div class="sch_wrap page">
-							
-								<input type="text" name="key" placeholder="검색어를 입력하세요."  id="ss">
-								<button id="findBtn" class="btn btn-primary btn-circle">
-							    <i class="search-icon"></i>
-							    </button>
-							</div>
-					</div>
-				
-	<h4 class="search-title mb-3"><span id="ss"></span>에 대한 총 <span id="totalCount"></span> 건의 검색 결과</h4>
-
-	<div class="container" id="view"> 
-	 
-	</div>
-	</div>
-	</div>
 		</div>
-				</div>	
-	
-	
-
-	
-
+		<div class="col-lg-9 px-0">
+			<div class="container-xxl py-lg-3 py-4 px-0">
+				<div class="container">
+					<div class="sch_wrap page">
+						<input type="text" name="key" placeholder="검색어를 입력하세요."  id="ss">
+						<input type="submit" id="findBtn" class="btn btn-primary btn-circle">
+							<i class="search-icon"></i>
+						</input>
+					</div>
+				</div>
+<%--				<h4 class="search-title mb-3"><span id="ss"></span>에 대한 총 <span id="totalCount"></span> 건의 검색 결과</h4>--%>
+				<div class="container" id="view">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 <script type="text/javascript">
 		<%--북마크 클릭 이벤트 --%>
 		$('.bookmark-btn').on('click',function(e){
@@ -233,23 +208,6 @@ $('#view').html(html)
 			}
 		});
 
-		<%-- 필터 input range 라이브러리 --%>
-		rangeSlider(document.querySelector('#range-slider'), {
-			min: 0,
-			max: 100000,
-			step: 1000, //step size
-			value: [0,100000], //initial values
-			onInput: function(valueSet) {
-				console.log(valueSet);
-				rangeset(valueSet[0],valueSet[1]);
-			},
-		});
-		function rangeset(min, max){
-			$('input.start').val(min.toLocaleString('ko-KR')+'원');
-			$('input.end').val(max.toLocaleString('ko-KR')+'원');
-		}
-		rangeset(0,100000);
-
 		<%--필터 absolute 애니메이트--%>
 		let floatPosition = parseInt($(".filter-container").css('top'));
 		$(window).scroll(function() {
@@ -262,21 +220,6 @@ $('#view').html(html)
 			}
 		}).scroll();
 
-		<%-- 필터창 스크롤 라이브러리 --%>
-		$(function(){
-			$('#filter').slimScroll({
-				height: 'auto',
-				railVisible: false,
-				railColor: '#222',
-				railOpacity: 0.3,
-				wheelStep: 10,
-				allowPageScroll: false,
-				disableFadeOut: false
-			})
-		});
-
-
 	</script>
- 
 </body>
 </html>

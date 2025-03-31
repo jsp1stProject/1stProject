@@ -2501,3 +2501,34 @@ button.canbtn {
     top: -56px;
 }
 /*login*/
+
+.relative{
+    position:relative;
+}
+sup.newicon {
+    display: block;
+    position: absolute;
+    right: -16px;
+    top: 0;
+    width: 14px;
+    height: 14px;
+    background-color: #ff7700;
+    border-radius: 50px;
+}
+
+sup.newicon:after {
+    content: 'N';
+    font-size: 10px;
+    color: #ffffff;
+    line-height: 13px;
+    text-align: center;
+    width: 100%;
+    display: inline-block;
+    font-family: 'ariel';
+}
+table.tb-df th, table.tb-df td {
+    padding:12px 0;
+}
+table.tb-df a:hover{
+    color:var(--primary);
+}

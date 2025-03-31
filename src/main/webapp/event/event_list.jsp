@@ -16,8 +16,8 @@
 	<div class="container">
 		<div class="row justify-content-center">
 			<div class="col-lg-3 py-3 px-0" style="position:relative">
-				<div class="filter-container">
-					<div class="d-flex justify-content-between px-2">
+				<div class="filter-container container">
+					<div class="d-flex justify-content-between">
 						<button class="cpsbtn">필터</button>
 						<button type="button" class="btn btn-light resetbtn" onclick="reset()">초기화</button>
 					</div>
