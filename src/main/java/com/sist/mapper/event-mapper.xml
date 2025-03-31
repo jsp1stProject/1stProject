@@ -121,7 +121,7 @@
 		FROM event_list_view v join content c on v.content_id=c.content_id
 		<choose>
 			<when test="key!=null">
-				WHERE regexp_like(TITLE,#{key},'i')
+				WHERE regexp_like(v.TITLE,#{key},'i')
 			</when>
 			<when test="areacode!=null">
 				WHERE v.AREACODE in
@@ -135,7 +135,7 @@
 			AND price between #{filtermin} and #{filtermax}
 		</if>
 		<if test="cate != null">
-			AND CAT3 in
+			AND v.CAT3 in
 			<foreach collection="cate" item="c" separator="," open="(" close=")">
 				#{c}
 			</foreach>

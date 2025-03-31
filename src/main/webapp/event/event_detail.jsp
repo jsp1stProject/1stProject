@@ -261,7 +261,6 @@
                             <textarea name="message" class="review-textarea" placeholder="어떤 경험을 했는지 알려주세요." required></textarea>
                     </div>
                     <div class="submitwrap">
-                        <button type="button" class="buynow">바로구매</button>
                         <button type="submit" class="cart" id="review_insert">리뷰 작성하기</button>
                     </div>
                 </div>

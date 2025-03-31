@@ -13,7 +13,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 <script type="text/javascript" src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <div class="container pt-3">
+  <div class="container pt-5 pt-lg-3">
     <div class="row justify-content-center">
       <jsp:include page="mynav.jsp"></jsp:include>
       <div class="col-lg-9 col-12">
