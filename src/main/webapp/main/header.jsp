@@ -91,7 +91,7 @@
     			<button type="button" class="closebtn"></button>
     		</div>
     		<div class="center_wrap">
-    			<form action="" method="post" name="main-search">
+    			<form action="" method="post" name="main-search" id="main-search">
 	    			<div class="sch_wrap">
 						<select name="option">
 							<option value="1">숙박</option>
@@ -99,15 +99,9 @@
 							<option value="3">축제</option>
 						</select>
 						<input type="text" name="key" placeholder="검색어를 입력하세요.">
-						<input type="submit" value="검색">
+						<input type="button" value="검색" id="main-searchbtn">
 					</div>
     			</form>
-				<div class="latest_wrap">
-					<div class="latest">
-						<span>검색어</span>
-						<button type="button" name="del"></button>
-					</div>
-				</div>
     		</div>
     	</div>
     </div>
@@ -155,6 +149,23 @@
 	$(document).on("click",".scrollTopBtn",function(){
 		$('html').scrollTop(0);
 	})
+
+	let form=$("form[name=main-search]")[0];
+	$("#main-searchbtn").on("click",function(e){
+		e.preventDefault();
+		if(!form.checkValidity()){
+			form.reportValidity();
+			return;
+		}else{
+			if($("select[name=option]").val()=="2"){
+				var input = $("<input>")
+						.attr("type", "hidden")
+						.attr("name", "mode").val("search");
+				$(form).append(input);
+				$(form).attr("action","../event/event_list.do").submit();
+			}
+		}
+	});
     </script>
 </body>
 </html>
