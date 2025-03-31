@@ -8,6 +8,12 @@
   <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
   <link rel="stylesheet" type="text/css" href="../assets/css/cart.css">
 <body>
+<c:if test="${sessionScope.user_id eq null}">
+  <script>
+    window.alert("장바구니는 로그인 후 이용하실 수 있습니다.");
+    setTimeout(function(){window.history.back();},2000);
+  </script>
+</c:if>
 <div id="wrap">
   <div>
     <div class="container-lg px-0">
@@ -307,10 +313,9 @@
   });
   }
 
-  //페이지 진입 시 총 상품 금액 초기화
+  //페이지 진입 시 총 상품 금액 초기화1
   total();
 
-</script>
 </script>
 </body>
 </html>

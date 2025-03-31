@@ -30,15 +30,15 @@
             </c:if>
         </div>
         <div class="detail_titleWrap">
-            <div class="d-flex justify-content-between align-items-start">
-                <div>
+            <div>
+                <div class="d-flex justify-content-between align-items-end">
                     <p class="cate">${vo.dbcate}</p>
-                    <p class="title">${vo.cvo.title}</p>
+                    <div class="detail_btnWrap">
+                        <button type="button" class="bookmark-btn"></button>
+                        <button type="button" class="share-btn"></button>
+                    </div>
                 </div>
-                <div class="detail_btnWrap">
-                    <button type="button" class="bookmark-btn"></button>
-                    <button type="button" class="share-btn"></button>
-                </div>
+                <p class="title">${vo.cvo.title}</p>
             </div>
             <p class="location">${vo.cvo.addr1}</p>
             <p class="eventdate"><b>${vo.dbstart}</b>부터 <b>${vo.dbend}</b>까지</p>
@@ -122,7 +122,6 @@
                     <div class="pt-3">
                         <select class="form-select filter-sm" aria-label="Default select">
                             <option value="0" selected>최신순</option>
-                            <option value="1">평가 높은순</option>
                         </select>
                     </div>
                     <ul class="review-ul">
@@ -230,7 +229,6 @@
                 </div>
             </li>
             <li class="submitwrap">
-                <button type="button" class="buynow">바로구매</button>
                 <button type="button" class="cart" id="cart">장바구니</button>
             </li>
         </ul>
@@ -366,6 +364,9 @@
         //장바구니 버튼 클릭 시
         $("#cart").on("click",function(e){
             e.preventDefault();
+            if($("input[name=product_count]").val()==0){
+                return;
+            }
             cartUpdate(this); //cart 테이블 업데이트, eventcount session
             //구매 팝업 초기화, 끄기
             $("input[name=product_count]").val(0);
@@ -395,8 +396,11 @@
                         "content":content
                     }
                 });
+                console.log(response.data);
                 if(response.data.eventcart!=null){
                     $("nav .cart_num").text(response.data.eventcart);
+                }else if(response.data.statement=="noid"){
+                    alert("장바구니는 로그인 후 사용할 수 있습니다.")
                 }else{
                     console.log(response.data);
                 }

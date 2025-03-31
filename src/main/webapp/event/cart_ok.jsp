@@ -125,7 +125,6 @@
                    class="xans-element- xans-order xans-order-totalorder ">
                 <div class="ec-base-button">
                   <a href="#none" class="btnSubmit gFull sizeL">전체상품주문</a>
-                  <a href="#none" class="btnNormal gFull sizeL">선택상품주문</a>
                 </div>
               </div>
             </div>

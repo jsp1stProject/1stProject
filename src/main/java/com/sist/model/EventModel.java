@@ -525,6 +525,20 @@ public class EventModel {
 		HttpSession session = request.getSession();
 		String user_id = (String) session.getAttribute("user_id");
 
+		JSONObject obj=new JSONObject();
+		if(user_id==null || user_id==""){// 로그인 안 돼있으면
+			obj.put("statement", "noid");
+			PrintWriter out;
+			try {
+				out = response.getWriter();
+				out.write(obj.toJSONString());
+				out.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return;
+		}
+
 		if (json.size() == 0) return; //값이 없으면 종료
 
 		for (Object cart : json.values()) { //각 상품 목록
@@ -567,7 +581,7 @@ public class EventModel {
 
 		//cart count 세션에 갱신+json으로 보내기
 		session.setAttribute("eventcart", eventCartCount(user_id));
-		JSONObject obj=new JSONObject();
+		obj=new JSONObject();
 		obj.put("eventcart", eventCartCount(user_id));
 
 		PrintWriter out;
@@ -633,6 +647,8 @@ public class EventModel {
 			eventOrderInsert(map2);
 		}
 		cartDeleteAll(user_id); //주문 완료 후 장바구니 초기화
+		HttpSession session = request.getSession();
+		session.setAttribute("eventcart", 0);
 
 		request.setAttribute("event", "y"); //event page
 		request.setAttribute("main_jsp", "../event/cart_ok.jsp");
@@ -663,6 +679,8 @@ public class EventModel {
 			eventOrderInsert(map2);
 		}
 		cartDeleteAll(user_id); //주문 완료 후 장바구니 초기화
+		HttpSession session = request.getSession();
+		session.setAttribute("eventcart", 0);
 
 		JSONObject obj=new JSONObject();
 		obj.put("statement", "success");

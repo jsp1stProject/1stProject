@@ -1881,6 +1881,9 @@ form.hidden{
 .detail_titleWrap p.title {
     font-size: 24px;
     font-weight:600;
+    word-break: keep-all;
+    line-height: 1.2;
+    margin-bottom: 4px;
 }
 .detail_titleWrap button.bookmark-btn {
     position: static;
