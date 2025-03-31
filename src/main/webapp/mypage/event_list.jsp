@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <body>
-	<script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<style type="text/css">
 		.content-ul .thumb-wrap {
 			width: 120px;
@@ -67,7 +67,7 @@
 								<c:choose>
 									<c:when test="${vo.used eq 'n' }"><a href="#" class="mt-3" style="display:block;"><button class="btn-white usedbtn" data-payid="${vo.payment_id}">사용 완료하기</button></a></c:when>
 									<c:when test="${vo.used eq 'y' }"><a href="../event/event_detail.do?id=${vo.cvo.content_id}" class="mt-3" style="display:block;"><button class="btn-white">리뷰 작성하기</button></a></c:when>
-									<c:when test="${vo.used eq 'r' }"><a href="#" class="mt-3" style="display:block;"><button class="btn-black">리뷰 확인하기</button></a></c:when>
+									<c:when test="${vo.used eq 'r' }"><a href="../event/event_detail.do?id=${vo.cvo.content_id}" class="mt-3" style="display:block;"><button class="btn-black">리뷰 확인하기</button></a></c:when>
 								</c:choose>
 
 							</li>

@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
 <html>
-  <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
   <link rel="stylesheet" type="text/css" href="../assets/css/cart.css">
 <body>
