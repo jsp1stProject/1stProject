@@ -98,7 +98,7 @@
 							</div>
 							<div class="notice-content">
 								<p>${nvo.content }</p>
-								<button type="button" class="notice-more-btn w-100" onclick="location.href='#'">자세히 보기</button>
+								<button type="button" class="notice-more-btn w-100" onclick="location.href='../notice/notice_detail.do?no=${nvo.no}'">자세히 보기</button>
 							</div>
 						</li>
 					</c:forEach>
