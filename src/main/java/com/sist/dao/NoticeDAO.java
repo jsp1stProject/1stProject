@@ -63,10 +63,17 @@ public class NoticeDAO {
 		FETCH FIRST 1 ROW ONLY;
 	</select>
 	 */
+	/** 메인 페이지 팝업 */
 	public static NoticeVO noticePopUp() {
 		SqlSession session = ssf.openSession();
 		NoticeVO vo = session.selectOne("noticePopUp");
 		session.close();
 		return vo;
+	}
+	/** 공지사항 삭제 */
+	public static void noticeDelete(int no) {
+		try(SqlSession session= ssf.openSession(true)) {
+			session.delete("noticeDelete", no);
+		}
 	}
 }

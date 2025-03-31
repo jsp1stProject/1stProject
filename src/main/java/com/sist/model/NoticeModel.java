@@ -181,4 +181,11 @@ public class NoticeModel {
 		request.setAttribute("main_jsp", "../notice/notice_detail.jsp");
 		return "../main/main.jsp";
 	}
+	@RequestMapping("notice/notice_admin_delete.do")
+	public String notice_delete(HttpServletRequest request, HttpServletResponse response) {
+		String noStr = request.getParameter("no");
+		int no = Integer.parseInt(noStr);
+		NoticeDAO.noticeDelete(no);
+		return "redirect:../notice/notice_admin_list.do";
+	}
 }

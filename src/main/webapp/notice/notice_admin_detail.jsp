@@ -57,6 +57,7 @@
 	<div class="submit-btn-container">
 	<button class="btn btn-primary" onclick="history.back()">목록</button>
 	<a href="../notice/notice_admin_update.do?no=${vo.no }"><button class="btn btn-primary" id="trans" style="margin-right: 0;">수정</button></a>
+	<a href="../notice/notice_admin_delete.do?no=${vo.no }"><button class="btn btn-danger" style="margin-right: 0;">삭제</button></a>
 	</div>
 </div>
 </body>

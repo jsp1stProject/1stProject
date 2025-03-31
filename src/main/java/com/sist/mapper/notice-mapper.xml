@@ -64,4 +64,7 @@
 		ORDER BY no DESC
 		FETCH FIRST 1 ROW ONLY
 	</select>
+	<delete id="noticeDelete" parameterType="int">
+		DELETE FROM notice_board WHERE no = ${no}
+	</delete>
 </mapper>
