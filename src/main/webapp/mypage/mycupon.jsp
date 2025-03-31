@@ -1,8 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
+<script src="${pageContext.request.contextPath }/assets/plugin/wow/wow.min.js"></script>
 <script type="text/javascript" >
-new WOW().init();
+	// Initiate the wowjs
+	new WOW().init();
 </script>
 <body>
   <div class="container pt-3">

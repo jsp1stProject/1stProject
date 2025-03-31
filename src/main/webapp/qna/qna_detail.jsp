@@ -55,7 +55,7 @@
               <tr>
                <th class="texet-center" width=15%>내용</th>
                <td width=85% colspan="4" style="text-align: left;"
-                  valign="top" height="200"><pre style="white-space:pre-wrap;border:none;background-color: white">${vo.content }</pre>
+                  valign="top" height="200"><p>${vo.content }</p>
     
                </td>
               </tr>
