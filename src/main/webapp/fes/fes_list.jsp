@@ -26,6 +26,46 @@ window.onload = function () {
 	console.log("페이지실행")
 }
 
+function cleanData()
+{
+	ac=[];
+	cat3=[];
+	valueSet=[0,100000];
+	sd="";
+	const cleancheckboxes1 = document.getElementsByName('cat3');
+	const cleancheckboxes2 = document.getElementsByName('ac');
+	cleancheckboxes1.forEach((checkbox) => {
+
+	    checkbox.checked = false;
+
+	  })
+	  cleancheckboxes2.forEach((checkbox) => {
+
+	    checkbox.checked = false;
+
+	  })
+	 rangeset(0,100000);
+	
+	rangeSlider(document.querySelector('#range-slider'), {
+		min: 0,
+		max: 100000,
+		step: 1000, //step size
+		value: [0,100000], //initial values
+		//onInput 태그 안의 값들이 변경 될 때마다 이벤트가 발tod
+		onInput: function(valueSet) {
+			console.log(valueSet);
+			rangeset(valueSet[0],valueSet[1]);
+			price_change(valueSet);
+		},
+		
+		
+	});
+	
+	
+	
+	data_ajax(cat3,ac,sd,valueSet);
+}
+
 function price_change(valueSet)
 {
 	console.log("valueSet배열로"+valueSet)
@@ -80,6 +120,11 @@ function acClick()
 	data_ajax(cat3,ac,sd,valueSet);
 } 
 
+
+
+
+
+
 /*t
 Ajax에서 Controller에 배열(array)를 보내는 방법 
 1. Ajax에 traditional: true, 기본값이 false로 되어있다
@@ -92,7 +137,7 @@ function data_ajax(cat3,ac,sd,valueSet)
 {
 	console.log("ajaxcat:"+cat3);
 	console.log("ajaxac:"+ac);
-	console.log("ajaxsd:"+sd);
+	
 	
 	 $.ajax({
          type: "post",
@@ -100,21 +145,39 @@ function data_ajax(cat3,ac,sd,valueSet)
          traditional:true,
          data:{"cat3":cat3,"ac":ac,"search":sd,"valueSet":valueSet},
          success: function(result){
-        	 let json=JSON.parse(result)        	
-        	 jsonView(json)
+        	 let json=JSON.parse(result)  
+        	 if(json.length==0)	 
+        	 {
+        		 console.log(json);
+        		 alert("검색된 데이터가 없습니다")
+        	 }
+        	 else
+        	 {
+        		 console.log(json);
+            	 jsonView(json)
+        	 }	 
+        	 
+        	 
          }
       }); // ajax 종료
 
 }
+
 
 function jsonView(json)
 {
 	console.log("jsonView진입")
 	let html='';
 	html+='<h4 class="search-title mb-3">'
-		
-			+'<span>'+json[0].search+'</span>'
-			+'에 대한 총 <span>'+json.length+'</span> 건의 검색 결과</h4>'
+			if(json[0].search!=null)
+			{	
+				html+='<span>'+json[0].search+'</span>'
+			}
+			else
+			{
+				html+='<span>'+${search}+'</span>'
+			}
+			html+='에 대한 총 <span>'+json.length+'</span> 건의 검색 결과</h4>'
 			+'<ul class="content-ul event"  >'
 	
 	json.map(function(fes){
@@ -166,7 +229,7 @@ function jsonView(json)
 				<div class="filter-container active">
 					<div class="d-flex justify-content-between px-2">
 						<button class="cpsbtn">필터</button>
-						<button type="button" class="btn btn-light resetbtn">초기화</button>
+						<button type="button" class="btn btn-light resetbtn" onclick="cleanData()">초기화</button>
 					</div>
 					<div class="filter-wrap" id="filter" style="height: 450px">
 						<div class="filter-item col-lg-12 col-md-4 col-sm-12"> <!-- range 타입 -->
@@ -251,7 +314,7 @@ function jsonView(json)
 				<div class="container-xxl py-3 px-0">
 					<div class="container">
 							<div class="sch_wrap page">
-								<input type="text" id="search" name="key" placeholder=>
+								<input type="text" id="search" name="key">
 								<input type="submit"  value="검색" id="ss" >
 							</div>
 					</div>
@@ -266,7 +329,7 @@ function jsonView(json)
 						
 					</div>
 				</div>
-				<div class="container-xxl py-3 px-0">
+				<%-- <div class="container-xxl py-3 px-0">
 					<div class="container d-flex">
 						<ul class="pagination">
 							<c:if test="${startPage>1 }">
@@ -299,7 +362,7 @@ function jsonView(json)
 							</c:if>
 						</ul>
 					</div>
-				</div>
+				</div> --%>
 			</div>
 		</div>
 	</div>

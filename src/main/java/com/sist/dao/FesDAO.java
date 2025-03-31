@@ -409,6 +409,13 @@ public class FesDAO {
 		}
 		return list;
 	}
+	
+	public static void fesCartCancel(int fno)
+	{
+		SqlSession session=ssf.openSession(true);
+		session.update("fesCartCancel",fno);
+		session.close();
+	}
 
 	public static void buyInsert(FesCartVO vo)
 	{

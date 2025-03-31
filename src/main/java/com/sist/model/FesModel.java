@@ -50,7 +50,7 @@ public class FesModel {
 		  map.put("end",curpage*12);
 		  List<FesVO> list=FesDAO.fesHomeFindData(map);
 		  int totalcount=FesDAO.fesHomeTotalCount(search);
-
+		  
 		  int totalpage=(totalcount/12+1);
 		  final int BLOCK=10;
 		  int startPage=((curpage-1)/BLOCK*BLOCK)+1;
@@ -226,8 +226,9 @@ public class FesModel {
 
 		// request.setAttribute("addr", addr1);
 		//request.setAttribute("mvo", mvo);
+		request.setAttribute("user_id", user_id);
 		request.setAttribute("vo", vo);
-		// request.setAttribute("ilist", ilist);
+		request.setAttribute("ilist", ilist);
 		request.setAttribute("pList", plist);
 		request.setAttribute("main_jsp", "../fes/fes_detail.jsp");
 
@@ -382,6 +383,16 @@ public class FesModel {
 		  FesDAO.reviewDelete(Integer.parseInt(no));
 		  return "redirect:../fes/fes_detail.do?content_id="+content_id;
 	  }
+	
+	@RequestMapping("fes/fes_cart_delete.do")
+	public String fes_cart_delete(HttpServletRequest request, HttpServletResponse response)
+	{
+		String content_id=request.getParameter("content_id");
+		
+		FesDAO.fesCartCancel(Integer.parseInt(content_id));
+		return "redirect:../fes/fes_cart_list.do?";
+		
+	}
 	  
 	  @RequestMapping("fes/review_update.do")
 	  public String reply_update(HttpServletRequest request,
